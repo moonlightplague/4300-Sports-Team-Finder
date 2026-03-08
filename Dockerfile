@@ -11,4 +11,4 @@ RUN pip install --no-cache-dir -r $CONTAINER_HOME/requirements.txt
 
 COPY src/ $CONTAINER_HOME/
 
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
+CMD ["gunicorn", "--chdir", "src", "app:app", "--bind", "0.0.0.0:5000"]
