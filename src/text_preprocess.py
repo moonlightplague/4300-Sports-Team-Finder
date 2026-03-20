@@ -1,6 +1,7 @@
 import json
 import re
 import os
+from collections import Counter
 
 
 def tokenize(text):
@@ -23,7 +24,7 @@ def build_documents(filepath):
 
 def build_inverted_index(files):
     """
-    Builds an inverted indexs
+    Builds an inverted index with team-level term frequencies.
 
     files: {Sport Team Name: file Path
     }
@@ -33,17 +34,18 @@ def build_inverted_index(files):
     for team_name in files:
         filePath = files[team_name]
         documents = build_documents(filePath)
-        seen_team = set()
+        team_term_freq = Counter()
         for doc in documents:
-            text = doc["text"]
-            for token in tokenize(text):
-                if token not in seen_team:
-                    seen_team.add(token)
-                    if token not in inverted_index:
-                        inverted_index[token] = []
-                    inverted_index[token].append(team_name)
+            text = doc.get("text", "")
+            team_term_freq.update(tokenize(text))
+
+        for token, tf in team_term_freq.items():
+            if token not in inverted_index:
+                inverted_index[token] = {}
+            inverted_index[token][team_name] = tf
+
     for token in inverted_index:
-        inverted_index[token] = sorted(inverted_index[token])
+        inverted_index[token] = dict(sorted(inverted_index[token].items()))
     return inverted_index
 
 
