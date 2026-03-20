@@ -29,12 +29,12 @@ def build_inverted_index(files):
     for team_name in files:
         filePath = files[team_name]
         documents = build_documents(filePath)
-        seen_terms = set()
+        seen_team = set()
         for doc in documents:
             text = doc["text"]
             for token in tokenize(text):
-                if token not in seen_terms:
-                    seen_terms.add(token)
+                if token not in seen_team:
+                    seen_team.add(token)
                     if token not in inverted_index:
                         inverted_index[token] = []
                     inverted_index[token].append(team_name)
