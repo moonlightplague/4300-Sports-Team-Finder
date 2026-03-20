@@ -1,5 +1,5 @@
 <!doctype html>
-<title>Kardashian Chat</title>
+<title>Sports Team Finder</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -8,14 +8,13 @@
     <div class="full-body-container llm-mode">
         <div class="top-text">
             <div class="google-colors">
-                <h1 id="google-4">4</h1>
-                <h1 id="google-3">3</h1>
-                <h1 id="google-0-1">0</h1>
-                <h1 id="google-0-2">0</h1>
+                <h1 id="google-4">Sports</h1>
+                <h1 id="google-3">Team</h1>
+                <h1 id="google-0-1">Finder</h1>
             </div>
             <div class="input-box" onclick="document.getElementById('filter-text-val').focus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a Keeping up with the Kardashians episode" id="filter-text-val" onkeyup="filterText()">
+                <input placeholder="Search for a sports team you like" id="filter-text-val" onkeyup="filterText()">
             </div>
         </div>
 
