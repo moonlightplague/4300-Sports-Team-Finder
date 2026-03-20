@@ -9,6 +9,10 @@ def tokenize(text):
 
 
 def build_documents(filepath):
+    """
+
+    returns a list of utterances from a filepath
+    """
     documents = []
     with open(filepath, "r", encoding="utf-8") as f:
         for line in f:
@@ -24,21 +28,24 @@ def build_inverted_index(files):
     files: {Sport Team Name: file Path
     }
     
-    
     """
     inverted_index = {}
-    for team_name, filepath in files.items():
-        documents = build_documents(filepath)
-        seen_terms = set()
+    for team_name in files:
+        filePath = files[team_name]
+        documents = build_documents(filePath)
+        seen_team = set()
         for doc in documents:
             text = doc["text"]
             for token in tokenize(text):
-                if token not in seen_terms:
-                    seen_terms.add(token)
+                if token not in seen_team:
+                    seen_team.add(token)
                     if token not in inverted_index:
                         inverted_index[token] = []
                     inverted_index[token].append(team_name)
+    for token in inverted_index:
+        inverted_index[token] = sorted(inverted_index[token])
     return inverted_index
+
 
 
 
@@ -54,7 +61,6 @@ def main():
             team_files[team_name] = filepath
 
     result = build_inverted_index(team_files)
-
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
 
