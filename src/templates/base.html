@@ -35,11 +35,11 @@
 
         function filterText() {
             document.getElementById("answer-box").innerHTML = "";
-            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
+            fetch("/search?" + new URLSearchParams({ q: document.getElementById("filter-text-val").value }).toString())
                 .then((response) => response.json())
-                .then((data) => data.forEach(row => {
+                .then((data) => data.forEach(teamName => {
                     let tempDiv = document.createElement("div");
-                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.imdb_rating);
+                    tempDiv.innerHTML = answerBoxTemplate(teamName, "", "");
                     document.getElementById("answer-box").appendChild(tempDiv);
                 }));
         }
