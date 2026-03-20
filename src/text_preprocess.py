@@ -24,11 +24,11 @@ def build_inverted_index(files):
     files: {Sport Team Name: file Path
     }
     
-    
     """
     inverted_index = {}
-    for team_name, filepath in files.items():
-        documents = build_documents(filepath)
+    for team_name in files:
+        filePath = files[team_name]
+        documents = build_documents(filePath)
         seen_terms = set()
         for doc in documents:
             text = doc["text"]
@@ -38,7 +38,10 @@ def build_inverted_index(files):
                     if token not in inverted_index:
                         inverted_index[token] = []
                     inverted_index[token].append(team_name)
+    for token in inverted_index:
+        inverted_index[token] = sorted(inverted_index[token])
     return inverted_index
+
 
 
 
@@ -54,7 +57,6 @@ def main():
             team_files[team_name] = filepath
 
     result = build_inverted_index(team_files)
-
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
 
