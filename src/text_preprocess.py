@@ -1,16 +1,11 @@
 import json
 import re
-import argparse
-from collections import Counter
-from nltk.stem import PorterStemmer
 import os
-stemmer = PorterStemmer()
 
 
 def tokenize(text):
-    """Lowercase, extract words via regex, stem each token."""
-    tokens = re.findall(r"[a-z]+", text.lower())
-    return [stemmer.stem(t) for t in tokens]
+    """Lowercase and extract words via regex."""
+    return re.findall(r"[a-z]+", text.lower())
 
 
 def build_documents(filepath):
@@ -22,14 +17,34 @@ def build_documents(filepath):
                 documents.append(json.loads(line))
     return documents
 
-def build_document_term_matrix(files):
-    pass
+def build_inverted_index(files):
+    """
+    Builds an inverted indexs
+
+    files: {Sport Team Name: file Path
+    }
+    
+    
+    """
+    inverted_index = {}
+    for team_name, filepath in files.items():
+        documents = build_documents(filepath)
+        seen_terms = set()
+        for doc in documents:
+            text = doc["text"]
+            for token in tokenize(text):
+                if token not in seen_terms:
+                    seen_terms.add(token)
+                    if token not in inverted_index:
+                        inverted_index[token] = []
+                    inverted_index[token].append(team_name)
+    return inverted_index
 
 
 
 def main():
     DATASET_FOLDER = "dataset"
-    OUTPUT_FILE = "src/data/term_doc_matrix.json"
+    OUTPUT_FILE = "src/data/inverted_index_matrix.json"
 
     team_files = {}
     for filename in os.listdir(DATASET_FOLDER):
@@ -38,7 +53,7 @@ def main():
             filepath = os.path.join(DATASET_FOLDER, filename)
             team_files[team_name] = filepath
 
-    result = build_term_document_matrix(team_files)
+    result = build_inverted_index(team_files)
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)

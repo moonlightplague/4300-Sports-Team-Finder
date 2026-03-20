@@ -1,4 +1,5 @@
 env/
+dataset/
 .DS_Store
 Docker/__pycache__
 
