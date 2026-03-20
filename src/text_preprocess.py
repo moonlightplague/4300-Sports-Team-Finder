@@ -9,6 +9,10 @@ def tokenize(text):
 
 
 def build_documents(filepath):
+    """
+
+    returns a list of utterances from a filepath
+    """
     documents = []
     with open(filepath, "r", encoding="utf-8") as f:
         for line in f:
