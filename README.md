@@ -1,5 +1,11 @@
 # Sports Team Finder
-Erik Mauricio (em882), Desmond Whitley (ddw78), Chenwei Hou (ch2352)
+
+## Group members
+
+Erik Mauricio (em882), Desmond Whitley (ddw78), Chenwei Hou (ch2352). 
+
+## Introduction
+
 Sports Team Finder is a Flask web app that retrieves sports teams from a prebuilt inverted index using TF-IDF cosine similarity.
 Users can search for teams in real time through the web UI, and the app ranks results by textual relevance.
 
