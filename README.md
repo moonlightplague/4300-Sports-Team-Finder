@@ -19,6 +19,30 @@ Users can search for teams in real time through the web UI, and the app ranks re
 Optional mode:
 - LLM chat support can be enabled by setting `USE_LLM = True` in `src/routes.py` and providing `API_KEY` in `.env`.
 
+## Architecture
+
+```text
+4300-Sports-Team-Finder/
+├── src/
+│   ├── app.py                         # Flask entry point
+│   ├── routes.py                      # Search routes and template selection
+│   ├── llm_routes.py                  # Optional LLM chat route (when USE_LLM=True)
+│   ├── ir_engine.py                   # TF-IDF + cosine similarity retrieval engine
+│   ├── text_preprocess.py             # Builds inverted index from dataset files
+│   ├── data/
+│   │   └── inverted_index_matrix.json # Prebuilt inverted index used at runtime
+│   ├── templates/
+│   │   ├── base.html                  # Search UI
+│   │   └── chat.html                  # Search + chat UI
+│   └── static/
+│       ├── style.css
+│       └── images/
+├── dataset/                           # Source team utterance JSONL files
+├── requirements.txt                   # Python dependencies
+├── .env.example                       # API key template for optional LLM mode
+└── Dockerfile                         # Container build config
+```
+
 ## Installation (Conda Environment)
 
 ### Prerequisites
