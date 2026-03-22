@@ -7,10 +7,48 @@ from collections import Counter, defaultdict
 
 TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
 
+QUERY_EXPANSIONS = {
+    "exciting": ["energetic", "lethal", "attacking", "explosive"],
+    "young": ["prospects", "academy", "rebuilding", "upcoming"],
+    "loyal": ["passionate", "dedicated", "support", "atmosphere"],
+    "historic": ["legacy", "tradition", "trophies", "iconic"],
+    "successful": ["winning", "dominant", "elite", "championship"],
+    "defensive": ["defense", "physical", "disciplined", "tough"],
+    "offensive": ["attacking", "creative", "fast", "scoring"],
+}
+
 
 def tokenize(text):
     """Lowercase and tokenize text into alphanumeric terms."""
     return TOKEN_PATTERN.findall((text or "").lower())
+
+
+def is_good_term(term):
+    """
+    Basic term cleanup to reduce junk in the vocabulary.
+    """
+    if not isinstance(term, str):
+        return False
+    if len(term) < 3:
+        return False
+    if term.isdigit():
+        return False
+    if len(set(term)) == 1:
+        return False
+    if re.fullmatch(r"(ha)+", term):
+        return False
+    return True
+
+
+def expand_query_tokens(tokens):
+    """
+    Add synonym style expansions for better matching.
+    """
+    expanded = []
+    for token in tokens:
+        expanded.append(token)
+        expanded.extend(QUERY_EXPANSIONS.get(token, []))
+    return expanded
 
 
 class InvertedIndexSearchEngine:
@@ -47,6 +85,10 @@ class InvertedIndexSearchEngine:
 
         normalized_index = {}
         for term, postings in raw_index.items():
+            if not is_good_term(term):
+                continue
+
+            term = term.lower()
             term_postings = {}
 
             if isinstance(postings, dict):
@@ -56,6 +98,7 @@ class InvertedIndexSearchEngine:
                     if not isinstance(tf, (int, float)) or tf <= 0:
                         continue
                     term_postings[team] = int(tf)
+
             elif isinstance(postings, list):
                 # Backward compatibility for previous binary format: term -> [team]
                 for team in postings:
@@ -76,9 +119,13 @@ class InvertedIndexSearchEngine:
         for team in all_teams:
             team_name_tf = Counter(tokenize(team))
             for token, tf in team_name_tf.items():
+                if not is_good_term(token):
+                    continue
                 postings = normalized_index.setdefault(token, {})
                 postings[team] = postings.get(team, 0) + tf
-                self.team_term_tf[team][token] = self.team_term_tf[team].get(token, 0) + tf
+                self.team_term_tf[team][token] = (
+                    self.team_term_tf[team].get(token, 0) + tf
+                )
 
         self.inverted_index = normalized_index
         self.teams = all_teams
@@ -97,6 +144,7 @@ class InvertedIndexSearchEngine:
 
     def search(self, query, top_k=20):
         query_tokens = tokenize(query)
+        query_tokens = expand_query_tokens(query_tokens)
 
         if not query_tokens:
             return [
@@ -133,27 +181,36 @@ class InvertedIndexSearchEngine:
         for team in candidate_teams:
             dot = 0.0
             matched_terms = []
+            term_contributions = []
+
             for term, q_weight in query_weights.items():
                 tf = self.inverted_index.get(term, {}).get(team, 0)
                 if tf > 0:
                     d_weight = self._tf_weight(tf) * self.idf[term]
-                    dot += q_weight * d_weight
+                    contribution = q_weight * d_weight
+                    dot += contribution
                     matched_terms.append(term)
+                    term_contributions.append((term, contribution))
 
             denom = query_norm * self.doc_norm.get(team, 1.0)
             cosine_score = dot / denom if denom else 0.0
             coverage = len(matched_terms) / max(1, len(query_weights))
             score = cosine_score + (0.1 * coverage)
+
             if score <= 0:
                 continue
+
+            term_contributions.sort(key=lambda x: x[1], reverse=True)
+            top_terms = [term for term, _ in term_contributions[:5]]
 
             scored.append(
                 {
                     "title": team,
-                    "descr": "Matched terms: " + ", ".join(matched_terms[:8]),
+                    "descr": "Strongest matches: " + ", ".join(top_terms),
                     "imdb_rating": round(score, 4),
                     "score": round(score, 4),
                     "matched_terms": matched_terms,
+                    "top_terms": top_terms,
                 }
             )
 
