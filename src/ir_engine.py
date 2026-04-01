@@ -9,6 +9,7 @@ import numpy as np
 
 TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
 SVD_EPSILON = 1e-10
+QUERY_EXPANSION_WEIGHT = 0.35
 
 QUERY_EXPANSIONS = {
     "exciting": ["energetic", "lethal", "attacking", "explosive"],
@@ -73,7 +74,9 @@ class InvertedIndexSearchEngine:
         self.team_term_tf = defaultdict(dict)
         self.teams = []
         self.team_to_idx = {}
+        self.team_name_tokens = {}
         self.idf = {}
+        self.doc_norm = {}
 
         self._u_k = None
         self._s_k = None
@@ -147,6 +150,14 @@ class InvertedIndexSearchEngine:
             df = len(teams)
             self.idf[term] = 1.0 + math.log((num_teams + 1.0) / (df + 1.0))
 
+        self.team_name_tokens = {team: set(tokenize(team)) for team in self.teams}
+        for team, term_tf in self.team_term_tf.items():
+            norm_sq = 0.0
+            for term, tf in term_tf.items():
+                weight = self._tf_weight(tf) * self.idf.get(term, 0.0)
+                norm_sq += weight * weight
+            self.doc_norm[team] = math.sqrt(norm_sq) if norm_sq > 0 else 1.0
+
         self._build_svd_model()
 
     def _build_svd_model(self):
@@ -204,6 +215,26 @@ class InvertedIndexSearchEngine:
         norms = np.linalg.norm(self._team_latent, axis=1)
         norms[norms == 0] = 1.0
         self._team_latent_norm = norms
+
+    def _build_query_weights(self, query_tokens, include_expansions=True):
+        query_tf = Counter(query_tokens)
+        query_weights = defaultdict(float)
+
+        for term, tf in query_tf.items():
+            idf = self.idf.get(term)
+            if idf is None:
+                continue
+            query_weights[term] += self._tf_weight(tf) * idf
+
+        if include_expansions:
+            for term in query_tf.keys():
+                for expanded_term in QUERY_EXPANSIONS.get(term, []):
+                    idf = self.idf.get(expanded_term)
+                    if idf is None:
+                        continue
+                    query_weights[expanded_term] += QUERY_EXPANSION_WEIGHT * idf
+
+        return dict(query_weights)
 
     def _project_query_to_latent(self, query_weights):
         doc_query_dots = np.zeros(len(self.teams), dtype=np.float64)
@@ -290,7 +321,6 @@ class InvertedIndexSearchEngine:
 
     def search(self, query, top_k=20):
         query_tokens = tokenize(query)
-        query_tokens = expand_query_tokens(query_tokens)
 
         if not query_tokens:
             return [
@@ -304,46 +334,126 @@ class InvertedIndexSearchEngine:
                 for team in self.teams[:top_k]
             ]
 
-        query_tf = Counter(query_tokens)
-        query_weights = {}
-        for term, tf in query_tf.items():
-            idf = self.idf.get(term)
-            if idf is None:
-                continue
-            query_weights[term] = self._tf_weight(tf) * idf
+        exact_query_weights = self._build_query_weights(
+            query_tokens, include_expansions=False
+        )
+        expanded_query_weights = self._build_query_weights(
+            query_tokens, include_expansions=True
+        )
 
-        if not query_weights:
+        if not expanded_query_weights:
             return []
 
-        q_latent = self._project_query_to_latent(query_weights)
+        lexical_reference_weights = (
+            exact_query_weights if exact_query_weights else expanded_query_weights
+        )
+
+        candidate_teams = set()
+        for term in lexical_reference_weights:
+            candidate_teams.update(self.inverted_index.get(term, {}).keys())
+        if not candidate_teams:
+            for term in expanded_query_weights:
+                candidate_teams.update(self.inverted_index.get(term, {}).keys())
+        if not candidate_teams:
+            return []
+
+        q_latent = self._project_query_to_latent(expanded_query_weights)
         q_norm = float(np.linalg.norm(q_latent))
         if q_norm <= SVD_EPSILON:
             return []
         q_unit = q_latent / q_norm
 
-        denom = self._team_latent_norm * q_norm
-        scores = (self._team_latent @ q_latent) / denom
+        lexical_query_norm = math.sqrt(
+            sum(weight * weight for weight in lexical_reference_weights.values())
+        )
+        lexical_scores = {}
+        lexical_matches = {}
 
-        ranked_indices = np.argsort(scores)[::-1]
+        for team in candidate_teams:
+            dot = 0.0
+            matched_terms = []
+
+            for term, q_weight in lexical_reference_weights.items():
+                tf = self.inverted_index.get(term, {}).get(team, 0)
+                if tf <= 0:
+                    continue
+                d_weight = self._tf_weight(tf) * self.idf.get(term, 0.0)
+                dot += q_weight * d_weight
+                matched_terms.append(term)
+
+            denom = lexical_query_norm * self.doc_norm.get(team, 1.0)
+            lexical_scores[team] = (dot / denom) if denom else 0.0
+            lexical_matches[team] = matched_terms
+
+        max_lexical = max(lexical_scores.values()) if lexical_scores else 0.0
+        num_ref_terms = max(1, len(lexical_reference_weights))
+        exact_term_set = set(exact_query_weights.keys())
+        exact_query_set = set(query_tokens)
+
         ranked = []
-        for team_idx in ranked_indices:
-            score = float(scores[team_idx])
+        for team in candidate_teams:
+            team_idx = self.team_to_idx.get(team)
+            if team_idx is None:
+                continue
+            denom = self._team_latent_norm[team_idx] * q_norm
+            svd_score = float((self._team_latent[team_idx] @ q_latent) / denom) if denom else 0.0
+            if svd_score <= 0:
+                continue
+
+            matched_ref_terms = lexical_matches.get(team, [])
+            coverage = len(matched_ref_terms) / num_ref_terms
+            lexical = lexical_scores.get(team, 0.0)
+            lexical_norm = (lexical / max_lexical) if max_lexical > SVD_EPSILON else 1.0
+
+            team_tokens = self.team_name_tokens.get(team, set())
+            name_overlap = (
+                len(team_tokens.intersection(exact_term_set)) / len(exact_term_set)
+                if exact_term_set
+                else 1.0
+            )
+
+            coverage_factor = 0.35 + (0.55 * coverage)
+            lexical_factor = 0.30 + (0.60 * lexical_norm)
+            name_factor = 0.80 + (0.15 * name_overlap)
+            score = svd_score * coverage_factor * lexical_factor * name_factor
+
+            if exact_query_set and exact_query_set == team_tokens:
+                score += 0.25
+            elif exact_query_set and exact_query_set.issubset(team_tokens):
+                score += 0.12
+
             if score <= 0:
                 continue
 
-            explanation = self._explain_match(team_idx, query_weights, q_unit)
+            explanation = self._explain_match(team_idx, expanded_query_weights, q_unit)
+            strong_terms = []
+            if matched_ref_terms:
+                strong_terms.extend(matched_ref_terms)
+            for term in explanation["top_terms"]:
+                if term not in strong_terms:
+                    strong_terms.append(term)
+                if len(strong_terms) >= 5:
+                    break
+            if not strong_terms:
+                strong_terms = explanation["top_terms"]
+
+            explanation_descr = (
+                f"{explanation['descr']} "
+                f"(query overlap: {len(matched_ref_terms)}/{num_ref_terms})"
+            )
             ranked.append(
                 {
-                    "title": self.teams[team_idx],
-                    "descr": explanation["descr"],
+                    "title": team,
+                    "descr": explanation_descr,
                     "imdb_rating": round(score, 4),
                     "score": round(score, 4),
-                    "matched_terms": explanation["matched_terms"],
-                    "top_terms": explanation["top_terms"],
+                    "matched_terms": strong_terms,
+                    "top_terms": strong_terms,
                     "svd_components": explanation["svd_components"],
+                    "svd_score": round(svd_score, 4),
+                    "lexical_score": round(lexical, 4),
                 }
             )
-            if len(ranked) >= top_k:
-                break
 
-        return ranked
+        ranked.sort(key=lambda item: (-item["score"], item["title"].lower()))
+        return ranked[:top_k]
