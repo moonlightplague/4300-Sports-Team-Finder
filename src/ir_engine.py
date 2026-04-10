@@ -8,11 +8,9 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
+from scipy.sparse import csr_matrix
 
 stemmer = PorterStemmer()
-
-import numpy as np
-
 
 TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
 SVD_EPSILON = 1e-10
@@ -186,38 +184,67 @@ class InvertedIndexSearchEngine:
             self._team_latent_norm = np.ones(num_teams, dtype=np.float64)
             return
 
-        tfidf_matrix = np.zeros((num_teams, num_terms), dtype=np.float32)
-        for term_idx, (term, postings) in enumerate(self.inverted_index.items()):
-            term_idf = self.idf[term]
-            for team, tf in postings.items():
-                row_idx = self.team_to_idx.get(team)
-                if row_idx is None:
-                    continue
-                tfidf_matrix[row_idx, term_idx] = self._tf_weight(tf) * term_idf
-
-        gram = tfidf_matrix @ tfidf_matrix.T
-        del tfidf_matrix
-
-        eigvals, eigvecs = np.linalg.eigh(gram.astype(np.float64, copy=False))
-        order = np.argsort(eigvals)[::-1]
-        eigvals = eigvals[order]
-        eigvecs = eigvecs[:, order]
-
-        positive = eigvals > SVD_EPSILON
-        eigvals = eigvals[positive]
-        eigvecs = eigvecs[:, positive]
-
-        if eigvals.size == 0:
+        max_components = min(self.max_svd_components, num_teams - 1, num_terms - 1)
+        if max_components <= 0:
             self._u_k = np.zeros((num_teams, 1), dtype=np.float64)
             self._s_k = np.ones(1, dtype=np.float64)
             self._team_latent = np.zeros((num_teams, 1), dtype=np.float64)
             self._team_latent_norm = np.ones(num_teams, dtype=np.float64)
             return
 
-        k = min(self.max_svd_components, eigvals.size)
-        self._s_k = np.sqrt(eigvals[:k])
-        self._u_k = eigvecs[:, :k]
-        self._team_latent = self._u_k * self._s_k
+        rows = []
+        cols = []
+        values = []
+        for term_idx, (term, postings) in enumerate(self.inverted_index.items()):
+            term_idf = self.idf.get(term, 0.0)
+            if term_idf <= 0:
+                continue
+            for team, tf in postings.items():
+                row_idx = self.team_to_idx.get(team)
+                if row_idx is None:
+                    continue
+                weight = self._tf_weight(tf) * term_idf
+                if weight <= 0:
+                    continue
+                rows.append(row_idx)
+                cols.append(term_idx)
+                values.append(weight)
+
+        if not values:
+            self._u_k = np.zeros((num_teams, 1), dtype=np.float64)
+            self._s_k = np.ones(1, dtype=np.float64)
+            self._team_latent = np.zeros((num_teams, 1), dtype=np.float64)
+            self._team_latent_norm = np.ones(num_teams, dtype=np.float64)
+            return
+
+        tfidf_matrix = csr_matrix(
+            (
+                np.asarray(values, dtype=np.float32),
+                (np.asarray(rows, dtype=np.int32), np.asarray(cols, dtype=np.int32)),
+            ),
+            shape=(num_teams, num_terms),
+            dtype=np.float32,
+        )
+
+        svd = TruncatedSVD(
+            n_components=max_components,
+            algorithm="randomized",
+            random_state=0,
+        )
+        team_latent = svd.fit_transform(tfidf_matrix).astype(np.float64, copy=False)
+        singular_values = svd.singular_values_.astype(np.float64, copy=False)
+
+        positive = singular_values > SVD_EPSILON
+        if not np.any(positive):
+            self._u_k = np.zeros((num_teams, 1), dtype=np.float64)
+            self._s_k = np.ones(1, dtype=np.float64)
+            self._team_latent = np.zeros((num_teams, 1), dtype=np.float64)
+            self._team_latent_norm = np.ones(num_teams, dtype=np.float64)
+            return
+
+        self._s_k = singular_values[positive]
+        self._team_latent = team_latent[:, positive]
+        self._u_k = self._team_latent / self._s_k
 
         norms = np.linalg.norm(self._team_latent, axis=1)
         norms[norms == 0] = 1.0
