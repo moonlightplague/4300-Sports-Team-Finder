@@ -3,6 +3,9 @@ import math
 import os
 import re
 from collections import Counter, defaultdict
+from nltk.stem import PorterStemmer
+
+stemmer = PorterStemmer()
 
 
 TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
@@ -144,6 +147,7 @@ class InvertedIndexSearchEngine:
 
     def search(self, query, top_k=20):
         query_tokens = tokenize(query)
+        query_tokens = [stemmer.stem(t) for t in query_tokens]
         query_tokens = expand_query_tokens(query_tokens)
 
         if not query_tokens:
