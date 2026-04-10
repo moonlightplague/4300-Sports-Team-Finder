@@ -2,6 +2,8 @@ import json
 import re
 import os
 from collections import Counter
+import wikipediaapi
+
 
 
 def tokenize(text):
@@ -47,6 +49,20 @@ def build_inverted_index(files):
     for token in inverted_index:
         inverted_index[token] = dict(sorted(inverted_index[token].items()))
     return inverted_index
+
+def scrape_wikipedia(team_name: str) -> str:
+    """
+    returns the webscraped wikipedia content
+    
+    """
+    wiki = wikipediaapi.Wikipedia(
+        language="en",
+        user_agent="SportsTeamFinder"
+    )
+    page = wiki.page(team_name)
+    if not page.exists():
+        return ""
+    return page.text
 
 
 
