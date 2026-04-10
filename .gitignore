@@ -22,3 +22,4 @@ helpers/*
 json_template/
 
 .env
+.codex
