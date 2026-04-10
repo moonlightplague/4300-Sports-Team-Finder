@@ -4,7 +4,6 @@ import os
 import time
 from collections import Counter
 import wikipediaapi
-from nltk.stem import PorterStemmer
 from helper import (
     european_soccrer_league_to_teams,
     americas_soccer_league_to_teams,
@@ -15,7 +14,6 @@ from helper import (
     LEAGUE_ALIASES,
 )
 
-stemmer = PorterStemmer()
 WIKISCRAPED_CACHE_FILE = "dataset/wiki_cache.json"
 wiki = wikipediaapi.Wikipedia(language="en", user_agent="SportsTeamFinder")
 
@@ -65,8 +63,7 @@ def save_wiki_cache(cache):
 def tokenize(text):
     """Lowercase and extract words via regex."""
     tokens = re.findall(r"[a-z]+", text.lower())
-    result = [stemmer.stem(t) for t in tokens]
-    return result
+    return tokens
 
 
 def build_documents(filepath):
