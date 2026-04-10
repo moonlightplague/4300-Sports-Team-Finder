@@ -407,3 +407,43 @@ hockey = {"NHL (USA/Canada)": [
     "Washington Capitals",
     "Winnipeg Jets"
 ]}
+
+
+def normalize_leagues(league_dicts):
+    alias_map = {}
+    for league_dict in league_dicts:
+        for league_name in league_dict.keys():
+            clean = league_name.lower()
+            base = clean.split("(")[0].strip()
+            key = base.replace(" ", "").replace("-", "")
+            alias_map[base] = key
+            alias_map[clean] = key
+            alias_map[base.replace(" ", "")] = key
+            alias_map[base.replace(" ", " ")] = key
+
+            
+            if "premier league" in base:
+                alias_map["epl"] = key
+                alias_map["english premier league"] = key
+            if "major league soccer" in base:
+                alias_map["mls"] = key
+
+    return alias_map
+
+
+LEAGUE_ALIASES = normalize_leagues([
+    european_soccrer_league_to_teams,
+    americas_soccer_league_to_teams,
+    basketball_teams,
+    football,
+    baseball,
+    hockey,
+])
+
+
+def normalize_query(text):
+    text = text.lower()
+    for phrase, replacement in LEAGUE_ALIASES.items():
+        if phrase in text:
+            text = text.replace(phrase, replacement)
+    return text
