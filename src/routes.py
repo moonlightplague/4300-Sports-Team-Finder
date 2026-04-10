@@ -7,6 +7,7 @@ import json
 import os
 from flask import render_template, request
 from ir_engine import InvertedIndexSearchEngine
+from helper import normalize_query
 
 # ── AI toggle ──
 USE_LLM = False
@@ -19,13 +20,13 @@ search_engine = InvertedIndexSearchEngine(index_file_path)
 
 
 def json_search(query):
-    results = search_engine.search(query or "", top_k=20)
+    results = search_engine.search(normalize_query(query or ""), top_k=20)
     return json.dumps(results)
 
 def json_team_names(query):
     if not query or not query.strip():
         return json.dumps([])
-    results = search_engine.search(query, top_k=20)
+    results = search_engine.search(normalize_query(query), top_k=20)
     team_names = [row["title"] for row in results]
     return json.dumps(team_names)
 
