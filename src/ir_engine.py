@@ -4,6 +4,10 @@ import os
 import re
 from collections import Counter, defaultdict
 from nltk.stem import PorterStemmer
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import TruncatedSVD
+from sklearn.metrics.pairwise import cosine_similarity
 
 stemmer = PorterStemmer()
 

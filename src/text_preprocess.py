@@ -101,31 +101,43 @@ def build_documents_from_wikipedia(team_name, cache):
     return teamDocs
 
 
+def build_team_documents(team_name, files, cache):
+    """Returns all documents for a team from Reddit, Wikipedia, and metadata."""
+    documents = []
+    if team_name in files:
+        documents = build_documents(files[team_name])
+    documents += build_documents_from_wikipedia(team_name, cache)
+    meta = team_metadata.get(team_name)
+    if meta:
+        league = meta['league']
+        normalized_league = LEAGUE_ALIASES.get(league.lower(), league)
+        documents.append({"text": f"{team_name} is a professional {meta['sport']} team"})
+        documents.append({"text": f"{team_name} plays in {normalized_league}"})
+    return documents
+
+
+def build_corpus(files):
+    """Builds a corpus dict {team_name: concatenated text}"""
+    cache = load_wiki_cache()
+    corpus = {}
+    all_teams = set(files.keys()).union(set(team_metadata.keys()))
+    for team_name in all_teams:
+        documents = build_team_documents(team_name, files, cache)
+        corpus[team_name] = " ".join(doc.get("text", "") for doc in documents)
+    return corpus
+
+
 def build_inverted_index(files):
     """
     Builds an inverted index with team-level term frequencies.
 
-    files: {Sport Team Name: file Path
-    }
-    
+    files: {Sport Team Name: file Path}
     """
     inverted_index = {}
     cache = load_wiki_cache()
-
     all_teams = set(files.keys()).union(set(team_metadata.keys()))
     for team_name in all_teams:
-        documents = []
-        if team_name in files:
-            documents = build_documents(files[team_name])
-        documents += build_documents_from_wikipedia(team_name, cache)
-
-        meta = team_metadata.get(team_name)
-        if meta:
-            league = meta['league']
-            normalized_league = LEAGUE_ALIASES.get(league.lower(), league)
-            documents.append({"text": f"{team_name} is a professional {meta['sport']} team"})
-            documents.append({"text": f"{team_name} plays in {normalized_league}"})
-
+        documents = build_team_documents(team_name, files, cache)
         team_term_freq = Counter()
         for doc in documents:
             text = doc.get("text", "")
@@ -160,6 +172,10 @@ def main():
     print(f"Finished at: {time.strftime('%H:%M:%S')} — took {time.time() - start:.4f}s")
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
+
+    corpus = build_corpus(team_files)
+    with open("src/data/corpus.json", "w", encoding="utf-8") as f:
+        json.dump(corpus, f, indent=2)
 
 
 
