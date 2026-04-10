@@ -6,7 +6,7 @@ Erik Mauricio (em882), Desmond Whitley (ddw78), Chenwei Hou (ch2352).
 
 ## Introduction
 
-Sports Team Finder is a Flask web app that retrieves sports teams from a prebuilt inverted index using TF-IDF cosine similarity.
+Sports Team Finder is a Flask web app that retrieves sports teams from a prebuilt inverted index using SVD-based latent semantic retrieval.
 Users can search for teams in real time through the web UI, and the app ranks results by textual relevance.
 
 ## Project info
@@ -16,8 +16,9 @@ Users can search for teams in real time through the web UI, and the app ranks re
 - Runs a custom retrieval engine in `src/ir_engine.py`:
   - Tokenization
   - TF-IDF weighting
-  - Cosine similarity scoring
-  - Query-term coverage boost for ranking
+  - Truncated SVD over team-term vectors
+  - Latent-space cosine similarity scoring
+  - SVD-based explainability (top latent factors + term evidence)
 - Provides:
   - `GET /episodes?title=<query>` for ranked search results
   - `GET /search?q=<query>` for team-name suggestions
@@ -33,7 +34,7 @@ Optional mode:
 │   ├── app.py                         # Flask entry point
 │   ├── routes.py                      # Search routes and template selection
 │   ├── llm_routes.py                  # Optional LLM chat route (when USE_LLM=True)
-│   ├── ir_engine.py                   # TF-IDF + cosine similarity retrieval engine
+│   ├── ir_engine.py                   # SVD latent semantic retrieval + explanations
 │   ├── text_preprocess.py             # Builds inverted index from dataset files
 │   ├── data/
 │   │   └── inverted_index_matrix.json # Prebuilt inverted index used at runtime
