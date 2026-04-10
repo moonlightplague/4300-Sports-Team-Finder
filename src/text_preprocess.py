@@ -12,6 +12,7 @@ from helper import (
     football,
     baseball,
     hockey,
+    LEAGUE_ALIASES,
 )
 
 stemmer = PorterStemmer()
@@ -111,18 +112,19 @@ def build_inverted_index(files):
     inverted_index = {}
     cache = load_wiki_cache()
 
-    teams = set(files.keys()).union(set(team_metadata.keys()))
-    for team_name in teams:
-        filePath = teams[team_name]
+    all_teams = set(files.keys()).union(set(team_metadata.keys()))
+    for team_name in all_teams:
         documents = []
         if team_name in files:
-            documents = build_documents(filePath)
+            documents = build_documents(files[team_name])
         documents += build_documents_from_wikipedia(team_name, cache)
 
         meta = team_metadata.get(team_name)
         if meta:
+            league = meta['league']
+            normalized_league = LEAGUE_ALIASES.get(league.lower(), league)
             documents.append({"text": f"{team_name} is a professional {meta['sport']} team"})
-            documents.append({"text": f"{team_name} plays in {meta['league']}"})
+            documents.append({"text": f"{team_name} plays in {normalized_league}"})
 
         team_term_freq = Counter()
         for doc in documents:
