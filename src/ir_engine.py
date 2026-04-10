@@ -15,6 +15,7 @@ stemmer = PorterStemmer()
 TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
 SVD_EPSILON = 1e-10
 QUERY_EXPANSION_WEIGHT = 0.35
+MIN_EXACT_CANDIDATES = 8
 
 QUERY_EXPANSIONS = {
     "exciting": ["energetic", "lethal", "attacking", "explosive"],
@@ -24,6 +25,13 @@ QUERY_EXPANSIONS = {
     "successful": ["winning", "dominant", "elite", "championship"],
     "defensive": ["defense", "physical", "disciplined", "tough"],
     "offensive": ["attacking", "creative", "fast", "scoring"],
+    # Domain-level expansions for broad sports queries.
+    "basketball": ["nba", "wnba", "hoop", "fiba", "dunk", "lebron"],
+    "nba": ["basketball", "wnba", "fiba", "dunk", "playoffs"],
+}
+
+QUERY_TERM_EXPANSION_WEIGHT = {
+    "basketball": 0.85,
 }
 
 
@@ -262,11 +270,14 @@ class InvertedIndexSearchEngine:
 
         if include_expansions:
             for term in query_tf.keys():
+                expansion_weight = QUERY_TERM_EXPANSION_WEIGHT.get(
+                    term, QUERY_EXPANSION_WEIGHT
+                )
                 for expanded_term in QUERY_EXPANSIONS.get(term, []):
                     idf = self.idf.get(expanded_term)
                     if idf is None:
                         continue
-                    query_weights[expanded_term] += QUERY_EXPANSION_WEIGHT * idf
+                    query_weights[expanded_term] += expansion_weight * idf
 
         return dict(query_weights)
 
@@ -378,16 +389,34 @@ class InvertedIndexSearchEngine:
         if not expanded_query_weights:
             return []
 
-        lexical_reference_weights = (
-            exact_query_weights if exact_query_weights else expanded_query_weights
+        has_domain_intent = any(
+            term in QUERY_TERM_EXPANSION_WEIGHT for term in query_tokens
         )
 
-        candidate_teams = set()
-        for term in lexical_reference_weights:
-            candidate_teams.update(self.inverted_index.get(term, {}).keys())
+        exact_candidate_teams = set()
+        for term in exact_query_weights:
+            exact_candidate_teams.update(self.inverted_index.get(term, {}).keys())
+
+        expanded_candidate_teams = set()
+        for term in expanded_query_weights:
+            expanded_candidate_teams.update(self.inverted_index.get(term, {}).keys())
+
+        use_expanded_lexical_reference = (
+            has_domain_intent
+            or not exact_query_weights
+            or len(exact_candidate_teams) < min(top_k, MIN_EXACT_CANDIDATES)
+        )
+        lexical_reference_weights = (
+            expanded_query_weights
+            if use_expanded_lexical_reference
+            else exact_query_weights
+        )
+
+        candidate_teams = set(exact_candidate_teams)
+        if has_domain_intent or len(candidate_teams) < min(top_k, MIN_EXACT_CANDIDATES):
+            candidate_teams.update(expanded_candidate_teams)
         if not candidate_teams:
-            for term in expanded_query_weights:
-                candidate_teams.update(self.inverted_index.get(term, {}).keys())
+            candidate_teams.update(expanded_candidate_teams)
         if not candidate_teams:
             return []
 
