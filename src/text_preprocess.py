@@ -5,7 +5,7 @@ import time
 from collections import Counter
 import wikipediaapi
 from helper import (
-    european_soccrer_league_to_teams,
+    european_soccer_league_to_teams,
     americas_soccer_league_to_teams,
     basketball_teams,
     football,
@@ -17,9 +17,17 @@ from helper import (
 WIKISCRAPED_CACHE_FILE = "dataset/wiki_cache.json"
 wiki = wikipediaapi.Wikipedia(language="en", user_agent="SportsTeamFinder")
 
+WEIGHTS = {
+    "name": 5.0,
+    "league": 2.0,
+    "sport": 2.0,
+    "wiki": 1.0,
+    "reddit": 1.0,
+}
+
 
 team_metadata = {}
-for league, teams in european_soccrer_league_to_teams.items():
+for league, teams in european_soccer_league_to_teams.items():
     for team in teams:
         team_metadata[team] = {"sport": "soccer", "league": league}
 for league, teams in americas_soccer_league_to_teams.items():
