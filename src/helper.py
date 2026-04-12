@@ -461,7 +461,7 @@ def tokenize(text):
     cleaned = normalize_text(text or "")
     for phrase, token in ENTITY_PHRASES.items():
         cleaned = cleaned.replace(phrase, token)
-    tokens = regex.findall(cleaned)
+    tokens = REGEX.findall(cleaned)
     return [t for t in tokens if t not in STOPWORDS]
 
 def normalize_leagues(league_dicts):

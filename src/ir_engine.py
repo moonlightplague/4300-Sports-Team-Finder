@@ -8,9 +8,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
+from helper import tokenize
 
 
-TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
+
 SVD_EPSILON = 1e-10
 QUERY_EXPANSION_WEIGHT = 0.35
 MIN_EXACT_CANDIDATES = 8
@@ -31,11 +32,6 @@ QUERY_EXPANSIONS = {
 QUERY_TERM_EXPANSION_WEIGHT = {
     "basketball": 0.85,
 }
-
-
-def tokenize(text):
-    """Lowercase and tokenize text into alphanumeric terms."""
-    return TOKEN_PATTERN.findall((text or "").lower())
 
 
 def is_good_term(term):

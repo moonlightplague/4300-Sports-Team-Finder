@@ -11,15 +11,12 @@ from helper import (
     football,
     baseball,
     hockey,
-    LEAGUE_ALIASES,
+    LEAGUE_ALIASES, tokenize
 )
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 WIKISCRAPED_CACHE_FILE = "dataset/wiki_cache.json"
 wiki = wikipediaapi.Wikipedia(language="en", user_agent="SportsTeamFinder")
 
-SAFEWORDS = {"united", "city", "real", "national", "new", "first"}
-STOPWORDS = set(ENGLISH_STOP_WORDS - SAFEWORDS)
 
 team_metadata = {}
 for league, teams in european_soccrer_league_to_teams.items():
@@ -63,10 +60,6 @@ def save_wiki_cache(cache):
 
 
 
-def tokenize(text):
-    """Lowercase and extract words via regex."""
-    tokens = re.findall(r"[a-z]+", text.lower())
-    return tokens
 
 
 def build_documents(filepath):
@@ -93,11 +86,9 @@ def build_documents_from_wikipedia(team_name, cache):
     page = wiki.page(team_name)
     if not page.exists():
         cache[team_name] = []
-        save_wiki_cache(cache)
         return []
     teamDocs = [{"text": page.text}]
     cache[team_name] = teamDocs
-    save_wiki_cache(cache)
     return teamDocs
 
 
@@ -149,6 +140,7 @@ def build_inverted_index(files):
 
     for token in inverted_index:
         inverted_index[token] = dict(sorted(inverted_index[token].items()))
+    save_wiki_cache(cache)
     return inverted_index
 
 
@@ -173,9 +165,7 @@ def main():
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
 
-    corpus = build_corpus(team_files)
-    with open("src/data/corpus.json", "w", encoding="utf-8") as f:
-        json.dump(corpus, f, indent=2)
+
 
 
 
