@@ -11,7 +11,7 @@ from helper import (
     football,
     baseball,
     hockey,
-    LEAGUE_ALIASES,
+    LEAGUE_ALIASES, tokenize
 )
 
 WIKISCRAPED_CACHE_FILE = "dataset/wiki_cache.json"
@@ -60,10 +60,6 @@ def save_wiki_cache(cache):
 
 
 
-def tokenize(text):
-    """Lowercase and extract words via regex."""
-    tokens = re.findall(r"[a-z]+", text.lower())
-    return tokens
 
 
 def build_documents(filepath):
@@ -90,11 +86,9 @@ def build_documents_from_wikipedia(team_name, cache):
     page = wiki.page(team_name)
     if not page.exists():
         cache[team_name] = []
-        save_wiki_cache(cache)
         return []
-    teamDocs = [{"text": s.strip()} for s in page.text.split(". ") if s.strip()]
+    teamDocs = [{"text": page.text}]
     cache[team_name] = teamDocs
-    save_wiki_cache(cache)
     return teamDocs
 
 
@@ -146,6 +140,7 @@ def build_inverted_index(files):
 
     for token in inverted_index:
         inverted_index[token] = dict(sorted(inverted_index[token].items()))
+    save_wiki_cache(cache)
     return inverted_index
 
 
@@ -173,6 +168,8 @@ def main():
     corpus = build_corpus(team_files)
     with open("src/data/corpus.json", "w", encoding="utf-8") as f:
         json.dump(corpus, f, indent=2)
+
+
 
 
 
