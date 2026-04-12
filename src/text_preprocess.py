@@ -13,10 +13,13 @@ from helper import (
     hockey,
     LEAGUE_ALIASES,
 )
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 WIKISCRAPED_CACHE_FILE = "dataset/wiki_cache.json"
 wiki = wikipediaapi.Wikipedia(language="en", user_agent="SportsTeamFinder")
 
+SAFEWORDS = {"united", "city", "real", "national", "new", "first"}
+STOPWORDS = set(ENGLISH_STOP_WORDS - SAFEWORDS)
 
 team_metadata = {}
 for league, teams in european_soccrer_league_to_teams.items():
@@ -92,7 +95,7 @@ def build_documents_from_wikipedia(team_name, cache):
         cache[team_name] = []
         save_wiki_cache(cache)
         return []
-    teamDocs = [{"text": s.strip()} for s in page.text.split(". ") if s.strip()]
+    teamDocs = [{"text": page.text}]
     cache[team_name] = teamDocs
     save_wiki_cache(cache)
     return teamDocs

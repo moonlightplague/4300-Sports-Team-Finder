@@ -1,3 +1,7 @@
+import re
+import unicodedata
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+
 european_soccrer_league_to_teams = {
     "Premier League (England)": [
         "Arsenal F.C.",
@@ -409,6 +413,57 @@ hockey = {"NHL (USA/Canada)": [
 ]}
 
 
+REGEX = re.compile(r"[a-z0-9_]+")
+
+SAFEWORDS = {
+    "united", "city", "real", "national", "new", "first",
+    "fire", "top", "eleven",
+}
+STOPWORDS = set(ENGLISH_STOP_WORDS - SAFEWORDS)
+
+def normalize_text(text):
+    """
+    normalizes the text
+    """
+    text = unicodedata.normalize("NFKD", text)
+    text = text.encode("ascii", "ignore").decode("ascii")
+    return text.lower()
+
+def build_multiWord_team_or_league_to_single_token(league_dicts):
+    """Maps multi-word team or league names to single tokens."""
+    phrases = {}
+    for league_dict in league_dicts:
+        for teams in league_dict.values():
+            for team in teams:
+                normalized_text = normalize_text(team)
+                words = REGEX.findall(normalized_text)
+                if len(words) >= 2:
+                    phrase = " ".join(words)
+                    token = "_".join(words)
+                    phrases[phrase] = token
+    singleTokens = dict(sorted(phrases.items(), key=lambda x: -len(x[0])))
+    return singleTokens
+
+ENTITY_PHRASES = build_multiWord_team_or_league_to_single_token([
+    european_soccrer_league_to_teams,
+    americas_soccer_league_to_teams,
+    basketball_teams,
+    football,
+    baseball,
+    hockey,
+])
+
+
+def tokenize(text):
+    """
+    tokenizes the text
+    """
+    cleaned = normalize_text(text or "")
+    for phrase, token in ENTITY_PHRASES.items():
+        cleaned = cleaned.replace(phrase, token)
+    tokens = regex.findall(cleaned)
+    return [t for t in tokens if t not in STOPWORDS]
+
 def normalize_leagues(league_dicts):
     alias_map = {}
     for league_dict in league_dicts:
@@ -431,14 +486,17 @@ def normalize_leagues(league_dicts):
     return alias_map
 
 
-LEAGUE_ALIASES = normalize_leagues([
-    european_soccrer_league_to_teams,
-    americas_soccer_league_to_teams,
-    basketball_teams,
-    football,
-    baseball,
-    hockey,
-])
+LEAGUE_ALIASES = dict(sorted(
+    normalize_leagues([
+        european_soccrer_league_to_teams,
+        americas_soccer_league_to_teams,
+        basketball_teams,
+        football,
+        baseball,
+        hockey,
+    ]).items(),
+    key=lambda x: -len(x[0])
+))
 
 
 def normalize_query(text):
