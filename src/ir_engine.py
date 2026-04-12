@@ -9,6 +9,9 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
 from helper import tokenize
+from rapidfuzz import process, fuzz
+from helper import normalize_text, MULTIWORDS
+
 
 
 
@@ -91,6 +94,19 @@ class InvertedIndexSearchEngine:
         self._team_latent_norm = None
 
         self._load_index()
+    
+    def _fuzz(self, token):
+        if token in self.inverted_index:
+            return token
+
+        fuzzMatch = process.extractOne(token, 
+        self.inverted_index.keys(),
+        scorer=fuzz.ratio, 
+        score_cutoff=70)
+
+        if fuzzMatch:
+            return fuzzMatch[0]
+        return token
 
     @staticmethod
     def _tf_weight(tf):
@@ -157,7 +173,14 @@ class InvertedIndexSearchEngine:
             df = len(teams)
             self.idf[term] = 1.0 + math.log((num_teams + 1.0) / (df + 1.0))
 
-        self.team_name_tokens = {team: set(tokenize(team)) for team in self.teams}
+        self.team_name_tokens = {}
+        for team in self.teams:
+            tokens = set(tokenize(team))
+            normalized_name = normalize_text(team)
+            for phrase, token in MULTIWORDS.items():
+                if phrase in normalized_name:
+                    tokens.add(token)
+            self.team_name_tokens[team] = tokens
         for team, term_tf in self.team_term_tf.items():
             norm_sq = 0.0
             for term, tf in term_tf.items():
@@ -360,6 +383,7 @@ class InvertedIndexSearchEngine:
 
     def search(self, query, top_k=20):
         query_tokens = tokenize(query)
+        query_tokens = [self._fuzz(t) for t in query_tokens]
 
         if not query_tokens:
             return [
@@ -471,13 +495,15 @@ class InvertedIndexSearchEngine:
 
             coverage_factor = 0.35 + (0.55 * coverage)
             lexical_factor = 0.30 + (0.60 * lexical_norm)
-            name_factor = 0.80 + (0.15 * name_overlap)
+            name_factor = 0.60 + (0.40 * name_overlap)
             score = svd_score * coverage_factor * lexical_factor * name_factor
 
             if exact_query_set and exact_query_set == team_tokens:
-                score += 0.25
+                score += 0.50
             elif exact_query_set and exact_query_set.issubset(team_tokens):
-                score += 0.12
+                score += 0.35
+            elif exact_query_set and team_tokens.issubset(exact_query_set):
+                score += 0.30
 
             if score <= 0:
                 continue

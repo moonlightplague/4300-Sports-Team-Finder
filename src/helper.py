@@ -2,7 +2,7 @@ import re
 import unicodedata
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
-european_soccrer_league_to_teams = {
+european_soccer_league_to_teams = {
     "Premier League (England)": [
         "Arsenal F.C.",
         "Aston Villa F.C.",
@@ -441,11 +441,17 @@ def build_multiWord_team_or_league_to_single_token(league_dicts):
                     phrase = " ".join(words)
                     token = "_".join(words)
                     phrases[phrase] = token
+                    for i in range(len(words) - 1, 1, -1):
+                        sub = words[:i]
+                        sub_phrase = " ".join(sub)
+                        sub_token = "_".join(sub)
+                        if sub_phrase not in phrases:
+                            phrases[sub_phrase] = sub_token
     singleTokens = dict(sorted(phrases.items(), key=lambda x: -len(x[0])))
     return singleTokens
 
-ENTITY_PHRASES = build_multiWord_team_or_league_to_single_token([
-    european_soccrer_league_to_teams,
+MULTIWORDS = build_multiWord_team_or_league_to_single_token([
+    european_soccer_league_to_teams,
     americas_soccer_league_to_teams,
     basketball_teams,
     football,
@@ -459,7 +465,7 @@ def tokenize(text):
     tokenizes the text
     """
     cleaned = normalize_text(text or "")
-    for phrase, token in ENTITY_PHRASES.items():
+    for phrase, token in MULTIWORDS.items():
         cleaned = cleaned.replace(phrase, token)
     tokens = REGEX.findall(cleaned)
     return [t for t in tokens if t not in STOPWORDS]
@@ -475,8 +481,6 @@ def normalize_leagues(league_dicts):
             alias_map[clean] = key
             alias_map[base.replace(" ", "")] = key
             alias_map[base.replace(" ", " ")] = key
-
-            
             if "premier league" in base:
                 alias_map["epl"] = key
                 alias_map["english premier league"] = key
@@ -488,7 +492,7 @@ def normalize_leagues(league_dicts):
 
 LEAGUE_ALIASES = dict(sorted(
     normalize_leagues([
-        european_soccrer_league_to_teams,
+        european_soccer_league_to_teams,
         americas_soccer_league_to_teams,
         basketball_teams,
         football,
