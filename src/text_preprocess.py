@@ -11,14 +11,14 @@ from helper import (
     football,
     baseball,
     hockey,
-    LEAGUE_ALIASES, tokenize
+    LEAGUE_ALIASES, MULTIWORDS, tokenize, normalize_text
 )
 
 WIKISCRAPED_CACHE_FILE = "dataset/wiki_cache.json"
 wiki = wikipediaapi.Wikipedia(language="en", user_agent="SportsTeamFinder")
 
 WEIGHTS = {
-    "name": 5.0,
+    "name": 50.0,
     "league": 2.0,
     "sport": 2.0,
     "wiki": 1.0,
@@ -135,20 +135,45 @@ def build_inverted_index(files):
     inverted_index = {}
     cache = load_wiki_cache()
     all_teams = set(files.keys()).union(set(team_metadata.keys()))
+    
     for team_name in all_teams:
-        documents = build_team_documents(team_name, files, cache)
         team_term_freq = Counter()
-        for doc in documents:
-            text = doc.get("text", "")
-            team_term_freq.update(tokenize(text))
+        
+        for token in tokenize(team_name):
+            team_term_freq[token] += WEIGHTS["name"]
+        
+        normalized_team_name = normalize_text(team_name)
+        for phrase, token in MULTIWORDS.items():
+            if phrase in normalized_team_name and token not in team_term_freq:
+                team_term_freq[token] += WEIGHTS["name"]
+        meta = team_metadata.get(team_name)
+        if meta:
+            league = meta['league']
+            normalized_league = LEAGUE_ALIASES.get(league.lower(), league)
+            for token in tokenize(f"{team_name} is a professional {meta['sport']} team"):
+                team_term_freq[token] += WEIGHTS["sport"]
+            for token in tokenize(f"{team_name} plays in {normalized_league}"):
+                team_term_freq[token] += WEIGHTS["league"]
+
+        wiki_docs = build_documents_from_wikipedia(team_name, cache)
+        for doc in wiki_docs:
+            for token in tokenize(doc.get("text", "")):
+                team_term_freq[token] += WEIGHTS["wiki"]
+        
+        if team_name in files:
+            reddit_docs = build_documents(files[team_name])
+            for doc in reddit_docs:
+                for token in tokenize(doc.get("text", "")):
+                    team_term_freq[token] += WEIGHTS["reddit"]
+        
         for token, tf in team_term_freq.items():
             if token not in inverted_index:
                 inverted_index[token] = {}
             inverted_index[token][team_name] = tf
-
+    
+    save_wiki_cache(cache)
     for token in inverted_index:
         inverted_index[token] = dict(sorted(inverted_index[token].items()))
-    save_wiki_cache(cache)
     return inverted_index
 
 
@@ -172,10 +197,6 @@ def main():
     print(f"Finished at: {time.strftime('%H:%M:%S')} — took {time.time() - start:.4f}s")
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
-
-    corpus = build_corpus(team_files)
-    with open("src/data/corpus.json", "w", encoding="utf-8") as f:
-        json.dump(corpus, f, indent=2)
 
 
 
