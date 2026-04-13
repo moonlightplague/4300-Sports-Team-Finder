@@ -134,7 +134,7 @@ def build_inverted_index(files):
     """
     inverted_index = {}
     cache = load_wiki_cache()
-    all_teams = set(files.keys()).union(set(team_metadata.keys()))
+    all_teams = set(team_metadata.keys())
     
     for team_name in all_teams:
         team_term_freq = Counter()
