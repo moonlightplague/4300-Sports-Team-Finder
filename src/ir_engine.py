@@ -483,7 +483,7 @@ class InvertedIndexSearchEngine:
         team_unit = team_vec / team_norm if team_norm else team_vec
 
         component_scores = q_unit * team_unit
-        component_order = np.argsort(np.abs(component_scores))[::-1][:3]
+        component_order = np.argsort(np.abs(component_scores))[::-1][:6]
         svd_components = [
             {
                 "component": int(comp_idx + 1),
