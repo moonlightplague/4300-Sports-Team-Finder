@@ -39,6 +39,42 @@ DEFAULT_EMBEDDING_WORKERS = max(1, (os.cpu_count() or 2) - 1)
 EMBEDDING_WORKERS_ENV = "STF_EMBEDDING_WORKERS"
 
 
+JUNK_TERMS = {
+    "shit", "fuck", "fucking", "damn", "lol", "lmao", "rofl",
+    "yeah", "yes", "gonna", "wanna", "gotta",
+    "http", "https", "www", "com", "amp", "tweetposter",
+    "deleted", "removed", "reddit", "subreddit", "upvote", "downvote",
+    "gif", "jpg", "png", "mp4",
+    "just", "like", "think", "really", "know", "good", "don",
+    "going", "right", "better", "got", "need", "want", "great",
+    "way", "make", "people", "say", "love", "bad", "didn",
+    "sure", "lot", "guys", "pretty", "let", "doesn", "isn",
+    "guy", "getting", "hope", "probably", "does", "look",
+    "maybe", "thing", "come", "actually", "feel", "watch",
+    "work", "thought" "hes", "edit", "honestly", "dont", "gets", "thats",
+    "weird", "wow", "sorry", "mean", "saying", "looks", "makes", "needs", "agree",
+    "doing", "things", "thanks", "bit", "looking",
+    "wasn", "remember", "definitely", "believe", "wouldn",
+    "god", "hate", "watching", "trying", "wrong",
+    "guess", "happy", "true", "hes", "nice",
+    "far", "today", "dude", "tonight", "didnt", "expect", "aren", "wtf", "thread", "kinda", "imagine", "understand",
+    "happens", "obviously", "funny", "feels", "amazing",
+"knows", "yea", "hasn", "absolutely", "stupid",
+"hell", "hopefully", "wait", "thank", "awesome",
+"talking", "ago", "exactly", "tell", "happen",
+"kind", "rest", "especially", "looked", "stop", "nah", "ive", "doesnt", "shouldn", "garbage", "forgot",
+"imo", "yesterday", "ass", "fault", "thought", "little",
+"couple", "idea", "read", "happened", "worse", "course",
+"life", "means", "okay", "ridiculous", "dumb", "downvoted", "bullshit",
+"disagree", "sucks", "shitty", "worried", "wonder",
+"quite", "gone", "matter", "sense", "solid",
+"thinking", "wish", "forget", "fucked", "anymore", "isnt", "dad", "stuff",
+"nbsp", "bitch", "crazy", "alright", "holy", "talk",
+"seriously", "completely",
+}
+
+
+
 def is_good_term(term):
     """
     Basic term cleanup to reduce junk in the vocabulary.
@@ -52,6 +88,8 @@ def is_good_term(term):
     if len(set(term)) == 1:
         return False
     if re.fullmatch(r"(ha)+", term):
+        return False
+    if term in JUNK_TERMS:
         return False
     return True
 
@@ -166,6 +204,18 @@ class InvertedIndexSearchEngine:
                 self.team_term_tf[team][token] = (
                     self.team_term_tf[team].get(token, 0) + tf
                 )
+        
+        max_df = int(0.6 * len(all_teams))
+        normalized_index = {
+            term: postings for term, postings in normalized_index.items()
+            if 3 <= len(postings) <= max_df and not (sum(postings.values()) > 10000 and len(postings) < 50)
+        }
+
+        self.team_term_tf = defaultdict(dict)
+        for term, postings in normalized_index.items():
+            for team, tf in postings.items():
+                self.team_term_tf[team][term] = tf
+        
 
         self.inverted_index = normalized_index
         self.teams = all_teams
@@ -237,7 +287,17 @@ class InvertedIndexSearchEngine:
             self._embedding_vectors = model.wv
         except Exception:
             self._embedding_vectors = None
-
+    def print_latent_dimensions(self, n_dims=5, n_terms=10):
+        if self._svd_components is None:
+            print("No SVD components available.")
+            return
+        for i in range(min(n_dims, self._svd_components.shape[0])):
+            component = self._svd_components[i]
+            top_pos = component.argsort()[-n_terms:][::-1]
+            top_neg = component.argsort()[:n_terms]
+            print(f"Dimension {i+1}:")
+            print("  Positive:", [self._term_list[j] for j in top_pos])
+            print("  Negative:", [self._term_list[j] for j in top_neg])
     def _build_svd_model(self):
         num_teams = len(self.teams)
         self.team_to_idx = {team: idx for idx, team in enumerate(self.teams)}
@@ -307,6 +367,9 @@ class InvertedIndexSearchEngine:
         team_latent = svd.fit_transform(tfidf_matrix).astype(np.float64, copy=False)
         singular_values = svd.singular_values_.astype(np.float64, copy=False)
 
+        self._svd_components = svd.components_
+        self._term_list = list(self.inverted_index.keys())
+
         positive = singular_values > SVD_EPSILON
         if not np.any(positive):
             self._u_k = np.zeros((num_teams, 1), dtype=np.float64)
@@ -322,6 +385,7 @@ class InvertedIndexSearchEngine:
         norms = np.linalg.norm(self._team_latent, axis=1)
         norms[norms == 0] = 1.0
         self._team_latent_norm = norms
+
 
     def _embedding_expansions(self, term):
         if self._embedding_vectors is None:
