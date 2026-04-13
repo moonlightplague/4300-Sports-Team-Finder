@@ -10,4 +10,5 @@ numpy==1.26.4
 scikit-learn
 scipy
 wikipedia-api
+rapidfuzz
 git+https://github.com/MrPeterss/infosci-spark-client.git
