@@ -3,6 +3,7 @@ import math
 import os
 import re
 from collections import Counter, defaultdict
+from functools import lru_cache
 import numpy as np
 from sklearn.decomposition import TruncatedSVD
 from scipy.sparse import csr_matrix
@@ -51,7 +52,7 @@ JUNK_TERMS = {
     "sure", "lot", "guys", "pretty", "let", "doesn", "isn",
     "guy", "getting", "hope", "probably", "does", "look",
     "maybe", "thing", "come", "actually", "feel", "watch",
-    "work", "thought" "hes", "edit", "honestly", "dont", "gets", "thats",
+    "work", "thought", "hes", "edit", "honestly", "dont", "gets", "thats",
     "weird", "wow", "sorry", "mean", "saying", "looks", "makes", "needs", "agree",
     "doing", "things", "thanks", "bit", "looking",
     "wasn", "remember", "definitely", "believe", "wouldn",
@@ -114,14 +115,20 @@ class InvertedIndexSearchEngine:
         self.teams = []
         self.team_to_idx = {}
         self.team_name_tokens = {}
+        self._team_name_choices = []
+        self._team_name_choice_strings = []
         self.idf = {}
         self.doc_norm = {}
+        self._fuzzy_terms = ()
+        self._protected_name_terms = set()
+        self._term_team_weights = {}
 
         self._u_k = None
         self._s_k = None
         self._team_latent = None
         self._team_latent_norm = None
         self._embedding_vectors = None
+        self._term_latent_cache = {}
 
         self._load_index()
 
@@ -135,22 +142,56 @@ class InvertedIndexSearchEngine:
         except ValueError:
             return DEFAULT_EMBEDDING_WORKERS
     
+    @staticmethod
+    def _fuzzy_cutoff(token):
+        token_len = len(token)
+        if token_len <= 4:
+            return 90
+        if token_len <= 6:
+            return 82
+        return 76
+
+    @lru_cache(maxsize=4096)
     def _fuzz(self, token):
         if token in self.inverted_index:
             return token
+        if len(token) < 4 or token.isdigit():
+            return token
 
-        fuzzMatch = process.extractOne(token, 
-        self.inverted_index.keys(),
-        scorer=fuzz.ratio, 
-        score_cutoff=70)
-
-        if fuzzMatch:
-            return fuzzMatch[0]
+        fuzzy_matches = process.extract(
+            token,
+            self._fuzzy_terms,
+            scorer=fuzz.ratio,
+            score_cutoff=self._fuzzy_cutoff(token),
+            limit=5,
+        )
+        if fuzzy_matches:
+            best_score = fuzzy_matches[0][1]
+            near_best = [
+                match for match in fuzzy_matches
+                if match[1] >= (best_score - 2)
+            ]
+            protected_matches = [
+                match for match in near_best
+                if match[0] in self._protected_name_terms
+            ]
+            pool = protected_matches if protected_matches else near_best
+            candidate = min(
+                pool,
+                key=lambda match: abs(len(match[0]) - len(token))
+            )[0]
+            if len(candidate) <= 3 and len(token) >= 6 and (len(candidate) + 2) < len(token):
+                return token
+            return candidate
         return token
 
     @staticmethod
     def _tf_weight(tf):
         return 1.0 + math.log(tf) if tf > 0 else 0.0
+
+    @staticmethod
+    def _normalize_for_fuzzy(text):
+        return " ".join(re.findall(r"[a-z0-9]+", normalize_text(text or "")))
 
     def _load_index(self):
         if not os.path.exists(self.index_path):
@@ -194,11 +235,17 @@ class InvertedIndexSearchEngine:
 
         # Add team-name tokens so direct team queries (e.g. "lakers") are retrievable.
         all_teams = sorted(self.team_term_tf.keys())
+        protected_name_terms = set()
         for team in all_teams:
             team_name_tf = Counter(tokenize(team))
+            normalized_name = normalize_text(team)
+            for phrase, token in MULTIWORDS.items():
+                if phrase in normalized_name:
+                    team_name_tf[token] += 1
             for token, tf in team_name_tf.items():
                 if not is_good_term(token):
                     continue
+                protected_name_terms.add(token)
                 postings = normalized_index.setdefault(token, {})
                 postings[team] = postings.get(team, 0) + tf
                 self.team_term_tf[team][token] = (
@@ -206,9 +253,16 @@ class InvertedIndexSearchEngine:
                 )
         
         max_df = int(0.6 * len(all_teams))
+        self._protected_name_terms = set(protected_name_terms)
         normalized_index = {
             term: postings for term, postings in normalized_index.items()
-            if 3 <= len(postings) <= max_df and not (sum(postings.values()) > 10000 and len(postings) < 50)
+            if (
+                term in protected_name_terms
+                or (
+                    3 <= len(postings) <= max_df
+                    and not (sum(postings.values()) > 10000 and len(postings) < 50)
+                )
+            )
         }
 
         self.team_term_tf = defaultdict(dict)
@@ -219,6 +273,7 @@ class InvertedIndexSearchEngine:
 
         self.inverted_index = normalized_index
         self.teams = all_teams
+        self._fuzzy_terms = tuple(self.inverted_index.keys())
 
         num_teams = max(1, len(self.teams))
         for term, teams in self.inverted_index.items():
@@ -233,6 +288,11 @@ class InvertedIndexSearchEngine:
                 if phrase in normalized_name:
                     tokens.add(token)
             self.team_name_tokens[team] = tokens
+        self._team_name_choices = list(self.teams)
+        self._team_name_choice_strings = [
+            self._normalize_for_fuzzy(team)
+            for team in self._team_name_choices
+        ]
         for team, term_tf in self.team_term_tf.items():
             norm_sq = 0.0
             for term, tf in term_tf.items():
@@ -301,6 +361,8 @@ class InvertedIndexSearchEngine:
     def _build_svd_model(self):
         num_teams = len(self.teams)
         self.team_to_idx = {team: idx for idx, team in enumerate(self.teams)}
+        self._term_team_weights = {}
+        self._term_latent_cache = {}
 
         if num_teams == 0:
             self._u_k = np.zeros((0, 1), dtype=np.float64)
@@ -332,6 +394,8 @@ class InvertedIndexSearchEngine:
             term_idf = self.idf.get(term, 0.0)
             if term_idf <= 0:
                 continue
+            term_rows = []
+            term_values = []
             for team, tf in postings.items():
                 row_idx = self.team_to_idx.get(team)
                 if row_idx is None:
@@ -342,6 +406,13 @@ class InvertedIndexSearchEngine:
                 rows.append(row_idx)
                 cols.append(term_idx)
                 values.append(weight)
+                term_rows.append(row_idx)
+                term_values.append(weight)
+            if term_rows:
+                self._term_team_weights[term] = (
+                    np.asarray(term_rows, dtype=np.int32),
+                    np.asarray(term_values, dtype=np.float64),
+                )
 
         if not values:
             self._u_k = np.zeros((num_teams, 1), dtype=np.float64)
@@ -442,16 +513,11 @@ class InvertedIndexSearchEngine:
         doc_query_dots = np.zeros(len(self.teams), dtype=np.float64)
 
         for term, q_weight in query_weights.items():
-            postings = self.inverted_index.get(term)
-            if not postings:
+            team_weights = self._term_team_weights.get(term)
+            if team_weights is None:
                 continue
-            term_idf = self.idf.get(term, 0.0)
-            for team, tf in postings.items():
-                doc_idx = self.team_to_idx.get(team)
-                if doc_idx is None:
-                    continue
-                d_weight = self._tf_weight(tf) * term_idf
-                doc_query_dots[doc_idx] += d_weight * q_weight
+            doc_indices, doc_weights = team_weights
+            doc_query_dots[doc_indices] += doc_weights * q_weight
 
         if self._u_k is None or self._s_k is None:
             return np.zeros(1, dtype=np.float64)
@@ -462,20 +528,21 @@ class InvertedIndexSearchEngine:
         if self._u_k is None or self._s_k is None:
             return np.zeros(1, dtype=np.float64)
 
-        postings = self.inverted_index.get(term)
-        if not postings:
+        if term in self._term_latent_cache:
+            return self._term_latent_cache[term]
+
+        team_weights = self._term_team_weights.get(term)
+        if team_weights is None:
             return np.zeros(self._u_k.shape[1], dtype=np.float64)
 
-        latent = np.zeros(self._u_k.shape[1], dtype=np.float64)
-        term_idf = self.idf.get(term, 0.0)
+        doc_indices, doc_weights = team_weights
+        if doc_indices.size == 0:
+            return np.zeros(self._u_k.shape[1], dtype=np.float64)
 
-        for team, tf in postings.items():
-            doc_idx = self.team_to_idx.get(team)
-            if doc_idx is None:
-                continue
-            latent += (self._tf_weight(tf) * term_idf) * self._u_k[doc_idx]
-
-        return latent / self._s_k
+        latent = (doc_weights[:, None] * self._u_k[doc_indices]).sum(axis=0)
+        latent = latent / self._s_k
+        self._term_latent_cache[term] = latent
+        return latent
 
     def _explain_match(self, team_idx, query_weights, q_unit):
         team_vec = self._team_latent[team_idx]
@@ -521,9 +588,32 @@ class InvertedIndexSearchEngine:
             "svd_components": svd_components,
         }
 
+    def _team_name_fuzzy_boosts(self, query):
+        if not self._team_name_choice_strings:
+            return {}
+
+        normalized_query = self._normalize_for_fuzzy(query)
+        if len(normalized_query) < 3:
+            return {}
+
+        matches = process.extract(
+            normalized_query,
+            self._team_name_choice_strings,
+            scorer=fuzz.WRatio,
+            score_cutoff=80,
+            limit=8,
+        )
+        boosts = {}
+        for _, score, idx in matches:
+            team = self._team_name_choices[idx]
+            boost = 0.05 + ((float(score) - 80.0) / 20.0) * 0.35
+            boosts[team] = max(boosts.get(team, 0.0), min(0.45, boost))
+        return boosts
+
     def search(self, query, top_k=20):
         query_tokens = tokenize(query)
         query_tokens = [self._fuzz(t) for t in query_tokens]
+        team_name_boosts = self._team_name_fuzzy_boosts(query)
 
         if not query_tokens:
             return [
@@ -589,23 +679,31 @@ class InvertedIndexSearchEngine:
             sum(weight * weight for weight in lexical_reference_weights.values())
         )
         lexical_scores = {}
-        lexical_matches = {}
+        lexical_matches = defaultdict(list)
+        candidate_indices = {
+            self.team_to_idx[team]
+            for team in candidate_teams
+            if team in self.team_to_idx
+        }
+        lexical_dots = np.zeros(len(self.teams), dtype=np.float64)
+
+        for term, q_weight in lexical_reference_weights.items():
+            team_weights = self._term_team_weights.get(term)
+            if team_weights is None:
+                continue
+            doc_indices, doc_weights = team_weights
+            for doc_idx, doc_weight in zip(doc_indices, doc_weights):
+                if doc_idx not in candidate_indices:
+                    continue
+                lexical_dots[doc_idx] += q_weight * doc_weight
+                lexical_matches[self.teams[doc_idx]].append(term)
 
         for team in candidate_teams:
-            dot = 0.0
-            matched_terms = []
-
-            for term, q_weight in lexical_reference_weights.items():
-                tf = self.inverted_index.get(term, {}).get(team, 0)
-                if tf <= 0:
-                    continue
-                d_weight = self._tf_weight(tf) * self.idf.get(term, 0.0)
-                dot += q_weight * d_weight
-                matched_terms.append(term)
-
+            team_idx = self.team_to_idx.get(team)
+            if team_idx is None:
+                continue
             denom = lexical_query_norm * self.doc_norm.get(team, 1.0)
-            lexical_scores[team] = (dot / denom) if denom else 0.0
-            lexical_matches[team] = matched_terms
+            lexical_scores[team] = (lexical_dots[team_idx] / denom) if denom else 0.0
 
         max_lexical = max(lexical_scores.values()) if lexical_scores else 0.0
         num_ref_terms = max(1, len(lexical_reference_weights))
@@ -645,6 +743,9 @@ class InvertedIndexSearchEngine:
                 score += 0.35
             elif exact_query_set and team_tokens.issubset(exact_query_set):
                 score += 0.30
+            if exact_term_set and exact_term_set.issubset(team_tokens):
+                score += 0.35
+            score += team_name_boosts.get(team, 0.0)
 
             if score <= 0:
                 continue

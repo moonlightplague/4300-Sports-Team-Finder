@@ -549,9 +549,18 @@ LEAGUE_ALIASES = dict(sorted(
     key=lambda x: -len(x[0])
 ))
 
+CITY_ALIASES = {
+    "ny": "new york",
+    "la": "los angeles",
+    "sf": "san francisco",
+    "dc": "washington",
+}
+
 
 def normalize_query(text):
     text = text.lower()
+    for short_name, expanded_name in CITY_ALIASES.items():
+        text = re.sub(rf"\b{re.escape(short_name)}\b", expanded_name, text)
     for phrase, replacement in LEAGUE_ALIASES.items():
         if phrase in text:
             text = text.replace(phrase, replacement)
