@@ -10,7 +10,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
 from helper import tokenize
 from rapidfuzz import process, fuzz
-from helper import normalize_text, MULTIWORDS, TEAM_TO_SPORT
+from helper import normalize_text, MULTIWORDS, TEAM_TO_SPORT, TEAM_TO_LEAGUE, TEAM_TO_SUMMARY
 
 
 
@@ -394,6 +394,8 @@ class InvertedIndexSearchEngine:
                     "score": 0.0,
                     "matched_terms": [],
                     "sport": TEAM_TO_SPORT.get(team, "unknown"),
+                    "league": TEAM_TO_LEAGUE.get(team, ""),
+                    "summary": TEAM_TO_SUMMARY.get(team, ""),
                 }
                 for team in self.teams[:top_k]
             ]
@@ -537,6 +539,8 @@ class InvertedIndexSearchEngine:
                     "svd_score": round(svd_score, 4),
                     "lexical_score": round(lexical, 4),
                     "sport": TEAM_TO_SPORT.get(team, "unknown"),
+                    "league": TEAM_TO_LEAGUE.get(team, ""),
+                    "summary": TEAM_TO_SUMMARY.get(team, ""),
                 }
             )
 
