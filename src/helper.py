@@ -510,6 +510,8 @@ def tokenize(text):
     tokenizes the text
     """
     cleaned = normalize_text(text or "")
+    cleaned = re.sub(r'https?://\S+', '', cleaned)
+    cleaned = re.sub(r'www\.\S+', '', cleaned)
     for phrase, token in MULTIWORDS.items():
         cleaned = cleaned.replace(phrase, token)
     tokens = REGEX.findall(cleaned)
