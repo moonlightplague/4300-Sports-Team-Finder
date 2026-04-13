@@ -1,3 +1,5 @@
+import json
+import os
 import re
 import unicodedata
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
@@ -460,7 +462,6 @@ MULTIWORDS = build_multiWord_team_or_league_to_single_token([
 ])
 
 
-# Map every team name → sport string for use in search results
 TEAM_TO_SPORT = {}
 for _team in [t for teams in european_soccer_league_to_teams.values() for t in teams]:
     TEAM_TO_SPORT[_team] = "soccer"
@@ -474,6 +475,34 @@ for _team in [t for teams in baseball.values() for t in teams]:
     TEAM_TO_SPORT[_team] = "baseball"
 for _team in [t for teams in hockey.values() for t in teams]:
     TEAM_TO_SPORT[_team] = "hockey"
+
+
+TEAM_TO_LEAGUE = {}
+for league, teams in european_soccer_league_to_teams.items():
+    for team in teams:
+        TEAM_TO_LEAGUE[team] = league
+for league, teams in americas_soccer_league_to_teams.items():
+    for team in teams:
+        TEAM_TO_LEAGUE[team] = league
+for league, teams in basketball_teams.items():
+    for team in teams:
+        TEAM_TO_LEAGUE[team] = league
+for league, teams in football.items():
+    for team in teams:
+        TEAM_TO_LEAGUE[team] = league
+for league, teams in baseball.items():
+    for team in teams:
+        TEAM_TO_LEAGUE[team] = league
+for league, teams in hockey.items():
+    for team in teams:
+        TEAM_TO_LEAGUE[team] = league
+
+SUMMARIES_PATH = os.path.join(os.path.dirname(__file__), "data", "team_summaries.json")
+TEAM_TO_SUMMARY = {}
+if os.path.exists(SUMMARIES_PATH):
+    with open(SUMMARIES_PATH, "r", encoding="utf-8") as f:
+        summaries_data = json.load(f)
+    TEAM_TO_SUMMARY = {team: entry.get("summary", "") for team, entry in summaries_data.items()}
 
 
 def tokenize(text):
