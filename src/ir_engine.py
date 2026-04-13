@@ -4,37 +4,37 @@ import os
 import re
 from collections import Counter, defaultdict
 import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
-from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
 from helper import tokenize
 from rapidfuzz import process, fuzz
-from helper import normalize_text, MULTIWORDS, TEAM_TO_SPORT, TEAM_TO_LEAGUE, TEAM_TO_SUMMARY
+from helper import (
+    normalize_text,
+    MULTIWORDS,
+    TEAM_TO_SPORT,
+    TEAM_TO_LEAGUE,
+    TEAM_TO_SUMMARY,
+)
+try:
+    from gensim.models import Word2Vec
+except ImportError:
+    Word2Vec = None
 
 
 
 
 SVD_EPSILON = 1e-10
-QUERY_EXPANSION_WEIGHT = 0.35
 MIN_EXACT_CANDIDATES = 8
 
-QUERY_EXPANSIONS = {
-    "exciting": ["energetic", "lethal", "attacking", "explosive"],
-    "young": ["prospects", "academy", "rebuilding", "upcoming"],
-    "loyal": ["passionate", "dedicated", "support", "atmosphere"],
-    "historic": ["legacy", "tradition", "trophies", "iconic"],
-    "successful": ["winning", "dominant", "elite", "championship"],
-    "defensive": ["defense", "physical", "disciplined", "tough"],
-    "offensive": ["attacking", "creative", "fast", "scoring"],
-    # Domain-level expansions for broad sports queries.
-    "basketball": ["nba", "wnba", "hoop", "fiba", "dunk", "lebron"],
-    "nba": ["basketball", "wnba", "fiba", "dunk", "playoffs"],
-}
-
-QUERY_TERM_EXPANSION_WEIGHT = {
-    "basketball": 0.85,
-}
+EMBEDDING_VECTOR_SIZE = 80
+EMBEDDING_WINDOW = 8
+EMBEDDING_EPOCHS = 18
+EMBEDDING_TOPN = 8
+EMBEDDING_MAX_EXPANSIONS = 4
+EMBEDDING_MIN_SIMILARITY = 0.45
+EMBEDDING_EXPANSION_WEIGHT = 0.35
+EMBEDDING_REPEAT_CAP = 6
+EMBEDDING_TERMS_PER_TEAM = 1200
 
 
 def is_good_term(term):
@@ -52,17 +52,6 @@ def is_good_term(term):
     if re.fullmatch(r"(ha)+", term):
         return False
     return True
-
-
-def expand_query_tokens(tokens):
-    """
-    Add synonym style expansions for better matching.
-    """
-    expanded = []
-    for token in tokens:
-        expanded.append(token)
-        expanded.extend(QUERY_EXPANSIONS.get(token, []))
-    return expanded
 
 
 class InvertedIndexSearchEngine:
@@ -92,6 +81,7 @@ class InvertedIndexSearchEngine:
         self._s_k = None
         self._team_latent = None
         self._team_latent_norm = None
+        self._embedding_vectors = None
 
         self._load_index()
     
@@ -188,7 +178,53 @@ class InvertedIndexSearchEngine:
                 norm_sq += weight * weight
             self.doc_norm[team] = math.sqrt(norm_sq) if norm_sq > 0 else 1.0
 
+        self._build_embedding_model()
         self._build_svd_model()
+
+    def _build_embedding_model(self):
+        """
+        Train domain-specific word embeddings using gensim so query expansion is
+        data-driven rather than hardcoded.
+        """
+        if Word2Vec is None:
+            self._embedding_vectors = None
+            return
+
+        sentences = []
+        for term_tf in self.team_term_tf.values():
+            sentence = []
+            top_terms = sorted(
+                term_tf.items(),
+                key=lambda item: item[1],
+                reverse=True,
+            )[:EMBEDDING_TERMS_PER_TEAM]
+            for term, tf in top_terms:
+                if term not in self.inverted_index or tf <= 0:
+                    continue
+                repeats = int(round(self._tf_weight(tf)))
+                repeats = max(1, min(EMBEDDING_REPEAT_CAP, repeats))
+                sentence.extend([term] * repeats)
+            if len(sentence) >= 2:
+                sentences.append(sentence)
+
+        if len(sentences) < 2:
+            self._embedding_vectors = None
+            return
+
+        try:
+            model = Word2Vec(
+                sentences=sentences,
+                vector_size=EMBEDDING_VECTOR_SIZE,
+                window=EMBEDDING_WINDOW,
+                min_count=1,
+                workers=1,
+                sg=1,
+                epochs=EMBEDDING_EPOCHS,
+                seed=0,
+            )
+            self._embedding_vectors = model.wv
+        except Exception:
+            self._embedding_vectors = None
 
     def _build_svd_model(self):
         num_teams = len(self.teams)
@@ -275,9 +311,37 @@ class InvertedIndexSearchEngine:
         norms[norms == 0] = 1.0
         self._team_latent_norm = norms
 
+    def _embedding_expansions(self, term):
+        if self._embedding_vectors is None:
+            return []
+        if term not in self._embedding_vectors.key_to_index:
+            return []
+
+        expansions = []
+        try:
+            candidates = self._embedding_vectors.most_similar(term, topn=EMBEDDING_TOPN)
+        except KeyError:
+            return []
+
+        for expanded_term, similarity in candidates:
+            if similarity < EMBEDDING_MIN_SIMILARITY:
+                continue
+            if expanded_term == term:
+                continue
+            if expanded_term not in self.inverted_index:
+                continue
+            if not is_good_term(expanded_term):
+                continue
+            expansions.append((expanded_term, float(similarity)))
+            if len(expansions) >= EMBEDDING_MAX_EXPANSIONS:
+                break
+
+        return expansions
+
     def _build_query_weights(self, query_tokens, include_expansions=True):
         query_tf = Counter(query_tokens)
         query_weights = defaultdict(float)
+        expanded_terms = set()
 
         for term, tf in query_tf.items():
             idf = self.idf.get(term)
@@ -287,16 +351,16 @@ class InvertedIndexSearchEngine:
 
         if include_expansions:
             for term in query_tf.keys():
-                expansion_weight = QUERY_TERM_EXPANSION_WEIGHT.get(
-                    term, QUERY_EXPANSION_WEIGHT
-                )
-                for expanded_term in QUERY_EXPANSIONS.get(term, []):
+                for expanded_term, similarity in self._embedding_expansions(term):
                     idf = self.idf.get(expanded_term)
                     if idf is None:
                         continue
-                    query_weights[expanded_term] += expansion_weight * idf
+                    query_weights[expanded_term] += (
+                        EMBEDDING_EXPANSION_WEIGHT * similarity * idf
+                    )
+                    expanded_terms.add(expanded_term)
 
-        return dict(query_weights)
+        return dict(query_weights), expanded_terms
 
     def _project_query_to_latent(self, query_weights):
         doc_query_dots = np.zeros(len(self.teams), dtype=np.float64)
@@ -400,19 +464,17 @@ class InvertedIndexSearchEngine:
                 for team in self.teams[:top_k]
             ]
 
-        exact_query_weights = self._build_query_weights(
+        exact_query_weights, _ = self._build_query_weights(
             query_tokens, include_expansions=False
         )
-        expanded_query_weights = self._build_query_weights(
+        expanded_query_weights, expanded_terms = self._build_query_weights(
             query_tokens, include_expansions=True
         )
 
         if not expanded_query_weights:
             return []
 
-        has_domain_intent = any(
-            term in QUERY_TERM_EXPANSION_WEIGHT for term in query_tokens
-        )
+        has_query_expansion = bool(expanded_terms)
 
         exact_candidate_teams = set()
         for term in exact_query_weights:
@@ -423,7 +485,7 @@ class InvertedIndexSearchEngine:
             expanded_candidate_teams.update(self.inverted_index.get(term, {}).keys())
 
         use_expanded_lexical_reference = (
-            has_domain_intent
+            has_query_expansion
             or not exact_query_weights
             or len(exact_candidate_teams) < min(top_k, MIN_EXACT_CANDIDATES)
         )
@@ -434,7 +496,7 @@ class InvertedIndexSearchEngine:
         )
 
         candidate_teams = set(exact_candidate_teams)
-        if has_domain_intent or len(candidate_teams) < min(top_k, MIN_EXACT_CANDIDATES):
+        if has_query_expansion or len(candidate_teams) < min(top_k, MIN_EXACT_CANDIDATES):
             candidate_teams.update(expanded_candidate_teams)
         if not candidate_teams:
             candidate_teams.update(expanded_candidate_teams)
