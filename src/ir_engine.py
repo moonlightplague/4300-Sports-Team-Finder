@@ -29,6 +29,8 @@ EMBEDDING_MIN_SIMILARITY = 0.45
 EMBEDDING_EXPANSION_WEIGHT = 0.35
 EMBEDDING_REPEAT_CAP = 6
 EMBEDDING_TERMS_PER_TEAM = 1200
+DEFAULT_EMBEDDING_WORKERS = max(1, (os.cpu_count() or 2) - 1)
+EMBEDDING_WORKERS_ENV = "STF_EMBEDDING_WORKERS"
 
 
 def is_good_term(term):
@@ -78,6 +80,16 @@ class InvertedIndexSearchEngine:
         self._embedding_vectors = None
 
         self._load_index()
+
+    @staticmethod
+    def _embedding_workers():
+        configured = os.getenv(EMBEDDING_WORKERS_ENV)
+        if configured is None:
+            return DEFAULT_EMBEDDING_WORKERS
+        try:
+            return max(1, int(configured))
+        except ValueError:
+            return DEFAULT_EMBEDDING_WORKERS
     
     def _fuzz(self, token):
         if token in self.inverted_index:
@@ -211,7 +223,7 @@ class InvertedIndexSearchEngine:
                 vector_size=EMBEDDING_VECTOR_SIZE,
                 window=EMBEDDING_WINDOW,
                 min_count=1,
-                workers=1,
+                workers=self._embedding_workers(),
                 sg=1,
                 epochs=EMBEDDING_EPOCHS,
                 seed=0,

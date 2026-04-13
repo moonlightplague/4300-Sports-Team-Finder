@@ -107,6 +107,13 @@ You can tune constants in `src/ir_engine.py`:
 - `EMBEDDING_MIN_SIMILARITY`
 - `EMBEDDING_EXPANSION_WEIGHT`
 
+Parallelization:
+- Word2Vec training now uses multi-core workers by default (`cpu_count - 1`).
+- Override worker count with `STF_EMBEDDING_WORKERS`, for example:
+```bash
+export STF_EMBEDDING_WORKERS=4
+```
+
 ## Rebuild The Inverted Index (Optional)
 
 If you update files under `dataset/`, regenerate the index with:
