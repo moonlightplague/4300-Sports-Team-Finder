@@ -17,6 +17,7 @@ Users can search for teams in real time through the web UI, and the app ranks re
   - Tokenization
   - TF-IDF weighting
   - Truncated SVD over team-term vectors
+  - Gensim Word2Vec query expansion (trained on team-term data)
   - Latent-space cosine similarity scoring
   - SVD-based explainability (top latent factors + term evidence)
 - Provides:
@@ -88,6 +89,23 @@ python src/app.py
 
 Open:
 `http://localhost:5001`
+
+## Embedding-Based Query Expansion
+
+`src/ir_engine.py` now replaces hardcoded query synonym maps with `gensim` word embeddings:
+
+- Trains a Word2Vec model over team-term token sequences from the inverted-index corpus.
+- Expands each query term using nearest-neighbor words in embedding space.
+- Uses similarity-weighted expansion terms when building query TF-IDF weights.
+
+You can tune constants in `src/ir_engine.py`:
+- `EMBEDDING_VECTOR_SIZE`
+- `EMBEDDING_WINDOW`
+- `EMBEDDING_EPOCHS`
+- `EMBEDDING_TOPN`
+- `EMBEDDING_MAX_EXPANSIONS`
+- `EMBEDDING_MIN_SIMILARITY`
+- `EMBEDDING_EXPANSION_WEIGHT`
 
 ## Rebuild The Inverted Index (Optional)
 

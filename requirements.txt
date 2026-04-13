@@ -11,4 +11,5 @@ scikit-learn
 scipy
 wikipedia-api
 rapidfuzz
+gensim
 git+https://github.com/MrPeterss/infosci-spark-client.git
