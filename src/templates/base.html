@@ -71,7 +71,7 @@
         }
 
         function filterText() {
-            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
+            fetch("/search-teams?" + new URLSearchParams({ q: document.getElementById("filter-text-val").value }).toString())
                 .then((response) => response.json())
                 .then((data) => {
                     lastResults = data;

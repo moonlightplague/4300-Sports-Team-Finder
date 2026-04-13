@@ -38,9 +38,9 @@ def register_routes(app):
             return render_template('chat.html')
         return render_template('base.html')
 
-    @app.route("/episodes")
-    def episodes_search():
-        text = request.args.get("title", "")
+    @app.route("/search-teams")
+    def search_teams():
+        text = request.args.get("q", "")
         return json_search(text)
 
     @app.route("/search")
