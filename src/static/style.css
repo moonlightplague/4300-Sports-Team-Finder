@@ -66,7 +66,7 @@ body{
     justify-content: center;
     gap: 10px;
     font-size: 58px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     letter-spacing: -1.8px;
     flex-wrap: wrap;
     text-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
@@ -166,7 +166,7 @@ body{
     border: 1px solid transparent;
     background: #2e2e2e;
     color: #e0e0e0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -185,7 +185,7 @@ body{
     background: var(--accent);
     border-color: transparent;
     color: #fff;
-    box-shadow: 0 6px 16px rgba(204,0,0,0.35);
+    box-shadow: none;
 }
 
 /* Search results */
@@ -214,23 +214,14 @@ body{
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-#answer-box > div::before{
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 4px;
-    background: var(--accent);
-}
-
 #answer-box > div:hover{
     transform: translateY(-4px);
-    border-color: rgba(204,0,0,0.20);
     box-shadow: var(--shadow-lg);
 }
 
 .episode-title{
     margin: 0 0 10px;
-    font-family: 'Kanit', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 26px;
     line-height: 1.06;
     color: var(--text);
@@ -239,7 +230,6 @@ body{
 
 .episode-desc{
     margin: 0;
-    font-family: 'Montserrat', sans-serif;
     font-size: 15px;
     line-height: 1.72;
     color: var(--text-soft);
@@ -257,10 +247,46 @@ body{
     background: rgba(204,0,0,0.08);
     border: 1px solid rgba(204,0,0,0.15);
     color: var(--accent-dark);
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.15px;
+}
+
+
+.team-card { display: flex; flex-direction: column; gap: 6px; }
+
+.card-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.card-name { margin: 0; font-size: 22px; font-weight: 700; color: var(--text); }
+
+.card-league { margin: 0; font-size: 12px; font-weight: 600; color: var(--text-faint); text-transform: uppercase; }
+
+.card-summary { margin: 4px 0 0; font-size: 14px; line-height: 1.65; color: var(--text-soft); }
+
+.card-score {
+    margin: 8px 0 0;
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: var(--radius-pill);
+    background: rgba(204,0,0,0.07);
+    border: 1px solid rgba(204,0,0,0.14);
+    color: var(--accent-dark);
+    font-size: 12px;
+    font-weight: 700;
+    width: fit-content;
+}
+
+.card-sport-badge {
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    background: rgba(204,0,0,0.08);
+    color: var(--accent-dark);
 }
 
 /* LLM mode */
@@ -338,7 +364,7 @@ body{
 .message.user p{
     background: linear-gradient(135deg, #ffd45f 0%, #f4b400 58%, #f0a800 100%);
     color: #111827;
-    font-family: 'Kanit', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     border-bottom-right-radius: 9px;
 }
 
@@ -493,7 +519,7 @@ body{
     border: none;
     border-radius: var(--radius-pill);
     font-size: 14px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     color: #fff;
     letter-spacing: 0.2px;

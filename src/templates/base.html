@@ -14,7 +14,7 @@
             </div>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a sports team you like" id="filter-text-val" onkeyup="filterText()">
+                <input placeholder="What kind of team are you looking for? Try 'fast attacking play'" id="filter-text-val" onkeyup="filterText()">
             </div>
             <div class="sport-chips">
                 <button class="chip active" data-sport="all" onclick="setFilter('all', this)">All</button>
@@ -32,11 +32,17 @@
         let activeFilter = "all";
         let lastResults = [];
 
-        function answerBoxTemplate(title, titleDesc, rating) {
-            return `<div>
-                <h3 class='episode-title'>${title}</h3>
-                <p class='episode-desc'>${titleDesc}</p>
-                <p class='episode-rating'>Cosine Sim Rating: ${rating}</p>
+        function answerBoxTemplate(row) {
+            const summary = row.summary ? `<p class='card-summary'>${row.summary}</p>` : "";
+            return `<div class='team-card'>
+                <div class='card-header'>
+                    <h3 class='card-name'>${row.title}</h3>
+                    <span class='card-sport-badge card-sport-${row.sport}'>${row.sport}</span>
+                </div>
+                <p class='card-league'>${row.league}</p>
+                ${summary}
+                <p class='card-score'>Cosine Sim: ${row.score} &nbsp;|&nbsp; SVD: ${row.svd_score}</p>
+                <p class='episode-desc'>${row.descr}</p>
             </div>`;
         }
 
@@ -59,7 +65,7 @@
                 : data.filter(row => row.sport === activeFilter);
             filtered.forEach(row => {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.imdb_rating);
+                tempDiv.innerHTML = answerBoxTemplate(row);
                 box.appendChild(tempDiv);
             });
         }

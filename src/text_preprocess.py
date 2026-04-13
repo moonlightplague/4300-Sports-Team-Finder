@@ -180,6 +180,37 @@ def build_inverted_index(files):
 
 
 
+def build_summaries(output_path=None):
+    output_path = os.path.join(os.path.dirname(__file__), "data", "team_summaries.json")
+    """
+    Fetches Wikipedia summaries for all teams using page.summary and writes
+    them to data json file as { team: { league, sport, summary } }.
+    """
+    if os.path.exists(output_path):
+        with open(output_path, "r", encoding="utf-8") as f:
+            result = json.load(f)
+    else:
+        result = {}
+
+    for team, meta in team_metadata.items():
+        if team in result:
+            continue
+        page = wiki.page(team)
+        summary = ""
+        if page.exists():
+            raw = page.summary.strip()
+            sentences = re.split(r"(?<=[.!?])\s+", raw)
+            summary = " ".join(sentences[:2]).strip()
+
+        result[team] = {
+            "league": meta["league"],
+            "sport": meta["sport"],
+            "summary": summary,
+        }
+    
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False, indent=2)
+
 def main():
     DATASET_FOLDER = "dataset"
     OUTPUT_FILE = "src/data/inverted_index_matrix.json"
