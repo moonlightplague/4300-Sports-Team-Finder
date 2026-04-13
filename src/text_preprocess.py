@@ -22,7 +22,7 @@ WEIGHTS = {
     "league": 2.0,
     "sport": 2.0,
     "wiki": 1.0,
-    "reddit": 1.0,
+    "reddit": .3,
 }
 
 
