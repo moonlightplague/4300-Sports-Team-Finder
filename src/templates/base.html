@@ -16,11 +16,22 @@
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
                 <input placeholder="Search for a sports team you like" id="filter-text-val" onkeyup="filterText()">
             </div>
+            <div class="sport-chips">
+                <button class="chip active" data-sport="all" onclick="setFilter('all', this)">All</button>
+                <button class="chip" data-sport="soccer" onclick="setFilter('soccer', this)">Soccer</button>
+                <button class="chip" data-sport="basketball" onclick="setFilter('basketball', this)">Basketball</button>
+                <button class="chip" data-sport="football" onclick="setFilter('football', this)">Football</button>
+                <button class="chip" data-sport="baseball" onclick="setFilter('baseball', this)">Baseball</button>
+                <button class="chip" data-sport="hockey" onclick="setFilter('hockey', this)">Hockey</button>
+            </div>
         </div>
         <div id="answer-box"></div>
     </div>
 
     <script>
+        let activeFilter = "all";
+        let lastResults = [];
+
         function answerBoxTemplate(title, titleDesc, rating) {
             return `<div>
                 <h3 class='episode-title'>${title}</h3>
@@ -33,15 +44,33 @@
             document.getElementById('filter-text-val').focus();
         }
 
+        function setFilter(sport, btn) {
+            activeFilter = sport;
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            renderResults(lastResults);
+        }
+
+        function renderResults(data) {
+            const box = document.getElementById("answer-box");
+            box.innerHTML = "";
+            const filtered = activeFilter === "all"
+                ? data
+                : data.filter(row => row.sport === activeFilter);
+            filtered.forEach(row => {
+                let tempDiv = document.createElement("div");
+                tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.imdb_rating);
+                box.appendChild(tempDiv);
+            });
+        }
+
         function filterText() {
-            document.getElementById("answer-box").innerHTML = "";
             fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
                 .then((response) => response.json())
-                .then((data) => data.forEach(row => {
-                    let tempDiv = document.createElement("div");
-                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.imdb_rating);
-                    document.getElementById("answer-box").appendChild(tempDiv);
-                }));
+                .then((data) => {
+                    lastResults = data;
+                    renderResults(data);
+                });
         }
     </script>
 </body>

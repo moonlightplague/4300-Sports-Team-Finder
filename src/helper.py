@@ -460,6 +460,22 @@ MULTIWORDS = build_multiWord_team_or_league_to_single_token([
 ])
 
 
+# Map every team name → sport string for use in search results
+TEAM_TO_SPORT = {}
+for _team in [t for teams in european_soccer_league_to_teams.values() for t in teams]:
+    TEAM_TO_SPORT[_team] = "soccer"
+for _team in [t for teams in americas_soccer_league_to_teams.values() for t in teams]:
+    TEAM_TO_SPORT[_team] = "soccer"
+for _team in [t for teams in basketball_teams.values() for t in teams]:
+    TEAM_TO_SPORT[_team] = "basketball"
+for _team in [t for teams in football.values() for t in teams]:
+    TEAM_TO_SPORT[_team] = "football"
+for _team in [t for teams in baseball.values() for t in teams]:
+    TEAM_TO_SPORT[_team] = "baseball"
+for _team in [t for teams in hockey.values() for t in teams]:
+    TEAM_TO_SPORT[_team] = "hockey"
+
+
 def tokenize(text):
     """
     tokenizes the text
