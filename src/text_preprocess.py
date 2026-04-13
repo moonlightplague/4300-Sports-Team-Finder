@@ -156,6 +156,8 @@ def build_inverted_index(files):
                 team_term_freq[token] += WEIGHTS["league"]
 
         wiki_docs = build_documents_from_wikipedia(team_name, cache)
+        if not wiki_docs:
+            continue
         for doc in wiki_docs:
             for token in tokenize(doc.get("text", "")):
                 team_term_freq[token] += WEIGHTS["wiki"]
