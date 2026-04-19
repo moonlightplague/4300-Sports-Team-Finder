@@ -16,6 +16,21 @@ from infosci_spark_client import LLMClient
 logger = logging.getLogger(__name__)
 
 
+def improveQuery(client, user_query):
+
+    system = "You are a search query optimizer for a sports team database. "
+    "Given a short keyword query, expand it with related terms that describe play style, culture, or league. "
+    "Return only the improved query as a few keywords, no explanation. "
+    "Example: 'fast attacking play' to 'fast attacking offensive high-tempo pressing'"
+    prompt_query_modification = [
+    {"role": "system", "content": system },
+    {"role": "user", "content": f"Given user query::\n{user_query}"},
+  ]
+    response = client.chat(prompt_query_modification, stream=False, show_thinking=False)
+    modified_query = response["content"]
+    return modified_query
+
+
 def llm_search_decision(client, user_message):
     """Ask the LLM whether to search the DB and which word to use."""
     messages = [
@@ -58,6 +73,7 @@ def register_chat_route(app, json_search):
             return jsonify({"error": "API_KEY not set — add it to your .env file"}), 500
 
         client = LLMClient(api_key=api_key)
+        improveQuery(client, user_message)
         use_search, search_term = llm_search_decision(client, user_message)
 
         if use_search:

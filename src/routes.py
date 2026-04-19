@@ -10,8 +10,8 @@ from ir_engine import InvertedIndexSearchEngine
 from helper import normalize_query
 
 # ── AI toggle ──
-USE_LLM = False
-# USE_LLM = True
+# USE_LLM = False
+USE_LLM = True
 # ───────────────
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
