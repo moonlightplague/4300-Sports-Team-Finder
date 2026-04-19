@@ -347,7 +347,7 @@ class InvertedIndexSearchEngine:
             self._embedding_vectors = model.wv
         except Exception:
             self._embedding_vectors = None
-    def print_latent_dimensions(self, n_dims=5, n_terms=10):
+    def print_latent_dimensions(self, n_dims=20, n_terms=10):
         if self._svd_components is None:
             print("No SVD components available.")
             return
