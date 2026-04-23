@@ -28,6 +28,30 @@
         <div id="answer-box"></div>
     </div>
 
+    <div id="modal-overlay" onclick="closeModal()">
+        <div id="modal" onclick="event.stopPropagation()">
+            <button id="modal-close" onclick="closeModal()">×</button>
+            <p id="modal-meta"></p>
+            <h2 id="modal-name"></h2>
+            <p id="modal-league"></p>
+            <div class="modal-divider"></div>
+            <div class="modal-scores">
+                <div class="modal-score-col">
+                    <span class="modal-score-label">OVERALL SCORE</span>
+                    <span class="modal-score-val" id="modal-score"></span>
+                </div>
+                <div class="modal-score-col">
+                    <span class="modal-score-label">SVD COSINE</span>
+                    <span class="modal-score-val" id="modal-svd"></span>
+                </div>
+                <div class="modal-score-col">
+                    <span class="modal-score-label">LEXICAL</span>
+                    <span class="modal-score-val" id="modal-lexical"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let activeFilter = "all";
         let lastResults = [];
@@ -35,19 +59,38 @@
         function answerBoxTemplate(row, index) {
             const num = String(index + 1).padStart(2, '0');
             const summary = row.summary || row.descr || "";
-            return `<div class='team-card'>
+            return `<div class='team-card' onclick="openModal(${index})" style="cursor:pointer">
                 <div class='card-top'>
-                    <span class='card-rank'>Rank: ${num}</span>
+                    <span class='card-rank'>№ ${num}</span>
                     <span class='card-sport-badge'>${row.sport}</span>
                 </div>
                 <h3 class='card-name'>${row.title}</h3>
                 <p class='card-league'>${row.league}</p>
                 <p class='card-summary'>${summary}</p>
                 <div class='card-footer'>
-                    <span class='card-score'>Cosine Similarity Score <strong>${row.score}</strong></span>
+                    <span class='card-score'>score <strong>${row.score}</strong></span>
                 </div>
             </div>`;
         }
+
+        function openModal(index) {
+            const row = lastResults[index];
+            document.getElementById('modal-meta').textContent = `${row.sport.toUpperCase()} · MATCH #${index + 1}`;
+            document.getElementById('modal-name').textContent = row.title;
+            document.getElementById('modal-league').textContent = row.league;
+            document.getElementById('modal-score').textContent = row.score;
+            document.getElementById('modal-svd').textContent = row.svd_score ?? '—';
+            document.getElementById('modal-lexical').textContent = row.lexical_score ?? '—';
+            document.getElementById('modal-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
         function sendFocus() {
             document.getElementById('filter-text-val').focus();

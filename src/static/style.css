@@ -315,6 +315,104 @@ body{
     color: var(--text);
 }
 
+/* Modal */
+
+#modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 10, 0, 0.55);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+}
+
+#modal-overlay.active {
+    display: flex;
+}
+
+#modal {
+    position: relative;
+    background: var(--surface-solid);
+    width: min(780px, 92vw);
+    border-top: 4px solid var(--accent);
+    padding: 40px 44px 44px;
+}
+
+#modal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 48px;
+    height: 48px;
+    background: var(--text);
+    color: var(--bg-1);
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+#modal-meta {
+    margin: 0 0 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: var(--accent);
+}
+
+#modal-name {
+    margin: 0 0 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.05;
+}
+
+#modal-league {
+    margin: 0;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--text-soft);
+}
+
+.modal-divider {
+    border: none;
+    border-top: 1px dashed rgba(0,0,0,0.18);
+    margin: 28px 0;
+}
+
+.modal-scores {
+    display: flex;
+    gap: 48px;
+}
+
+.modal-score-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-score-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-faint);
+}
+
+.modal-score-val {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+}
+
 /* LLM mode */
 
 .llm-mode{
