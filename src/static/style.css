@@ -55,27 +55,48 @@ body{
 
 /* Logo */
 
-#google-4{ color: var(--accent); }
-#google-3{ color: var(--accent); }
-#google-0-1{ color: var(--accent); }
-#google-0-2{ color: var(--accent); }
-
-.google-colors{
+.site-title {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 58px;
-    font-family: 'Montserrat', sans-serif;
-    letter-spacing: -1.8px;
-    flex-wrap: wrap;
-    text-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
     animation: introRise 0.7s ease;
 }
 
-.google-colors h1{
+.site-title h1 {
     margin: 0;
-    line-height: 0.95;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: var(--text);
+    line-height: 1;
+}
+
+.site-title h1 span {
+    color: var(--accent);
+}
+
+.title-bar {
+    width: 100%;
+    height: 3px;
+    background: var(--text);
+    margin-top: 10px;
+}
+
+.hero-tagline {
+    margin: 22px 0 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text);
+    text-align: center;
+    max-width: 680px;
+}
+
+.hero-tagline em {
+    font-style: italic;
+    color: var(--accent);
     font-weight: 700;
 }
 
@@ -87,14 +108,6 @@ body{
     animation: fadeIn 0.8s ease;
 }
 
-.top-text::after{
-    content: "Search by vibe, style, league, or fanbase";
-    margin-top: 10px;
-    font-size: 14px;
-    color: var(--text-faint);
-    letter-spacing: 0.2px;
-    text-align: center;
-}
 
 /* Search box */
 
@@ -606,8 +619,12 @@ body{
 /* Responsive */
 
 @media (max-width: 900px){
-    .google-colors{
-        font-size: 48px;
+    .site-title h1{
+        font-size: 42px;
+    }
+
+    .hero-tagline{
+        font-size: 17px;
     }
 
     .input-box,
@@ -629,15 +646,14 @@ body{
         padding: 30px 12px 14px;
     }
 
-    .google-colors{
-        font-size: 38px;
-        gap: 6px;
-        letter-spacing: -1px;
+    .site-title h1{
+        font-size: 32px;
+        letter-spacing: -0.8px;
     }
 
-    .top-text::after{
-        font-size: 13px;
-        margin-top: 8px;
+    .hero-tagline{
+        font-size: 15px;
+        margin-top: 16px;
     }
 
     .input-box{

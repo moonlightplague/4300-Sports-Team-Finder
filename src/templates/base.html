@@ -7,14 +7,14 @@
 <body>
     <div class="full-body-container">
         <div class="top-text">
-            <div class="google-colors">
-                <h1 id="google-4">Sports</h1>
-                <h1 id="google-3">Team</h1>
-                <h1 id="google-0-1">Finder</h1>
+            <div class="site-title">
+                <h1>Sports<span>Team</span>Finder</h1>
+                <div class="title-bar"></div>
             </div>
+            <p class="hero-tagline">Describe the kind of team you love, in your own words —<br>we'll find it in a vocabulary of <em>latent themes</em> learned from fan talk.</p>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="What kind of team are you looking for? Try 'fast attacking play'" id="filter-text-val" onkeyup="filterText()">
+                <input placeholder="Try 'fast attacking play'" id="filter-text-val" onkeyup="filterText()">
             </div>
             <div class="sport-chips">
                 <button class="chip active" data-sport="all" onclick="setFilter('all', this)">All</button>
