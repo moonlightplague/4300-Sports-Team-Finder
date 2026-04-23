@@ -1848,5 +1848,1010 @@
     "league": "NHL (USA/Canada)",
     "sport": "hockey",
     "summary": "The Winnipeg Jets are a professional ice hockey team based in Winnipeg. The Jets compete in the National Hockey League (NHL) as a member of the Central Division in the Western Conference."
+  },
+  "AFC Ajax": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Amsterdamsche Football Club Ajax (Dutch: [ˈaːjɑks]), also known as AFC Ajax, Ajax Amsterdam, or simply Ajax, is a Dutch professional football club based in Amsterdam, that plays in the Eredivisie, the top tier in Dutch football. Historically, Ajax (named after the legendary Greek hero) is the most successful club in the Netherlands, with 36 Eredivisie titles and 20 KNVB Cups, both are records."
+  },
+  "PSV Eindhoven": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Philips Sport Vereniging (Dutch pronunciation: [ˈfilɪps ˌspɔrt fərˈeːnəɣɪŋ]; English: Philips Sports Society), abbreviated as PSV and internationally known as PSV Eindhoven (pronounced [ˌpeːjɛsˈfeː ˈʔɛintˌɦoːvə(n)]), is a Dutch sports club from Eindhoven, Netherlands. It is best known for its professional football department, which has played in the Eredivisie, the top tier in Dutch football, since its inception in 1956."
+  },
+  "Feyenoord": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Feyenoord Rotterdam ([ˈfɛiənoːrt]) is a Dutch professional football club based in Rotterdam, which plays in the Eredivisie, the top tier in Dutch football. Founded as Wilhelmina in 1908, the club changed to various names before settling on being called after its neighbourhood in 1912 as SC Feijenoord, updated in 1974 to SC Feyenoord, and then to Feyenoord in 1978, when it split from the amateur club under its wing, SC Feyenoord."
+  },
+  "AZ Alkmaar": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Alkmaar Zaanstreek (Dutch: [ˈɑl(ə)kmaːr ˈzaːnstreːk]), better known internationally as AZ Alkmaar, or simply and most commonly as AZ (pronounced [aːˈzɛt]) in the Netherlands, is a Dutch professional football club from Alkmaar and the Zaan district. The club plays in the Eredivisie, the top tier in Dutch football."
+  },
+  "FC Utrecht": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Football Club Utrecht (Dutch pronunciation: [ɛfˈseː ˈytrɛxt]) is a Dutch professional football club based in Utrecht. The club competes in the Eredivisie, the top tier of Dutch football, and plays its home matches at the Stadion Galgenwaard."
+  },
+  "SC Heerenveen": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Sportclub Heerenveen (Dutch pronunciation: [ˈspɔrtklʏp ˌɦeːrə(ɱ)ˈveːn]; West Frisian: Sportklub It Hearrenfean) is a Dutch professional football club from Heerenveen. They currently play in the Eredivisie, the top level of football in the Netherlands."
+  },
+  "FC Twente": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Football Club Twente (Dutch pronunciation: [ɛfˈseː ˈtʋɛntə]), sometimes known internationally as FC Twente Enschede, or simply Twente, is a Dutch professional football club from Enschede. The club was formed in 1965 by the merger of Enschedese Boys with Sportclub Enschede, the 1926 Dutch champions."
+  },
+  "Sparta Rotterdam": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Sparta Rotterdam (Dutch pronunciation: [ˈspɑrtaː ˌrɔtərˈdɑm]) is a Dutch professional football club based in Rotterdam. Established on 1 April 1888, Sparta Rotterdam is the oldest professional football team in the Netherlands."
+  },
+  "NEC Nijmegen": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "NEC Nijmegen (Nijmegen Eendracht Combinatie), commonly known as NEC (Dutch pronunciation: [ɛneːˈseː]), is a professional Dutch association football club based in Nijmegen. The club currently competes in the Eredivisie, the top tier of Dutch football, following promotion from the 2020–21 Eerste Divisie."
+  },
+  "PEC Zwolle": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Prins Hendrik Ende Desespereert Nimmer Combinatie Zwolle, commonly known as PEC Zwolle (Dutch: [ˈpɛk ˈsʋɔlə]), is a Dutch professional football club based in Zwolle, Netherlands. They play in the Eredivisie, the top tier of Dutch football."
+  },
+  "Heracles Almelo": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Heracles Almelo (Dutch: [ɦeːˈraːkləs ˈɑlməloː]) is a Dutch professional football club based in Almelo, founded in 1903. The club has won the Dutch national title twice, in 1927 and 1941."
+  },
+  "FC Groningen": {
+    "league": "Eredivisie (Netherlands)",
+    "sport": "soccer",
+    "summary": "Football Club Groningen (Dutch pronunciation: [ɛfˈseː ˈɣroːnɪŋə(n)]) is a Dutch professional association football club based in Groningen. Founded in 1971 as the successor of GVAV, Groningen compete in the Eredivisie, the first tier of Dutch football."
+  },
+  "FC Porto": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Futebol Clube do Porto, MHIH, OM (Portuguese pronunciation: [futɨˈβɔl ˈkluβɨ ðu ˈpoɾtu]), commonly known as FC Porto or simply Porto, is a Portuguese professional sports club based in Porto. It is best known for the professional football team playing in the Primeira Liga, the top flight of Portuguese football."
+  },
+  "S.L. Benfica": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Sport Lisboa e Benfica (Portuguese pronunciation: [sɨˈpɔɾ liʒˈβoɐ i βɐ̃jˈfikɐ] ), commonly known as Benfica, is a professional football club based in Lisbon, Portugal, that competes in the Primeira Liga, the top flight of Portuguese football. Founded on 28 February 1904, as Sport Lisboa, Benfica is one of the \"Big Three\" clubs in Portugal that have never been relegated from Primeira Liga, along with rivals Sporting CP and FC Porto."
+  },
+  "Sporting CP": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Sporting Clube de Portugal (Portuguese pronunciation: [sɨˈpɔɾtĩg ˈkluβɨ ðɨ puɾtuˈɣal]), otherwise referred to as Sporting CP or simply Sporting (particularly within Portugal), or as Sporting Lisbon in other countries, is a Portuguese sports club based in Lisbon. Having various sports departments and sporting disciplines, it is best known for its men's professional football team playing in the Primeira Liga, the top flight of Portuguese football."
+  },
+  "SC Braga": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Sporting Clube de Braga (Portuguese pronunciation: [sɨˈpɔɾtĩ ˈkluβɨ ðɨ ˈβɾaɣɐ]), commonly known as Sporting Braga or just Braga, is a Portuguese sports club from the city of Braga. Best known for the men's professional football team playing in the Primeira Liga, the top flight of Portuguese football at the Estádio Municipal de Braga, it also has departments for athletics, badminton, basketball, billiards, boccia, boxing, esports, futsal, karate, kickboxing, muay thai, swimming, taekwondo and volleyball."
+  },
+  "Vitória SC": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Vitória Sport Clube, commonly known as Vitória de Guimarães or just Vitória, is a Portuguese professional football club based in Guimarães that competes in the Primeira Liga, the top flight of Portuguese football, at the Estádio D. Afonso Henriques."
+  },
+  "Boavista FC": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Boavista Futebol Clube (Portuguese pronunciation: [boɐˈviʃtɐ]), commonly known as Boavista, was a Portuguese professional sports club from the Boavista neighborhood of Porto that competes in the Porto Football Association, the district leagues of Portuguese football, at the Estádio do Bessa. It is one of the oldest clubs in the country, having been founded on 1 August 1903 by British entrepreneurs and Portuguese textile workers."
+  },
+  "Rio Ave FC": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Rio Ave Futebol Clube, commonly known as Rio Ave ([ˈʁi.u ˈavɨ]), is a Portuguese professional football club based in Vila do Conde, that competes in the Primeira Liga. The club is named after the Ave River, which flows through the town and into the Atlantic Ocean."
+  },
+  "Gil Vicente FC": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Gil Vicente Futebol Clube (Portuguese pronunciation: [ˈʒil viˈsẽtɨ]), commonly known as Gil Vicente, founded in 1924, is a Portuguese professional football club that plays in Barcelos. It plays their home matches at the Estádio Cidade de Barcelos."
+  },
+  "FC Famalicão": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Futebol Clube de Famalicão, commonly known as Famalicão, is a Portuguese professional football club from Vila Nova de Famalicão. Founded on 21 August 1931, its senior team currently plays in the Primeira Liga, the top tier of Portuguese football."
+  },
+  "Portimonense SC": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Portimonense Sporting Clube is a Portuguese sports club based in Portimão. Founded on 14 August 1914, it is most notable for its professional football team, which currently plays in the Liga Portugal 2, the second division of Portuguese football."
+  },
+  "Marítimo": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Club Sport Marítimo MH M (Portuguese pronunciation: [mɐˈɾitimu]), commonly known as Marítimo or Marítimo da Madeira, is a Portuguese professional sports club based in the city of Funchal, on the island of Madeira. Established in 1910, Marítimo is best known for its football team currently playing in Liga Portugal 2 that previously played for 38 consecutive years in the Primeira Liga from 1985 to 2023."
+  },
+  "Santa Clara": {
+    "league": "Primeira Liga (Portugal)",
+    "sport": "soccer",
+    "summary": "Santa Clara (Portuguese and Spanish for Saint Clare or Saint Clair) may refer to:"
+  },
+  "Celtic F.C.": {
+    "league": "Scottish Premiership (Scotland)",
+    "sport": "soccer",
+    "summary": "The Celtic Football Club, commonly known as Celtic (), is a professional football club in Glasgow, Scotland. The team competes in the Scottish Premiership, the top division of Scottish football."
+  },
+  "Rangers F.C.": {
+    "league": "Scottish Premiership (Scotland)",
+    "sport": "soccer",
+    "summary": "Rangers Football Club is a professional football club in Glasgow, Scotland. The team competes in the Scottish Premiership, the top division of Scottish football."
+  },
+  "Aberdeen F.C.": {
+    "league": "Scottish Premiership (Scotland)",
+    "sport": "soccer",
+    "summary": "Aberdeen Football Club is a Scottish professional football club based in Aberdeen, Scotland. They compete in the Scottish Premiership and have never been relegated from the top division of the Scottish football league system since they were elected to the top flight in 1905."
+  },
+  "Heart of Midlothian F.C.": {
+    "league": "Scottish Premiership (Scotland)",
+    "sport": "soccer",
+    "summary": "Heart of Midlothian Football Club, commonly known as Hearts, is a professional football club in Edinburgh, Scotland. The team competes in the Scottish Premiership, the top division of Scottish football."
+  },
+  "Hibernian F.C.": {
+    "league": "Scottish Premiership (Scotland)",
+    "sport": "soccer",
+    "summary": "Hibernian Football Club (), commonly known as Hibs, is a professional football club in Edinburgh, Scotland. The team competes in the Scottish Premiership, the top division of Scottish football."
+  },
+  "Dundee United F.C.": {
+    "league": "Scottish Premiership (Scotland)",
+    "sport": "soccer",
+    "summary": "Dundee United Football Club is a Scottish professional football club based in the city of Dundee. Formed in 1909, originally as Dundee Hibernian, the club changed to the present name in 1923."
+  },
+  "Motherwell F.C.": {
+    "league": "Scottish Premiership (Scotland)",
+    "sport": "soccer",
+    "summary": "Motherwell Football Club is a Scottish professional football club based in Motherwell, North Lanarkshire, which plays in the Scottish Premiership. Motherwell have not dropped out of the top flight of Scottish football since 1985, and have lifted one trophy in that time – the Scottish Cup in 1991."
+  },
+  "Kilmarnock F.C.": {
+    "league": "Scottish Premiership (Scotland)",
+    "sport": "soccer",
+    "summary": "Kilmarnock Football Club is a Scottish professional football team based in the town of Kilmarnock, East Ayrshire that currently plays in the Scottish Premiership. The club has achieved several honours since its formation in 1869, most recently the 2011–12 Scottish League Cup after a 1–0 win over Celtic at Hampden Park and the Scottish Championship title in 2022."
+  },
+  "St Mirren F.C.": {
+    "league": "Scottish Premiership (Scotland)",
+    "sport": "soccer",
+    "summary": "St Mirren Football Club is a Scottish professional football club based in Paisley, Renfrewshire, that competes in the Scottish Premiership after winning the 2017–18 Scottish Championship. Founded in 1877, the team has two nicknames: The Buddies and The Saints."
+  },
+  "St Johnstone F.C.": {
+    "league": "Scottish Premiership (Scotland)",
+    "sport": "soccer",
+    "summary": "St Johnstone Football Club is a professional association football club in Perth, Scotland. The team competes in the Scottish Championship, the second division of Scottish football."
+  },
+  "Racing Club (Avellaneda)": {
+    "league": "Liga Profesional de Fútbol (Argentina)",
+    "sport": "soccer",
+    "summary": ""
+  },
+  "San Lorenzo de Almagro": {
+    "league": "Liga Profesional de Fútbol (Argentina)",
+    "sport": "soccer",
+    "summary": "Club Atlético San Lorenzo de Almagro (CASLA) is an Argentine professional sports club based in the Boedo neighborhood of Buenos Aires. It is best known for its football team, which plays in the Primera División, the first tier of the Argentine football league system."
+  },
+  "Vélez Sársfield": {
+    "league": "Liga Profesional de Fútbol (Argentina)",
+    "sport": "soccer",
+    "summary": "Vélez Sársfield may refer to:\n\nClub Atlético Vélez Sarsfield, an Argentine sports club best known for its football team\nJosé Amalfitani Stadium, the club's stadium, sometimes called \"Vélez Sarsfield stadium\"\nDalmacio Vélez Sarsfield, Argentine jurist and editor of the Civil Code of Argentina\nVélez Sársfield (barrio), a barrio in the Western part of Buenos Aires"
+  },
+  "Godoy Cruz Antonio Tomba": {
+    "league": "Liga Profesional de Fútbol (Argentina)",
+    "sport": "soccer",
+    "summary": "Club Deportivo Godoy Cruz Antonio Tomba is an Argentine sports club from Godoy Cruz, Mendoza. The club is best known for its football team, which plays in the Primera Nacional since 2026, the second top level of the Argentine football league system."
+  },
+  "Kentucky Wildcats men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Kentucky Wildcats men's basketball program is the men's college basketball team of the University of Kentucky. It has eight NCAA championships, the best all-time winning percentage, and the most all-time victories."
+  },
+  "North Carolina Tar Heels men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The North Carolina Tar Heels men's basketball program is a college basketball team of the University of North Carolina at Chapel Hill. The Tar Heels have won six NCAA championships (1957, 1982, 1993, 2005, 2009, and 2017) in addition to a 1924 Helms Athletic Foundation title (retroactive)."
+  },
+  "Kansas Jayhawks men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Kansas Jayhawks men's basketball program is the intercollegiate men's basketball program of the University of Kansas. The program is classified in the NCAA's Division I and the team competes in the Big 12 Conference."
+  },
+  "Duke Blue Devils men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Duke Blue Devils men's basketball team represents Duke University in NCAA Division I college basketball and competes in the Atlantic Coast Conference (ACC). The team is fourth all-time in wins of any NCAA men's basketball program, and is currently coached by Jon Scheyer."
+  },
+  "UCLA Bruins men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The UCLA Bruins men's basketball program represents the University of California, Los Angeles, in the sport of men's basketball as a member of the Big Ten Conference. Established in 1919, the program has won a record 11 NCAA titles."
+  },
+  "Indiana Hoosiers men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Indiana Hoosiers men's basketball team represents Indiana University Bloomington in NCAA Division I college basketball and competes in the Big Ten Conference. The Hoosiers play at Simon Skjodt Assembly Hall on the Branch McCracken Court in Bloomington, Indiana on the Indiana University Bloomington campus."
+  },
+  "Louisville Cardinals men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Louisville Cardinals men's basketball team is the men's college basketball program representing the University of Louisville (U of L) in the Atlantic Coast Conference (ACC) of NCAA Division I. The Cardinals have officially won two NCAA championships in 1980 and 1986 (with the 2013 title being vacated); and have officially been to eight Final Fours (with the 2012 and 2013 appearances being vacated) in 39 official NCAA tournament appearances while compiling 62 tournament wins."
+  },
+  "Syracuse Orange men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Syracuse Orange men's basketball program is an intercollegiate men's basketball team representing Syracuse University in Syracuse, New York. The program is classified in the NCAA Division I of the National Collegiate Athletic Association (NCAA), and the team competes in the Atlantic Coast Conference (ACC)."
+  },
+  "Michigan State Spartans men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Michigan State Spartans men's basketball team is the intercollegiate men's basketball program representing Michigan State University. The school competes in the Big Ten Conference of NCAA Division I college basketball."
+  },
+  "Arizona Wildcats men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Arizona Wildcats men's basketball team is the intercollegiate men's basketball program representing the University of Arizona in Tucson, Arizona. They compete in the Big 12 of NCAA Division I and are coached by Tommy Lloyd."
+  },
+  "Connecticut Huskies men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The UConn Huskies men's basketball program is the NCAA Division I men's college basketball team of the University of Connecticut in Storrs, Connecticut. They play in the Big East Conference and are coached by Dan Hurley."
+  },
+  "Villanova Wildcats men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Villanova Wildcats men's basketball program represent Villanova University in men's college basketball and competes in the Big East Conference of NCAA Division I. Their first season was the 1920–21 season."
+  },
+  "Michigan Wolverines men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Michigan Wolverines men's basketball team is the intercollegiate men's basketball program representing the University of Michigan. The school competes in the Big Ten Conference in Division I of the National Collegiate Athletic Association (NCAA), and play their home games at Crisler Center in Ann Arbor, Michigan."
+  },
+  "Ohio State Buckeyes men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Ohio State Buckeyes men's basketball team represents Ohio State University in NCAA Division I college basketball competition. The Buckeyes are a member of the Big Ten Conference."
+  },
+  "Florida Gators men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Florida Gators men's basketball team represents the University of Florida in the sport of basketball. The Gators compete in NCAA Division I's Southeastern Conference (SEC)."
+  },
+  "Georgetown Hoyas men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Georgetown Hoyas men's basketball program represents Georgetown University in NCAA Division I men's intercollegiate basketball and the Big East Conference. Georgetown has competed in men's college basketball since 1907."
+  },
+  "Gonzaga Bulldogs men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Gonzaga Bulldogs are an intercollegiate men's basketball program representing Gonzaga University. The school competes in the West Coast Conference in Division I of the National Collegiate Athletic Association (NCAA)."
+  },
+  "Illinois Fighting Illini men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Illinois Fighting Illini men's basketball team is a men’s college basketball team representing the University of Illinois Urbana-Champaign. The Fighting Illini compete at the NCAA Division I level as a member of the Big Ten Conference, and play their home games at State Farm Center, located in Champaign, Illinois."
+  },
+  "Wisconsin Badgers men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Wisconsin Badgers are an NCAA Division I college basketball team competing in the Big Ten Conference. The Badgers' home games are played at the Kohl Center, located on the University of Wisconsin–Madison campus in Madison, Wisconsin."
+  },
+  "Maryland Terrapins men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Maryland Terrapins men's basketball team represents the University of Maryland in National Collegiate Athletic Association Division I competition. Maryland, a founding member of the Atlantic Coast Conference (ACC), left the ACC in 2014 to join the Big Ten Conference."
+  },
+  "Purdue Boilermakers men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Purdue Boilermakers men's basketball team are the men's college basketball program that represent Purdue University. They compete in NCAA Division I and are a founding member of the Big Ten Conference."
+  },
+  "Houston Cougars men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Houston Cougars men's basketball team represents the University of Houston in Houston, Texas, in NCAA Division I men's basketball competition. They compete as members of the Big 12 Conference."
+  },
+  "Virginia Cavaliers men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Virginia Cavaliers men's basketball team is the intercollegiate men's basketball program representing the University of Virginia. The school competes in the Atlantic Coast Conference (ACC) in Division I of the National Collegiate Athletic Association (NCAA)."
+  },
+  "NC State Wolfpack men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The NC State Wolfpack men's basketball team represents North Carolina State University in NCAA Division I men's basketball competition. NC State is one of the seven founding members of the Atlantic Coast Conference."
+  },
+  "Arkansas Razorbacks men's basketball": {
+    "league": "NCAA Men's Basketball (USA)",
+    "sport": "basketball",
+    "summary": "The Arkansas Razorbacks men's basketball team, colloquially known as the Hogs, represents the University of Arkansas in Fayetteville, Arkansas in NCAA Division I men's basketball competition. The team competes in the Southeastern Conference and is coached by John Calipari."
+  },
+  "Austin Spurs": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Austin Spurs are an American professional basketball team in the NBA G League based in the Greater Austin area, and are affiliated with the San Antonio Spurs. The team plays their home games at H-E-B Center at Cedar Park."
+  },
+  "Birmingham Squadron": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Birmingham Squadron are an American professional basketball team in the NBA G League based in Birmingham, Alabama, and are affiliated with the New Orleans Pelicans. The Squadron play their home games at Legacy Arena."
+  },
+  "Capital City Go-Go": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Capital City Go-Go are an American professional basketball team in the NBA G League based in Washington, D.C., and are affiliated with the Washington Wizards. The Go-Go play their home games at the CareFirst Arena."
+  },
+  "Cleveland Charge": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Cleveland Charge are an American professional basketball team in the NBA G League based in Cleveland, and are affiliated with the Cleveland Cavaliers. Since 2024, the team plays its home games at Public Auditorium in downtown Cleveland, though to begin the 2024–25 season, home games were played at Rocket Arena (home of the Cavaliers) due to renovations at Public Auditorium."
+  },
+  "College Park Skyhawks": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The College Park Skyhawks  are an American professional basketball team in the NBA G League based in College Park, Georgia, and are affiliated with the Atlanta Hawks. The Skyhawks play their home games at Gateway Center Arena at College Park after the franchise played its first two seasons in Erie, Pennsylvania, at the Erie Insurance Arena as the Erie BayHawks."
+  },
+  "Delaware Blue Coats": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Delaware Blue Coats are an American professional basketball team in the NBA G League based in Wilmington, Delaware. They are the G-League affiliates of the Philadelphia 76ers."
+  },
+  "Greensboro Swarm": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Greensboro Swarm are an American basketball team of the NBA G League based in Greensboro, North Carolina, and are affiliated with the Charlotte Hornets. The Swarm play their home games at the Greensboro Coliseum Complex."
+  },
+  "Grand Rapids Gold": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Grand Rapids Gold are an American professional basketball team in the NBA G League based in Grand Rapids, Michigan, and are affiliated with the Denver Nuggets. The Gold play their home games at Van Andel Arena."
+  },
+  "Indiana Mad Ants": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Noblesville Boom are an American professional basketball team based in Noblesville, Indiana that competes in the NBA G League. The Boom are the affiliate team of the NBA's Indiana Pacers and, since 2025, they have played their home games at Riverview Health Arena at Innovation Mile."
+  },
+  "Iowa Wolves": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Iowa Wolves are an American professional basketball team in the NBA G League based in Des Moines, Iowa, and are affiliated with the Minnesota Timberwolves. The Wolves play their home games at the Casey's Center and compete in the Western Conference of the NBA G League."
+  },
+  "Long Island Nets": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Long Island Nets are an American professional basketball team in the NBA G League based in Uniondale, New York, and are affiliated with the Brooklyn Nets. The team plays its home games at the Nassau Coliseum in Uniondale, New York."
+  },
+  "Maine Celtics": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Maine Celtics are an American professional basketball team in the NBA G League based in Portland, Maine, and are affiliated with the Boston Celtics. The Maine Celtics play their home games at the Portland Expo Building."
+  },
+  "Memphis Hustle": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Memphis Hustle are an American professional basketball team of the NBA G League based in the Greater Memphis suburb of Southaven, Mississippi, and are affiliated with the Memphis Grizzlies. The team plays their home games at the Landers Center."
+  },
+  "Mexico City Capitanes": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Mexico City Capitanes (Spanish: Capitanes de la Ciudad de México) are a Mexican professional basketball team based in Mexico City. The Capitanes competed as a member club in the Liga Nacional de Baloncesto Profesional (LNBP) for its first three seasons and the franchise is currently a member of the NBA G League."
+  },
+  "Motor City Cruise": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Motor City Cruise are an American professional basketball team in the NBA G League based in Detroit, and are affiliated with the Detroit Pistons. The Cruise play their home games at Wayne State Fieldhouse."
+  },
+  "Oklahoma City Blue": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Oklahoma City Blue are an American professional basketball team based in Oklahoma City and are affiliated with the Oklahoma City Thunder. The Blue compete in the NBA G League as members of the Western Conference."
+  },
+  "Osceola Magic": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Osceola Magic are an American professional basketball team in the NBA G League based in Kissimmee, Florida, and are affiliated with the Orlando Magic. The Magic began play in the 2017–18 season as the Lakeland Magic, and now play their home games at the Silver Spurs Arena."
+  },
+  "Raptors 905": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Raptors 905 are a Canadian professional basketball team in the NBA G League based in Mississauga, and are affiliated with the Toronto Raptors. Raptors 905 began play in the 2015–16 season and play their home games at Paramount Fine Foods Centre, replacing the centre's former basketball tenant, the Mississauga Power of the National Basketball League of Canada."
+  },
+  "Rio Grande Valley Vipers": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Rio Grande Valley Vipers are an American professional basketball team of the NBA G League based in Edinburg, Texas, and are affiliated with the Houston Rockets. The Vipers play their home games at the Bert Ogden Arena."
+  },
+  "Rip City Remix": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Rip City Remix are an American professional basketball team in the NBA G League based in North Portland, Oregon, and are affiliated with the Portland Trail Blazers of the National Basketball Association. The team plays home games at the Chiles Center and debuted in the 2023–24 season."
+  },
+  "Salt Lake City Stars": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Salt Lake City Stars are an American minor-league basketball team. They are a member of the NBA G League, based in the Salt Lake City suburb of West Valley City, Utah, and are affiliated with the Utah Jazz."
+  },
+  "San Diego Clippers": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Los Angeles Clippers are an American professional basketball team based in the Greater Los Angeles area. The Clippers compete in the National Basketball Association (NBA) as a member of the Pacific Division of the Western Conference."
+  },
+  "Santa Cruz Warriors": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Santa Cruz Warriors are an American professional basketball team in the NBA G League based in Santa Cruz, California, and are affiliated with the Golden State Warriors. The Warriors play their home games at Kaiser Permanente Arena."
+  },
+  "Sioux Falls Skyforce": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Sioux Falls Skyforce are an American professional basketball team of the NBA G League based in Sioux Falls, South Dakota, and are affiliated with the Miami Heat. The team has played its home games in the Sanford Pentagon since the 2013–14 season."
+  },
+  "South Bay Lakers": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The South Bay Lakers are an American professional basketball team based in El Segundo, California, that competes in the NBA G League. Founded in 2006 as the Los Angeles D-Fenders, the team is owned by the Los Angeles Lakers, who were the first National Basketball Association (NBA) franchise to own a D-League team."
+  },
+  "Stockton Kings": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Stockton Kings are an American professional basketball team of the NBA G League based in Stockton, California, and are affiliated with the Sacramento Kings. The Kings play their home games at the Adventist Health Arena and compete in the G League's Western Conference Pacific Division."
+  },
+  "Texas Legends": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Texas Legends are an American professional basketball team in the NBA G League based in Frisco, Texas, and are affiliated with the Dallas Mavericks. The Legends play their home games at the Comerica Center."
+  },
+  "Valley Suns": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Valley Suns are an American professional basketball team of the NBA G League and the affiliate of the Phoenix Suns of the National Basketball Association. Based in Tempe, Arizona, and officially created on February 14, 2024, the team played their home games during the 2024–25 season at Mullett Arena on the campus of Arizona State University."
+  },
+  "Westchester Knicks": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Westchester Knicks are an American professional basketball team in the NBA G League based in White Plains, New York, and are affiliated with the New York Knicks. The Knicks play their home games at Westchester County Center in White Plains, New York."
+  },
+  "Wisconsin Herd": {
+    "league": "NBA G League (USA)",
+    "sport": "basketball",
+    "summary": "The Wisconsin Herd are an American professional basketball team in the NBA G League based in Oshkosh, Wisconsin, and are affiliated with the Milwaukee Bucks. The Herd play their home games at Oshkosh Arena."
+  },
+  "Alabama Crimson Tide football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Alabama Crimson Tide football program represents the University of Alabama (variously Alabama, UA, or Bama) in American football. It is part of the wider Crimson Tide athletics program and competes in the Southeastern Conference (SEC), a conference of the NCAA's Football Bowl Subdivision (FBS)."
+  },
+  "Georgia Bulldogs football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Georgia Bulldogs football program represents the University of Georgia in the sport of American football. The Bulldogs compete in the Football Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA) and the Southeastern Conference (SEC)."
+  },
+  "Ohio State Buckeyes football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Ohio State Buckeyes football team represents the Ohio State University in American football. They compete in the NCAA Division I Football Bowl Subdivision (FBS) as a member of the Big Ten Conference."
+  },
+  "Michigan Wolverines football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Michigan Wolverines football team represents the University of Michigan in college football at the NCAA Division I Football Bowl Subdivision (FBS) level. Michigan has the most all-time wins in college football history."
+  },
+  "Notre Dame Fighting Irish football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Notre Dame Fighting Irish football team represents the University of Notre Dame in American football. It plays home games at the 77,622-capacity Notre Dame Stadium, located near South Bend in Notre Dame, Indiana."
+  },
+  "USC Trojans football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The USC Trojans football team represents the University of Southern California in American football. The Trojans compete in the NCAA Football Bowl Subdivision (FBS) and the Big Ten Conference (Big Ten)."
+  },
+  "Texas Longhorns football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Texas Longhorns football program is the intercollegiate team representing the University of Texas at Austin (variously Texas or UT) in the sport of American football. The Longhorns compete in the NCAA Division I Football Bowl Subdivision (formerly Division I-A) as a member of the Southeastern Conference (SEC)."
+  },
+  "Oklahoma Sooners football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Oklahoma Sooners football team represents the University of Oklahoma (OU) in college football at the NCAA Division I Football Bowl Subdivision (FBS) level in the Southeastern Conference (SEC). The program began in 1895 and is one of the most successful in the nation, having won 960 games and possessing a .723 winning percentage, both sixth all-time."
+  },
+  "LSU Tigers football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The LSU Tigers football program, also known as the Fighting Tigers, represents Louisiana State University in college football. The Tigers compete in the Football Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA) and the Southeastern Conference (SEC)."
+  },
+  "Clemson Tigers football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Clemson Tigers football program are the American football team at Clemson University. The Tigers compete in the NCAA Division I Football Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA) of the Atlantic Coast Conference (ACC)."
+  },
+  "Florida Gators football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Florida Gators football program represents the University of Florida (UF) in American college football. Florida competes in the Football Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA) and the Southeastern Conference (SEC)."
+  },
+  "Auburn Tigers football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Auburn Tigers football program represents Auburn University in the sport of American college football. Auburn competes in the Football Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA) and the Southeastern Conference (SEC)."
+  },
+  "Penn State Nittany Lions football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Penn State Nittany Lions team represents the Pennsylvania State University in college football. The Nittany Lions compete in the NCAA Division I Football Bowl Subdivision (FBS) as a member of the Big Ten Conference, which they joined in 1993 after playing as an Independent from 1892 to 1992."
+  },
+  "Tennessee Volunteers football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Tennessee Volunteers football program (variously called \"Vols,\" \"UT\", and \"Big Orange\") represents the University of Tennessee (UT). The Volunteers compete in the Football Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA), as members of the Southeastern Conference (SEC)."
+  },
+  "Florida State Seminoles football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Florida State Seminoles football team represents Florida State University (variously Florida State or FSU) in the sport of American football. The Seminoles compete in the NCAA Division I Football Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA) and the Atlantic Coast Conference (ACC)."
+  },
+  "Miami Hurricanes football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Miami Hurricanes football team represents the University of Miami in college football. The Hurricanes compete in the NCAA's Football Bowl Subdivision (FBS)."
+  },
+  "Nebraska Cornhuskers football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Nebraska Cornhuskers football team competes as part of the NCAA Division I Football Bowl Subdivision, representing the University of Nebraska–Lincoln in the  Big Ten Conference. Nebraska has played its home games at Memorial Stadium since 1923 and sold out every game at the venue since 1962."
+  },
+  "Oregon Ducks football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Oregon Ducks football program is a college football team for the University of Oregon, located in the U.S. state of Oregon."
+  },
+  "Wisconsin Badgers football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Wisconsin Badgers football program represents the University of Wisconsin–Madison in the sport of American football. Wisconsin competes in the Football Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA) within the Big Ten Conference (Big Ten)."
+  },
+  "Iowa Hawkeyes football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Iowa Hawkeyes football program represents the University of Iowa in college football. The Hawkeyes compete in the Big Ten Conference."
+  },
+  "Michigan State Spartans football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Michigan State Spartans football program represents Michigan State University (MSU) in college football at the NCAA Division I Football Bowl Subdivision (FBS) level. The Spartans are members of the Big Ten Conference."
+  },
+  "Texas A&M Aggies football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Texas A&M Aggies football program represents Texas A&M University in the sport of American football. The Aggies compete in the Football Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA) and the Western Division of the Southeastern Conference (SEC)."
+  },
+  "Arkansas Razorbacks football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Arkansas Razorbacks football program represents the University of Arkansas in the sport of American football. The Razorbacks compete in the \nFootball Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA) as a member of the Southeastern Conference (SEC)."
+  },
+  "Washington Huskies football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Washington Huskies football team represents the University of Washington in college football. Washington competes in the NCAA Division I Football Bowl Subdivision (FBS) as a member of the Big Ten Conference, having been a charter member of the Pac-12 Conference between 1915 and 2024."
+  },
+  "Ole Miss Rebels football": {
+    "league": "NCAA FBS Football (USA)",
+    "sport": "football",
+    "summary": "The Ole Miss Rebels football program represents the University of Mississippi, also known as \"Ole Miss\". The Rebels compete in the Football Bowl Subdivision (FBS) of the National Collegiate Athletic Association (NCAA) as members of the Southeastern Conference (SEC)."
+  },
+  "BC Lions": {
+    "league": "CFL (Canada)",
+    "sport": "football",
+    "summary": "The BC Lions are a professional Canadian football team based in Vancouver, British Columbia. The Lions compete in the West Division of the Canadian Football League (CFL), and play their home games at BC Place."
+  },
+  "Edmonton Elks": {
+    "league": "CFL (Canada)",
+    "sport": "football",
+    "summary": "The Edmonton Elks are a professional Canadian football team based in Edmonton. The club competes in the Canadian Football League (CFL) as a member of the league's West Division and plays their home games at Commonwealth Stadium."
+  },
+  "Calgary Stampeders": {
+    "league": "CFL (Canada)",
+    "sport": "football",
+    "summary": "The Calgary Stampeders are a professional Canadian football team based in Calgary. The Stampeders compete in the West Division of the Canadian Football League (CFL)."
+  },
+  "Saskatchewan Roughriders": {
+    "league": "CFL (Canada)",
+    "sport": "football",
+    "summary": "The Saskatchewan Roughriders are a professional Canadian football team based in Regina, Saskatchewan. The Roughriders compete in the Canadian Football League (CFL) as a member club of the league's West Division."
+  },
+  "Winnipeg Blue Bombers": {
+    "league": "CFL (Canada)",
+    "sport": "football",
+    "summary": "The Winnipeg Blue Bombers are a professional Canadian football team based in Winnipeg. The Blue Bombers compete in the Canadian Football League (CFL) as a member club of the league's West division."
+  },
+  "Hamilton Tiger-Cats": {
+    "league": "CFL (Canada)",
+    "sport": "football",
+    "summary": "The Hamilton Tiger-Cats are a professional Canadian football team based in Hamilton, Ontario, Canada. They are currently members of the East Division of the Canadian Football League (CFL)."
+  },
+  "Toronto Argonauts": {
+    "league": "CFL (Canada)",
+    "sport": "football",
+    "summary": "The Toronto Argonauts (officially the Toronto Argonaut Football Club and colloquially known as the Argos) are a professional Canadian football team based in Toronto. The Argonauts compete in the East Division of the Canadian Football League (CFL)."
+  },
+  "Ottawa Redblacks": {
+    "league": "CFL (Canada)",
+    "sport": "football",
+    "summary": "The Ottawa Redblacks (officially stylized as REDBLACKS) (French: Rouge et Noir d'Ottawa) are a professional Canadian football team based in Ottawa. The team plays in the East Division of the Canadian Football League (CFL)."
+  },
+  "Montreal Alouettes": {
+    "league": "CFL (Canada)",
+    "sport": "football",
+    "summary": "The Montreal Alouettes (French: Les Alouettes de Montréal), colloquially known as the Als, are a professional Canadian football team based in Montreal. Founded in 1946, the team has disbanded and been re-established twice."
+  },
+  "Yomiuri Giants": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Yomiuri Giants (読売ジャイアンツ, Yomiuri Jaiantsu; formally Yomiuri Kyojingun (読売巨人軍)) and still known by the nickname Kyojin (巨人) are a Japanese professional baseball team competing in Nippon Professional Baseball's Central League. Based in Bunkyō, Tokyo, they are one of two professional baseball teams based in Tokyo, the other being the Tokyo Yakult Swallows."
+  },
+  "Hanshin Tigers": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Hanshin Tigers (阪神タイガース, Hanshin Taigāsu) are a Nippon Professional Baseball team playing in the Central League. The team is based in Nishinomiya, Hyōgo Prefecture, Japan, next to their main stadium, Hanshin Koshien Stadium."
+  },
+  "Chunichi Dragons": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Chunichi Dragons (中日ドラゴンズ, Chūnichi Doragonzu) are a professional baseball team based in Nagoya, the chief city in the Chūbu region of Japan. The team plays in the Central League of Nippon Professional Baseball."
+  },
+  "Tokyo Yakult Swallows": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Tokyo Yakult Swallows (Japanese: 東京ヤクルトスワローズ, Hepburn: Tōkyō Yakuruto Suwarōzu) are a Japanese professional baseball team competing in Nippon Professional Baseball's Central League. Based in Shinjuku, Tokyo, they are one of two professional baseball teams in Tokyo, the other being the Yomiuri Giants."
+  },
+  "Yokohama DeNA BayStars": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Yokohama DeNA BayStars (横浜DeNAベイスターズ, Yokohama Dī-Enu-Ē Beisutāzu) are a professional baseball team in the Central League of Nippon Professional Baseball. Their home field is Yokohama Stadium, located in central Yokohama."
+  },
+  "Hiroshima Toyo Carp": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Hiroshima Toyo Carp (広島東洋カープ, Hiroshima Tōyō Kāpu) are a professional baseball team based in Hiroshima, Japan. They compete in the Central League of Nippon Professional Baseball, playing their homes games at Mazda Zoom-Zoom Stadium Hiroshima."
+  },
+  "Fukuoka SoftBank Hawks": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Fukuoka SoftBank Hawks (福岡ソフトバンクホークス, Fukuoka Sofutobanku Hōkusu) are a Japanese professional baseball team based in Fukuoka, Fukuoka Prefecture. They compete in Nippon Professional Baseball (NPB) as a member of the Pacific League."
+  },
+  "Hokkaido Nippon-Ham Fighters": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Hokkaido Nippon-Ham Fighters (北海道日本ハムファイターズ, Hokkaidō Nippon-Hamu Faitāzu) are a Japanese professional baseball team based in Kitahiroshima, Hokkaidō, in the Sapporo metropolitan area. They compete in the Pacific League of Nippon Professional Baseball, playing the majority of their home games at ES CON Field Hokkaido."
+  },
+  "Chiba Lotte Marines": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Chiba Lotte Marines (千葉ロッテマリーンズ, Chiba Rotte Marīnzu) are a professional baseball team in the Pacific League based in Chiba City, Chiba Prefecture in the Kantō region of Japan and owned by Lotte Holdings Co., Ltd. The Marines were a founding member of the Pacific League in 1950 as the then-known Mainichi Orions when the Japanese Baseball League reorganized into Nippon Professional Baseball, where they won the inaugural 1950 Japan Series."
+  },
+  "Tohoku Rakuten Golden Eagles": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Tohoku Rakuten Golden Eagles (東北楽天ゴールデンイーグルス, Tōhoku Rakuten Gōruden Īgurusu), often shortened as the Rakuten Eagles (楽天イーグルス, Rakuten Īgurusu), are a baseball team based in Sendai, Miyagi Prefecture, Japan. It has played in Nippon Professional Baseball's Pacific League since the team's formation in November 2004."
+  },
+  "Saitama Seibu Lions": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Saitama Seibu Lions (埼玉西武ライオンズ, Saitama Seibu Raionzu) are a professional baseball team in Japan's Pacific League based north of Tokyo in Tokorozawa, Saitama Prefecture. Before 1979, they were based in Fukuoka, Fukuoka Prefecture, in Kyushu."
+  },
+  "Orix Buffaloes": {
+    "league": "NPB (Japan)",
+    "sport": "baseball",
+    "summary": "The Orix Buffaloes (オリックス・バファローズ, Orikkusu Bafarōzu) are a Nippon Professional Baseball team formed as a result of the 2004 Nippon Professional Baseball realignment by the merger of the Orix BlueWave of Kobe, Hyōgo Prefecture, Japan, and the Osaka Kintetsu Buffaloes of Osaka, Osaka Prefecture, Japan. The team plays in the Pacific League and is under ownership by Orix, a financial services company founded in Osaka."
+  },
+  "LG Twins": {
+    "league": "KBO League (South Korea)",
+    "sport": "baseball",
+    "summary": "The LG Twins (Korean: LG 트윈스) are a South Korean professional baseball team based in Seoul, South Korea. They are a member of the KBO League."
+  },
+  "Kia Tigers": {
+    "league": "KBO League (South Korea)",
+    "sport": "baseball",
+    "summary": "The Kia Tigers (Korean: KIA 타이거즈) are a South Korean professional baseball team founded in 1982 and based in the southwestern city of Gwangju. Until 2001, they were known as the Haitai Tigers."
+  },
+  "Samsung Lions": {
+    "league": "KBO League (South Korea)",
+    "sport": "baseball",
+    "summary": "The Samsung Lions (Korean: 삼성 라이온즈) are a South Korean professional baseball team founded in 1982. They are based in the southeastern city of Daegu and are members of the KBO League."
+  },
+  "Doosan Bears": {
+    "league": "KBO League (South Korea)",
+    "sport": "baseball",
+    "summary": "The Doosan Bears (Korean: 두산 베어스) are a South Korean professional baseball team based in Seoul. Founded in 1982, they are a member of the KBO League."
+  },
+  "SSG Landers": {
+    "league": "KBO League (South Korea)",
+    "sport": "baseball",
+    "summary": "SSG Landers (Korean: SSG 랜더스; RR: SSG Laendeoseu) are a South Korean professional baseball team. The team was originally established as the SK Wyverns but was renamed as the SSG Landers in 2021 after Shinsegae acquired the team from SK Group."
+  },
+  "Lotte Giants": {
+    "league": "KBO League (South Korea)",
+    "sport": "baseball",
+    "summary": "The Lotte Giants (Korean: 롯데 자이언츠) are a South Korean professional baseball team based in Busan. They are a member of the KBO League."
+  },
+  "Hanwha Eagles": {
+    "league": "KBO League (South Korea)",
+    "sport": "baseball",
+    "summary": "The Hanwha Eagles (Korean: 한화 이글스) are a South Korean professional baseball team based in Daejeon that competes in the KBO League. The Eagles' home ballpark is Daejeon Hanwha Life Ballpark."
+  },
+  "NC Dinos": {
+    "league": "KBO League (South Korea)",
+    "sport": "baseball",
+    "summary": "The NC Dinos (Korean: NC 다이노스) are a South Korean professional baseball team based in Changwon. They are a member of the KBO League."
+  },
+  "Kiwoom Heroes": {
+    "league": "KBO League (South Korea)",
+    "sport": "baseball",
+    "summary": "The Kiwoom Heroes (Korean: 키움 히어로즈; RR: Kium Hieolojeu) are a South Korean professional baseball team based in Seoul. They are a member of the KBO League."
+  },
+  "KT Wiz": {
+    "league": "KBO League (South Korea)",
+    "sport": "baseball",
+    "summary": "The KT Wiz (Korean: KT 위즈; stylized as kt wiz) are a South Korean professional baseball team based in Suwon. They are a member of the KBO League."
+  },
+  "SKA Saint Petersburg": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club SKA (Russian: Хоккейный клуб СКА), often referred to as SKA Saint Petersburg and literally as the Sports Club of the Army, is a professional ice hockey club based in Saint Petersburg, Russia. It is a member of the Bobrov Division in the Kontinental Hockey League (KHL)."
+  },
+  "CSKA Moscow": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "CSKA Moscow (Russian: ЦСКА Москва) is a Russian multi-sports club based in Moscow. It is a federal autonomous institution of the Ministry of Defence (Russian: Федеральное автономное учреждение Министерства обороны Российской Федерации «Центральный спортивный клуб Армии»)."
+  },
+  "Ak Bars Kazan": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club Ak Bars (Russian: Ак Барс, Tatar: Ак Барс, English: Snow Leopard), also known as Ak Bars Kazan, is a professional ice hockey club based in Kazan, Russia. It is a member of the Kharlamov Division in the Kontinental Hockey League (KHL)."
+  },
+  "Metallurg Magnitogorsk": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Metallurg Magnitogorsk (Russian: Металлург Магнитогорск) is a professional ice hockey club based in Magnitogorsk, Russia. It is a member of the Kharlamov Division in the Kontinental Hockey League (KHL)."
+  },
+  "Avangard Omsk": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club Avangard (Russian: ХК Авангард, Vanguard), also known as Avangard Omsk, is a professional ice hockey club based in Omsk, Russia. It is a member of the Chernyshev Division in the Kontinental Hockey League (KHL)."
+  },
+  "Lokomotiv Yaroslavl": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club Lokomotiv (Russian: ХК Локомотив, English: Locomotive HC), also known as Lokomotiv Yaroslavl, is a professional ice hockey club based in Yaroslavl, Russia. It is a member of the Tarasov Division in the Kontinental Hockey League (KHL)."
+  },
+  "Dynamo Moscow": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "MGO VFSO \"Dynamo\" (Russian: МГО ВФСО «Динамо»), commonly known as Dynamo Moscow (Russian: Динамо Москва), is a Russian sports club based in Moscow. Founded by Felix Dzerzhinsky on 18 April 1923, Dynamo Moscow was the first institution created from the All-Union Dynamo Sports Club."
+  },
+  "Spartak Moscow": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Spartak Moscow may refer to the following teams based or formerly based in Moscow, Russia:\n\nFC Spartak Moscow, an association football club\nHC Spartak Moscow, a professional ice hockey team\nSpartak GM Moscow, a semi-professional rugby club\nWBC Spartak Noginsk, a women's basketball team previously known as WBC Spartak Moscow\nSpartak Moscow (bandy club), a bandy club, active 1910–1961\nFC Spartak Moscow (women)"
+  },
+  "Traktor Chelyabinsk": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Traktor Chelyabinsk, also known as Traktor, or HC Traktor Chelyabinsk, (Russian: ХК Трактор Челябинск; Трактор) is a professional ice hockey club based in Chelyabinsk, Russia. It is a member of the Kharlamov Division in the Kontinental Hockey League (KHL)."
+  },
+  "Salavat Yulaev Ufa": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club Salavat Yulaev (Russian: Хоккейный клуб «Салават Юлаев», romanized: Hokkejnyj klub «Salavat Julajev»; Bashkir: «Салауат Юлаев» хоккей клубы, romanized: «Salawat Yulayev» xokkey klubı), commonly referred as Salavat Yulaev Ufa, is a professional ice hockey club based in Ufa, Russia. It is a member of the Chernyshev Division in the Kontinental Hockey League (KHL)."
+  },
+  "Neftekhimik Nizhnekamsk": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Neftekhimik Nizhnekamsk may refer to:\n\nHC Neftekhimik Nizhnekamsk, ice hockey club\nFC Neftekhimik Nizhnekamsk, football club\nNeftekhimik Ice Palace, home arena for HC Neftekhimik Nizhnekamsk"
+  },
+  "Torpedo Nizhny Novgorod": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Torpedo Nizhny Novgorod (Russian: Торпедо Нижний Новгород) is a professional ice hockey club in Nizhny Novgorod, Russia. It is a member of the Bobrov Division in the Kontinental Hockey League (KHL)."
+  },
+  "Severstal Cherepovets": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club Severstal is a professional ice hockey club based in Cherepovets, Russia. It is a member of the Tarasov Division in the Kontinental Hockey League (KHL)."
+  },
+  "Barys Astana": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club Barys (Kazakh: Барыс хоккей клубы, romanized: Barys hokkei kluby; Russian: Хоккейный клуб Барыс, romanized: Khokkeynyy klub Barys), also referred to as Barys Astana or HC Barys, is a professional ice hockey club based in Astana, Kazakhstan. It is a member of the Chernyshev Division in the Kontinental Hockey League (KHL)."
+  },
+  "Kunlun Red Star": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "HC Kunlun Red Star (simplified Chinese: 昆仑红星; traditional Chinese: 崑崙紅星; pinyin: Kūnlún Hóngxīng) was a professional ice hockey club based in Beijing, China. It was a member of the Tarasov Division in the Kontinental Hockey League (KHL)."
+  },
+  "HC Sochi": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club Sochi (Russian: Хоккейный клуб Сочи) is a professional ice hockey club based in Sochi, Russia. It is a member of the Bobrov Division in the Kontinental Hockey League (KHL)."
+  },
+  "Amur Khabarovsk": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club Amur (Russian: Хоккейный клуб Амур), commonly referred to as the Amur Khabarovsk, is a professional ice hockey club based in Khabarovsk, Russia. It is a member of the Chernyshev Division in the Kontinental Hockey League (KHL)."
+  },
+  "Sibir Novosibirsk": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Sibir Novosibirsk may refer to one of the following sports clubs based in Novosibirsk, Russia:\n\nHC Sibir Novosibirsk, an ice hockey club\nFC Sibir Novosibirsk, a dissolved football club\nFC Sibir Novosibirsk (2019), a current football club"
+  },
+  "Admiral Vladivostok": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club Admiral, also known as Admiral Vladivostok, (Russian: Хоккейный клуб Адмирал) is a professional ice hockey club based in Vladivostok, Russia. It is a member of the Chernyshev Division in the Kontinental Hockey League (KHL)."
+  },
+  "Lada Togliatti": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Lada Togliatti may refer to one of the following sports clubs in Togliatti, Russia:\n\nFC Lada Togliatti, a football club\nFC Lada Togliatti (women), FC Lada's women team\nHC Lada Togliatti, an ice hockey club\nMega-Lada Togliatti, a motorcycle speedway team\nWHC Lada Togliatti, a women's handball club"
+  },
+  "Metallurg Novokuznetsk": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Metallurg Novokuznetsk (Russian: Металлург Новокузнецк Shor: Металлург Аба-тура) is a professional ice hockey team from Siberia based in Novokuznetsk, Kemerovo Oblast, Russia. They are currently members of the Supreme Hockey League (VHL)."
+  },
+  "HC Yugra": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Hockey Club Yugra (Russian: Хоккейный клуб Югра), is a professional ice hockey team based in Khanty-Mansiysk, Yugra, Russia. They currently play in the Supreme Hockey League, the second-highest league in Russia, and played in the Kontinental Hockey League from 2010 until 2018."
+  },
+  "Dinamo Riga": {
+    "league": "KHL (Russia/Eurasia)",
+    "sport": "hockey",
+    "summary": "Dinamo Riga (Latvian: Rīgas Dinamo) was a professional ice hockey team based in Riga, Latvia. It most recently was a member of the Latvian Hockey Higher League."
+  },
+  "Djurgårdens IF Hockey": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Djurgårdens IF Ishockeyförening, commonly known as Djurgårdens IF, Djurgården Hockey, or Djurgården (IPA: [ˈjʉ̂ːrˌɡoːɖɛn]), is a professional ice hockey team based in Stockholm, Sweden, affiliated with the Djurgårdens IF umbrella organisation. Djurgården compete in the Swedish Hockey League, which is the top tier Swedish ice hockey league."
+  },
+  "Frölunda HC": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Frölunda Hockey Club, previously known as the Frölunda Indians, is a Swedish professional ice hockey club based in Gothenburg. They currently play in the highest Swedish league, the Swedish Hockey League (SHL), formerly the Elitserien, where they have played for most of the club's existence."
+  },
+  "HV71": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "HV71 (Swedish pronunciation: [ˈhôːveː ˌɧɵtːɪˈɛtː]), often referred to as just HV, is a Swedish professional ice hockey club based in Jönköping, playing in the Swedish Hockey League (SHL), the first tier of Swedish ice hockey. The team played in the 2008–09 Champions Hockey League season, and has also participated in the new Champions Hockey League tournament since the 2014–15 season."
+  },
+  "Luleå HF": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Luleå Hockeyförening, also known as Luleå Hockey, is a professional ice hockey club from Luleå, Sweden. The club has been playing in the Swedish Hockey League (SHL), the top tier of ice hockey in Sweden, since the 1984–85 season."
+  },
+  "Malmö Redhawks": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "The Malmö Redhawks (colloquially referred to simply as Malmö or by past abbreviation MIF) are a Swedish professional ice hockey team based in Malmö, Sweden, which plays in the SHL, with Malmö Arena as the venue for home games. The history of the team dates back to 1944 as the ice hockey division of the now exclusively football club Malmö FF."
+  },
+  "Brynäs IF": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Brynäs IF is a Swedish professional ice hockey team from Gävle. The club currently plays in the Swedish Hockey League (SHL), promoted from the HockeyAllsvenskan, the second tier of ice hockey in Sweden, following the 2023–24 season."
+  },
+  "Rögle BK": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Rögle BK (Rögle Bandyklubb) is a Swedish professional ice hockey club from Ängelholm that has been playing in the SHL since the 2015–16 season. Rögle has previously played in the SHL (previously named Elitserien) in 1992–1996, 2008–2010, and briefly in 2012–13."
+  },
+  "Skellefteå AIK": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Skellefteå AIK is a Swedish professional ice hockey club from Skellefteå. They currently play In the Swedish Hockey League."
+  },
+  "Linköping HC": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Linköping Hockey Club, often known by its initials LHC, or colloquially among its fans as Cluben, is a Swedish professional ice hockey club from Linköping, founded in 1976. The home arena of the team is Saab Arena (formerly Cloetta Center) which accommodates 8,190 spectators."
+  },
+  "MODO Hockey": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Modo Hockey (or MoDo with uppercase letters) is a professional ice hockey club in Örnsköldsvik, Sweden. The team currently plays in Sweden's second-tier league HockeyAllsvenskan after losing to HV71 after the play out following the 2024/25 season."
+  },
+  "Färjestad BK": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Färjestad Bollklubb (Swedish pronunciation: [ˈfæ̌rjɛsta]; abbreviated as FBK) is a Swedish professional ice hockey team based in Karlstad. Färjestad has had 21 Swedish Championship final appearances, winning ten times since the Swedish Hockey League (SHL; formerly Elitserien) was started in 1975, making them the most successful SHL club in history."
+  },
+  "IFK Gothenburg": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Idrottsföreningen Kamraterna Göteborg (officially IFK Göteborg Fotboll), commonly known as IFK Göteborg, IFK (especially locally) or Blåvitt, is a Swedish professional football club based in Gothenburg. Founded in 1904, it is the only club in the Nordic countries that has won one of the main UEFA competitions, having won the UEFA Cup in both 1982 and 1987."
+  },
+  "Örebro HK": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "Örebro Hockeyklubb, commonly referred to as Örebro HK or Örebro Hockey, (formerly HC Örebro 90) is a Swedish professional ice hockey club located in Örebro. The team is currently playing in the Swedish Hockey League (SHL; formerly Elitserien), the top tier of Swedish ice hockey, since the 2013–14 season."
+  },
+  "IF Björklöven": {
+    "league": "SHL (Sweden)",
+    "sport": "hockey",
+    "summary": "IF Björklöven (often simply referred to as Löven) is a Swedish professional ice hockey club in Umeå, Västerbotten, in northern Sweden. The club is currently playing in the second-tier league HockeyAllsvenskan as of the 2024-25 season, but has played 15 seasons in the top Swedish league Elitserien (1976–77, 1978–79 to 1988–89, 1993–94, 1998–99 and 2000–01, becoming national champions in 1987)."
+  },
+  "Jokerit": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Helsingin Jokerit (Finnish pronunciation: [ˈjokerit], English: Jokers or Jesters of Helsinki) is a professional ice hockey team based in Helsinki, Finland, which competes in the Liiga. Jokerit plays its home games at the Veikkaus Arena in Helsinki."
+  },
+  "HIFK": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "HIFK, the Idrottsföreningen Kamraterna, Helsingfors (IFK, Helsingfors) rf (officially abbreviated IFK Helsingfors, colloquially often Helsingfors IFK or Helsingin IFK) is a multi-sport association based in Helsinki, Finland. Formed in 1897 on the initiative of Georges Doubitsky and fellow students of the Svenska Reallyceum, the Swedish lyceum in Helsinki, it is the oldest continuously operating Idrottsföreningen Kamraterna (IFK) organization in Finland."
+  },
+  "TPS": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "TPS may refer to:"
+  },
+  "Tappara": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Tappara (pronounced [ˈtɑpːɑrɑ]; Finnish for \"Battle axe\") is a Finnish professional ice hockey team playing in the SM-liiga. They play at Nokia Arena in Tampere, Finland."
+  },
+  "Ilves": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Tampereen Ilves, commonly known as Ilves, (pronounced [ˈilʋes]; Finnish for \"Lynx\") is a Finnish professional ice hockey team based in Tampere. They play in the Liiga at the Nokia Arena."
+  },
+  "Kärpät": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Oulun Kärpät (Finnish for \"Oulu Ermines\", sometimes referred to as Kärpät Oulu) is a Finnish professional ice hockey team based in Oulu and playing in the top-tier Finnish Liiga. Kärpät have won the Finnish championship title eight times, and is the most successful Finnish ice hockey team in the 21st century."
+  },
+  "Ässät": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Ässät or Ässä may refer to: \n\nHC Ässät Pori Oy, Finnish sports club\nPorin Ässät (men's ice hockey)\nPorin Ässät (women's ice hockey)\nPorin Ässät (men's football)\nPATA (esports)\nÄssät (band), Finnish band from Oulu\nS Group, Finnish Consumers' co-operative. Also known as Ässä or Ässät\nJalkaväkirykmentti 11 (winter war), Finnish military regiment."
+  },
+  "JYP": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "JYP may refer to: \n\nJ.Y. Park (born 1971), South Korean singer-songwriter and record producer\nJYP Entertainment, a K-pop record label, founded by J."
+  },
+  "KalPa": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Kalevan Pallo (KalPa) is a professional ice hockey team which competes in the Finnish Liiga. They play in Kuopio, Finland at the Olvi Areena."
+  },
+  "HPK": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Hämeenlinnan Pallokerho (HPK) is a professional ice hockey team in the Liiga, the top men's ice hockey league in Finland. Their home ice is the Ritari-areena in Hämeenlinna."
+  },
+  "Pelicans": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Pelicans (genus Pelecanus) are a genus of large water birds that make up the family Pelecanidae. They are characterized by a long beak and a large throat pouch used for catching prey and draining water from the scooped-up contents before swallowing."
+  },
+  "SaiPa": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Saimaan Pallo (SaiPa) is an ice hockey team in the Finnish Liiga. They play their home games at Kisapuisto in Lappeenranta, Finland."
+  },
+  "Sport Vaasa": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Sport, known by its full name as Hockey Team Vaasan Sport Oy or simply Vaasan Sport, is a Finnish ice hockey team playing in Liiga, and is based at the 5,200-capacity Vaasa Arena in Vaasa. The team was established in 1939 as IF Sport (Idrottsföreningen Sport)."
+  },
+  "Lukko": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "Rauman Lukko (Finnish for \"lock\") is a Finnish sports club based in Rauma, Finland, best known for its men's professional ice hockey team. The club was founded as Rauma Woodin Lukko in 1936."
+  },
+  "KooKoo": {
+    "league": "Liiga (Finland)",
+    "sport": "hockey",
+    "summary": "KooKoo is the debut solo album by American singer Debbie Harry, released on July 27, 1981, by Chrysalis Records. Produced by Nile Rodgers and Bernard Edwards of Chic, the album was recorded while Harry took a break from her band Blondie."
   }
 }
