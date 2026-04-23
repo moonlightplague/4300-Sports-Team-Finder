@@ -27,6 +27,31 @@ WEIGHTS = {
 
 MAX_REDDIT_DOCS_PER_TEAM = 100
 
+TARGET_SECTIONS = {
+    "overview", "background", "history", "founding", "origins",
+    "style of play", "playing style", "tactics", "kit", "colors", "colours",
+    "culture", "fan culture", "supporters", "ultras", "identity",
+    "nickname", "nicknames", "motto", "badge", "crest",
+    "support", "supporter culture", "fanbase", "fan base",
+    "rivalries", "rivalry", "derby", "derbies", "notable rivalries",
+    "honours", "achievements", "trophies", "titles",
+    "championships", "championship history",
+    "accolades", "records", "notable records",
+    "stadium", "ground", "home ground",
+    "arena", "home arena",
+    "academy", "youth academy", "youth system", "youth team",
+    "development", "reserve team", "reserves",
+    "notable players", "notable alumni", "famous players",
+    "coaches", "managers", "notable managers", "notable coaches",
+    "ownership", "management",
+    "kit and colors", "kit and colours", "club culture",
+    "supporters and rivalries", "badge and colours",
+    "showtime", "players", "draft history",
+    "spring training", "farm system",
+    "players", "general managers",
+    "draft", "cheerleaders",
+}
+
 
 team_metadata = {}
 for league, teams in european_soccer_league_to_teams.items():
@@ -187,12 +212,13 @@ def build_inverted_index(files):
 
 
 def build_summaries(output_path=None):
-    if output_path is None:
-        output_path = os.path.join(os.path.dirname(__file__), "data", "team_summaries.json")
     """
     Fetches Wikipedia summaries for all teams using page.summary and writes
     them to data json file as { team: { league, sport, summary } }.
     """
+    if output_path is None:
+        output_path = os.path.join(os.path.dirname(__file__), "data", "team_summaries.json")
+
     if os.path.exists(output_path):
         with open(output_path, "r", encoding="utf-8") as f:
             result = json.load(f)
@@ -202,7 +228,11 @@ def build_summaries(output_path=None):
     for team, meta in team_metadata.items():
         if team in result:
             continue
+
         summary = ""
+        extended = ""
+        sections = {}
+
         try:
             page = wiki.page(team)
             if page.exists():
@@ -210,6 +240,23 @@ def build_summaries(output_path=None):
                 if raw:
                     sentences = re.split(r"(?<=[.!?])\s+", raw)
                     summary = " ".join(sentences[:2]).strip()
+                    extended = " ".join(sentences[:5]).strip()
+
+                for s in page.sections:
+                    title_l = (s.title or "").strip().lower()
+                    if any(t in title_l for t in TARGET_SECTIONS):
+                        text = (s.text or "").strip()
+                        if text:
+                            sentences = re.split(r"(?<=[.!?])\s+", text)
+                            sections[s.title] = " ".join(sentences[:4]).strip()
+                    for sub in s.sections:
+                        sub_title_l = (sub.title or "").strip().lower()
+                        if any(t in sub_title_l for t in TARGET_SECTIONS):
+                            text = (sub.text or "").strip()
+                            if text:
+                                sentences = re.split(r"(?<=[.!?])\s+", text)
+                                sections[sub.title] = " ".join(sentences[:4]).strip()
+
         except Exception as e:
             print(f"failed summary for '{team}': {e}")
 
@@ -217,11 +264,12 @@ def build_summaries(output_path=None):
             "league": meta["league"],
             "sport": meta["sport"],
             "summary": summary,
+            "extended": extended,
+            "sections": sections,
         }
-    
+
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(result, f, ensure_ascii=False, indent=2)
-
 def main():
     DATASET_FOLDER = "dataset"
     OUTPUT_FILE = "src/data/inverted_index_matrix.json"
