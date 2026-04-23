@@ -77,7 +77,7 @@
                     <div>
                         <div class="modal-section-label">DIMENSION BREAKDOWN</div>
                         <p class="modal-breakdown-subtitle">
-                            UI placeholder for team-specific SVD explanations. Click a row to expand details.
+                            Team-specific latent dimensions with signed contribution and top terms.
                         </p>
                     </div>
                     <button type="button" id="modal-expand-all-btn" class="modal-expand-all-btn" onclick="toggleExpandAll()">
@@ -145,6 +145,26 @@
             return terms;
         }
 
+        function normalizeDimRows(row) {
+            const dimScores = row && row.dim_scores && typeof row.dim_scores === "object"
+                ? row.dim_scores
+                : {};
+
+            const parsed = Object.entries(dimScores)
+                .map(([dimId, score]) => ({
+                    dimId: Number(dimId),
+                    score: Number(score),
+                }))
+                .filter(item => Number.isFinite(item.dimId) && Number.isFinite(item.score))
+                .sort((a, b) => Math.abs(b.score) - Math.abs(a.score));
+
+            if (!parsed.length) return [];
+
+            const nonZero = parsed.filter(item => Math.abs(item.score) > 1e-8);
+            if (nonZero.length >= 3) return nonZero.slice(0, 8);
+            return parsed.slice(0, Math.min(8, Math.max(3, parsed.length)));
+        }
+
         function tokenizeQuery(text) {
             const tokens = String(text || "")
                 .toLowerCase()
@@ -193,8 +213,8 @@
         }
 
         function buildAccordionHtml(row) {
-            const components = Array.isArray(row.svd_components) ? row.svd_components : [];
-            if (!components.length) {
+            const dimRows = normalizeDimRows(row);
+            if (!dimRows.length) {
                 return `
                     <div class="modal-accordion-empty">
                         No SVD dimensions are available for this result yet.
@@ -202,22 +222,39 @@
                 `;
             }
 
-            const terms = uniqueTerms(row);
+            const topTermsByDim = row && row.top_terms_by_dim && typeof row.top_terms_by_dim === "object"
+                ? row.top_terms_by_dim
+                : {};
+            const dimLabels = row && row.dim_labels && typeof row.dim_labels === "object"
+                ? row.dim_labels
+                : {};
+            const dimBlurbs = row && row.dim_blurbs && typeof row.dim_blurbs === "object"
+                ? row.dim_blurbs
+                : {};
 
-            return components.map((component, idx) => {
+            return dimRows.map((dim, idx) => {
                 const isOpen = allAccordionExpanded || idx === openAccordionIndex;
-                const compNumber = component.component ?? (idx + 1);
-                const contribution = Number(component.contribution);
+                const compNumber = dim.dimId;
+                const contribution = dim.score;
                 const contribText = Number.isNaN(contribution)
                     ? "-"
                     : `${contribution >= 0 ? "+" : ""}${contribution.toFixed(3)}`;
 
-                const rowTerms = terms.length
-                    ? terms.slice(idx, idx + 4).concat(terms.slice(0, Math.max(0, idx + 4 - terms.length)))
-                    : [];
+                const perDimTerms = Array.isArray(topTermsByDim[String(compNumber)])
+                    ? topTermsByDim[String(compNumber)]
+                    : (Array.isArray(topTermsByDim[compNumber]) ? topTermsByDim[compNumber] : []);
+                const rowTerms = perDimTerms
+                    .map(item => item && typeof item === "object" ? item.t : "")
+                    .filter(Boolean)
+                    .slice(0, 6);
                 const termChips = rowTerms.length
                     ? rowTerms.map(t => `<span class="modal-term-chip">${esc(t)}</span>`).join("")
                     : `<span class="modal-term-chip muted">Awaiting term mapping</span>`;
+                const label = dimLabels[String(compNumber)] ?? dimLabels[compNumber] ?? `Dimension LS${compNumber}`;
+                const blurb = dimBlurbs[String(compNumber)] ?? dimBlurbs[compNumber] ?? "";
+                const detailText = blurb
+                    ? `${esc(blurb)} Evidence terms: ${rowTerms.map(esc).join(", ") || "n/a"}.`
+                    : `Evidence terms: ${rowTerms.map(esc).join(", ") || "n/a"}.`;
 
                 return `
                     <article class="modal-accordion-item ${isOpen ? "open" : ""}">
@@ -229,14 +266,13 @@
                         >
                             <span class="modal-accordion-left">
                                 <span class="modal-accordion-icon">${isOpen ? "-" : "+"}</span>
-                                <span class="modal-accordion-title">Dimension LS${esc(compNumber)}</span>
+                                <span class="modal-accordion-title">${esc(label)}</span>
                             </span>
                             <span class="modal-accordion-score">${contribText}</span>
                         </button>
                         <div class="modal-accordion-panel">
                             <p class="modal-accordion-copy">
-                                Placeholder explanation for LS${esc(compNumber)}. We will swap this with team-specific axis
-                                interpretation and evidence snippets in the next iteration.
+                                ${detailText}
                             </p>
                             <div class="modal-accordion-terms">${termChips}</div>
                         </div>
@@ -248,8 +284,8 @@
         function updateExpandAllButton(row) {
             const btn = document.getElementById("modal-expand-all-btn");
             if (!btn) return;
-            const components = row && Array.isArray(row.svd_components) ? row.svd_components : [];
-            btn.disabled = components.length === 0;
+            const dimRows = normalizeDimRows(row);
+            btn.disabled = dimRows.length === 0;
             btn.textContent = allAccordionExpanded ? "Collapse All" : "Expand All";
         }
 
@@ -322,8 +358,8 @@
 
         function toggleExpandAll() {
             if (!currentModalRow) return;
-            const components = Array.isArray(currentModalRow.svd_components) ? currentModalRow.svd_components : [];
-            if (!components.length) return;
+            const dimRows = normalizeDimRows(currentModalRow);
+            if (!dimRows.length) return;
 
             allAccordionExpanded = !allAccordionExpanded;
             openAccordionIndex = allAccordionExpanded ? -1 : 0;
