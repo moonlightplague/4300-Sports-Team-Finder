@@ -1,68 +1,158 @@
 """
-LLM chat route — only loaded when USE_LLM = True in routes.py.
-Adds a POST /chat endpoint that performs LLM-driven RAG.
-
-Setup:
-  1. Add API_KEY=your_key to .env
-  2. Set USE_LLM = True in routes.py
+LLM chat route — loaded only when USE_LLM = True in routes.py.
+Adds a POST /chat endpoint that performs sports-team RAG.
 """
 import json
-import os
-import re
 import logging
-from flask import request, jsonify, Response, stream_with_context
+import os
+from typing import Dict, List
+
+from flask import Response, jsonify, request, stream_with_context
 from infosci_spark_client import LLMClient
 
 logger = logging.getLogger(__name__)
 
+TEAM_SUMMARIES_PATH = os.path.join(
+    os.path.dirname(__file__), "data", "team_summaries.json"
+)
 
-def improveQuery(client, user_query):
-    system = """You are a search query optimizer for a sports team search engine. 
-    The user is looking for a sports team that matches their preferences. 
-    Transform their input into 5-8 descriptive keywords about team identity, 
-    play style, culture, or league that would match team profiles in a database.
-    Keywords can cover such as:
-        - Play style: pressing, counter-attack, possession, high-tempo, defensive, technical
-        - Culture/identity: passionate, historic, underdog, community, ultras, dynasty  
-        - League/region if mentioned: Premier League, La Liga, MLS, Bundesliga
-        - Team size/market: small-club, big-budget, mid-table
-    Return ONLY the expanded keywords, comma-separated. No explanation, no preamble.
-    Example: 'what are fast attacking teams' → 'high-tempo, pressing, attacking, offensive, dynamic, aggressive'"""
-    
-    prompt_query_modification = [
-        {"role": "system", "content": system},
-        {"role": "user", "content": f"Expand this into search keywords: {user_query}"},
+
+def _load_team_summaries() -> Dict[str, str]:
+    if not os.path.exists(TEAM_SUMMARIES_PATH):
+        return {}
+    try:
+        with open(TEAM_SUMMARIES_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return {
+            team: str((entry or {}).get("summary", "")).strip()
+            for team, entry in data.items()
+            if team
+        }
+    except Exception as exc:
+        logger.warning("Failed to load team summaries: %s", exc)
+        return {}
+
+
+TEAM_SUMMARIES = _load_team_summaries()
+
+
+def _clean_text(value, max_len=500):
+    text = " ".join(str(value or "").split())
+    return text[:max_len]
+
+
+def _build_ir_query(client, user_message):
+    system_prompt = (
+        "You rewrite sports-team preference prompts into search queries for an IR system. "
+        "Return only a concise keyword query (about 4-12 terms), no explanation."
+    )
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_message},
     ]
-    
-    response = client.chat(prompt_query_modification, stream=False, show_thinking=False)
-    modified_query = response["content"].strip()
-    return modified_query
+    try:
+        response = client.chat(
+            messages,
+            stream=False,
+            show_thinking=False,
+            reasoning_level="low",
+        )
+        rewritten = _clean_text((response or {}).get("content", ""), max_len=200)
+        return rewritten or user_message
+    except Exception as exc:
+        logger.warning("IR query rewrite failed; falling back to user message: %s", exc)
+        return user_message
 
-def llm_search_decision(client, user_message):
-    """Ask the LLM whether to search the DB and which word to use."""
+
+def _run_ir(json_search, ir_query) -> List[Dict]:
+    try:
+        results = json.loads(json_search(ir_query or ""))
+        if isinstance(results, list):
+            return results
+    except Exception as exc:
+        logger.error("IR search failed: %s", exc)
+    return []
+
+
+def _retrieval_context(ir_query, retrieved, max_items=8):
+    if not retrieved:
+        return (
+            f"IR query used: {ir_query}\n"
+            "No IR results were returned."
+        )
+
+    lines = [
+        f"IR query used: {ir_query}",
+        "Top retrieved teams with source IDs:",
+        "Use these source IDs for citations in the final answer.",
+    ]
+    for idx, team in enumerate(retrieved[:max_items], start=1):
+        source_id = f"S{idx}"
+        title = _clean_text(team.get("title", "Unknown team"), max_len=120)
+        league = _clean_text(team.get("league", ""), max_len=120)
+        sport = _clean_text(team.get("sport", ""), max_len=60)
+        score = team.get("score")
+        matched_terms = team.get("matched_terms") or []
+        top_terms = team.get("top_terms") or []
+        if not isinstance(matched_terms, list):
+            matched_terms = []
+        if not isinstance(top_terms, list):
+            top_terms = []
+        matched_terms = [_clean_text(t, max_len=30) for t in matched_terms[:8] if t]
+        top_terms = [_clean_text(t, max_len=30) for t in top_terms[:8] if t]
+        summary_from_json = TEAM_SUMMARIES.get(title)
+        summary = (
+            summary_from_json
+            or _clean_text(team.get("summary", ""), max_len=420)
+            or _clean_text(team.get("descr", ""), max_len=420)
+        )
+        summary_source = (
+            "team_summaries.json"
+            if summary_from_json
+            else "IR index summary/description"
+        )
+        lines.append(
+            f"[{source_id}] {title} | sport={sport} | league={league} | score={score}"
+        )
+        if matched_terms:
+            lines.append(f"   matched_terms: {', '.join(matched_terms)}")
+        if top_terms:
+            lines.append(f"   top_terms: {', '.join(top_terms)}")
+        if summary:
+            lines.append(f"   summary: {summary}")
+        lines.append(f"   source_type: {summary_source}")
+    return "\n".join(lines)
+
+
+def _build_generation_messages(user_message, ir_query, retrieved):
+    context = _retrieval_context(ir_query, retrieved)
     messages = [
         {
             "role": "system",
             "content": (
-                "You have access to a database of Keeping Up with the Kardashians episode titles, "
-                "descriptions, and IMDB ratings. Search is by a single word in the episode title. "
-                "Reply with exactly: YES followed by one space and ONE word to search (e.g. YES wedding), "
-                "or NO if the question does not need episode data."
+                "You are a sports-team recommendation assistant. "
+                "Ground your answer in the retrieved IR evidence. "
+                "Use only the provided retrieval context when giving factual claims, "
+                "and clearly say when retrieval evidence is weak or missing. "
+                "Explain in plain language why each recommended team matches the user request. "
+                "Only recommend teams that appear in the retrieval context source list. "
+                "Cite sources inline using [S#] and include a final 'Sources' section listing each cited source ID."
             ),
         },
-        {"role": "user", "content": user_message},
+        {
+            "role": "user",
+            "content": (
+                f"Original user request:\n{user_message}\n\n"
+                f"Retrieval context:\n{context}\n\n"
+                "Output format requirements:\n"
+                "1) Start with a short direct recommendation summary.\n"
+                "2) For each recommended team, include why it matches the query and at least one inline citation like [S1].\n"
+                "3) End with a 'Sources' section listing each cited source ID and a short evidence phrase.\n"
+                "4) Keep wording user-friendly and concise."
+            ),
+        },
     ]
-    response = client.chat(messages)
-    content = (response.get("content") or "").strip().upper()
-    logger.info(f"LLM search decision: {content}")
-    if re.search(r"\bNO\b", content) and not re.search(r"\bYES\b", content):
-        return False, None
-    yes_match = re.search(r"\bYES\s+(\w+)", content)
-    if yes_match:
-        return True, yes_match.group(1).lower()
-    if re.search(r"\bYES\b", content):
-        return True, "Kardashian"
-    return False, None
+    return messages
 
 
 def register_chat_route(app, json_search):
@@ -75,45 +165,35 @@ def register_chat_route(app, json_search):
         if not user_message:
             return jsonify({"error": "Message is required"}), 400
 
-        api_key = os.getenv("API_KEY")
+        api_key = os.getenv("SPARK_API_KEY") or os.getenv("API_KEY")
         if not api_key:
-            return jsonify({"error": "API_KEY not set — add it to your .env file"}), 500
+            return jsonify(
+                {"error": "Missing SPARK_API_KEY (or API_KEY) in environment"}
+            ), 500
 
         client = LLMClient(api_key=api_key)
-        improveQuery(client, user_message)
-        use_search, search_term = llm_search_decision(client, user_message)
-
-        if use_search:
-            episodes = json.loads(json_search(search_term or "Kardashian"))
-            context_text = "\n\n---\n\n".join(
-                f"Title: {ep['title']}\nDescription: {ep['descr']}\nIMDB Rating: {ep['imdb_rating']}"
-                for ep in episodes
-            ) or "No matching episodes found."
-            messages = [
-                {"role": "system", "content": "Answer questions about Keeping Up with the Kardashians using only the episode information provided."},
-                {"role": "user", "content": f"Episode information:\n\n{context_text}\n\nUser question: {user_message}"},
-            ]
-        else:
-            messages = [
-                {"role": "system", "content": "You are a helpful assistant for Keeping Up with the Kardashians questions."},
-                {"role": "user", "content": user_message},
-            ]
+        ir_query = _build_ir_query(client, user_message)
+        retrieved = _run_ir(json_search, ir_query)
+        messages = _build_generation_messages(user_message, ir_query, retrieved)
 
         def generate():
-            if use_search and search_term:
-                yield f"data: {json.dumps({'search_term': search_term})}\n\n"
+            if ir_query:
+                yield f"data: {json.dumps({'search_term': ir_query})}\n\n"
             try:
-                for chunk in client.chat(messages, stream=True):
-                    if chunk.get("content"):
-                        yield f"data: {json.dumps({'content': chunk['content']})}\n\n"
-            except Exception as e:
-                logger.error(f"Streaming error: {e}")
-                yield f"data: {json.dumps({'error': 'Streaming error occurred'})}\n\n"
+                streamed_any_content = False
+                for chunk in client.chat(messages, stream=True, show_thinking=False):
+                    content = chunk.get("content")
+                    if content:
+                        streamed_any_content = True
+                        yield f"data: {json.dumps({'content': content})}\n\n"
+                if not streamed_any_content:
+                    yield f"data: {json.dumps({'error': 'No response from LLM service'})}\n\n"
+            except Exception as exc:
+                logger.error("Streaming error: %s", exc)
+                yield f"data: {json.dumps({'error': 'LLM streaming error occurred'})}\n\n"
 
         return Response(
-            # Stream the response to the client ("stream_with_context" is from Flask)
             stream_with_context(generate()),
             mimetype="text/event-stream",
-            # Set this to prevent the browser from caching the response
             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
         )
