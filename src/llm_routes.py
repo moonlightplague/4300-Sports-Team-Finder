@@ -5,7 +5,8 @@ Adds a POST /chat endpoint that performs sports-team RAG.
 import json
 import logging
 import os
-from typing import Dict, List
+import re
+from typing import Dict, List, Tuple
 
 from flask import Response, jsonify, request, stream_with_context
 from infosci_spark_client import LLMClient
@@ -15,19 +16,27 @@ logger = logging.getLogger(__name__)
 TEAM_SUMMARIES_PATH = os.path.join(
     os.path.dirname(__file__), "data", "team_summaries.json"
 )
+WORD_RE = re.compile(r"[a-z0-9_]+")
 
 
-def _load_team_summaries() -> Dict[str, str]:
+def _load_team_summaries() -> Dict[str, Dict]:
     if not os.path.exists(TEAM_SUMMARIES_PATH):
         return {}
     try:
         with open(TEAM_SUMMARIES_PATH, "r", encoding="utf-8") as f:
             data = json.load(f)
-        return {
-            team: str((entry or {}).get("summary", "")).strip()
-            for team, entry in data.items()
-            if team
-        }
+        cleaned = {}
+        for team, entry in data.items():
+            if not team or not isinstance(entry, dict):
+                continue
+            cleaned[team] = {
+                "league": str(entry.get("league", "") or "").strip(),
+                "sport": str(entry.get("sport", "") or "").strip(),
+                "summary": str(entry.get("summary", "") or "").strip(),
+                "extended": str(entry.get("extended", "") or "").strip(),
+                "sections": entry.get("sections") if isinstance(entry.get("sections"), dict) else {},
+            }
+        return cleaned
     except Exception as exc:
         logger.warning("Failed to load team summaries: %s", exc)
         return {}
@@ -39,6 +48,56 @@ TEAM_SUMMARIES = _load_team_summaries()
 def _clean_text(value, max_len=500):
     text = " ".join(str(value or "").split())
     return text[:max_len]
+
+
+def _token_set(text):
+    return set(WORD_RE.findall(str(text or "").lower()))
+
+
+def _select_relevant_sections(sections, query_terms, max_sections=2):
+    if not isinstance(sections, dict) or not sections:
+        return []
+
+    ranked = []
+    for section_title, section_text in sections.items():
+        title = _clean_text(section_title, max_len=120)
+        body = _clean_text(section_text, max_len=420)
+        if not title or not body:
+            continue
+        content_tokens = _token_set(f"{title} {body}")
+        overlap = len(query_terms & content_tokens)
+        ranked.append((overlap, len(body), title, body))
+
+    if not ranked:
+        return []
+
+    ranked.sort(key=lambda row: (row[0], row[1]), reverse=True)
+    selected = [row for row in ranked if row[0] > 0][:max_sections]
+    if not selected:
+        selected = ranked[:1]
+    return [(title, body, overlap) for overlap, _, title, body in selected]
+
+
+def _team_knowledge(title, query_terms) -> Tuple[str, str, List[Tuple[str, str, int]], str]:
+    entry = TEAM_SUMMARIES.get(title) or {}
+    if not isinstance(entry, dict):
+        return "", "", [], "IR index summary/description"
+
+    summary = _clean_text(entry.get("summary", ""), max_len=320)
+    extended = _clean_text(entry.get("extended", ""), max_len=520)
+    sections = _select_relevant_sections(entry.get("sections"), query_terms, max_sections=2)
+
+    used_parts = []
+    if summary:
+        used_parts.append("summary")
+    if extended:
+        used_parts.append("extended")
+    if sections:
+        used_parts.append("sections")
+
+    if used_parts:
+        return summary, extended, sections, f"team_summaries.json ({', '.join(used_parts)})"
+    return "", "", [], "IR index summary/description"
 
 
 def _build_ir_query(client, user_message):
@@ -86,6 +145,7 @@ def _retrieval_context(ir_query, retrieved, max_items=8):
         "Top retrieved teams with source IDs:",
         "Use these source IDs for citations in the final answer.",
     ]
+    base_query_terms = _token_set(ir_query)
     for idx, team in enumerate(retrieved[:max_items], start=1):
         source_id = f"S{idx}"
         title = _clean_text(team.get("title", "Unknown team"), max_len=120)
@@ -100,16 +160,16 @@ def _retrieval_context(ir_query, retrieved, max_items=8):
             top_terms = []
         matched_terms = [_clean_text(t, max_len=30) for t in matched_terms[:8] if t]
         top_terms = [_clean_text(t, max_len=30) for t in top_terms[:8] if t]
-        summary_from_json = TEAM_SUMMARIES.get(title)
+        team_query_terms = set(base_query_terms)
+        team_query_terms.update(_token_set(" ".join(matched_terms)))
+        team_query_terms.update(_token_set(" ".join(top_terms)))
+        summary_from_json, extended_from_json, relevant_sections, summary_source = _team_knowledge(
+            title, team_query_terms
+        )
         summary = (
             summary_from_json
             or _clean_text(team.get("summary", ""), max_len=420)
             or _clean_text(team.get("descr", ""), max_len=420)
-        )
-        summary_source = (
-            "team_summaries.json"
-            if summary_from_json
-            else "IR index summary/description"
         )
         lines.append(
             f"[{source_id}] {title} | sport={sport} | league={league} | score={score}"
@@ -120,6 +180,12 @@ def _retrieval_context(ir_query, retrieved, max_items=8):
             lines.append(f"   top_terms: {', '.join(top_terms)}")
         if summary:
             lines.append(f"   summary: {summary}")
+        if extended_from_json:
+            lines.append(f"   extended: {extended_from_json}")
+        for section_title, section_body, overlap in relevant_sections:
+            lines.append(
+                f"   section ({section_title}) [query_overlap={overlap}]: {section_body}"
+            )
         lines.append(f"   source_type: {summary_source}")
     return "\n".join(lines)
 
@@ -134,9 +200,12 @@ def _build_generation_messages(user_message, ir_query, retrieved):
                 "Ground your answer in the retrieved IR evidence. "
                 "Use only the provided retrieval context when giving factual claims, "
                 "and clearly say when retrieval evidence is weak or missing. "
-                "Explain in plain language why each recommended team matches the user request. "
+                "When available, leverage summary/extended/section evidence from team_summaries.json. "
+                "Explain in plain language why recommended teams match the user request. "
                 "Only recommend teams that appear in the retrieval context source list. "
-                "Cite sources inline using [S#] and include a final 'Sources' section listing each cited source ID."
+                "Avoid technical IR jargon and raw field names (for example: matched_terms, top_terms, SVD, lexical score, query overlap). "
+                "Do not expose ranking math or internal retrieval statistics unless the user explicitly asks. "
+                "Cite sources inline using [S#] and end with a short 'Sources: ...' line listing cited source IDs."
             ),
         },
         {
@@ -145,10 +214,11 @@ def _build_generation_messages(user_message, ir_query, retrieved):
                 f"Original user request:\n{user_message}\n\n"
                 f"Retrieval context:\n{context}\n\n"
                 "Output format requirements:\n"
-                "1) Start with a short direct recommendation summary.\n"
-                "2) For each recommended team, include why it matches the query and at least one inline citation like [S1].\n"
-                "3) End with a 'Sources' section listing each cited source ID and a short evidence phrase.\n"
-                "4) Keep wording user-friendly and concise."
+                "1) Write one or two cohesive paragraphs in natural language for a non-technical user.\n"
+                "2) Mention the strongest 1-3 team recommendations and explain fit in everyday terms.\n"
+                "3) Do not use bullets, numbered lists, or markdown headings.\n"
+                "4) Include inline citations like [S1] naturally in sentences.\n"
+                "5) End with one line in this form: Sources: [S1], [S3]."
             ),
         },
     ]
