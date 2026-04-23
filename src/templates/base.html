@@ -67,6 +67,13 @@
                 <h3 class='card-name'>${row.title}</h3>
                 <p class='card-league'>${row.league}</p>
                 <p class='card-summary'>${summary}</p>
+                ${row.top_terms && row.top_terms.length ? `
+                <div class='card-dimensions'>
+                    <h3 class='card-dimensions-label'>Top Latent Dimensions</h3>
+                    <div class='card-term-chips'>
+                        ${row.top_terms.map(t => `<span class='term-chip'>${t}</span>`).join('')}
+                    </div>
+                </div>` : ''}
                 <div class='card-footer'>
                     <span class='card-score'>score <strong>${row.score}</strong></span>
                 </div>
