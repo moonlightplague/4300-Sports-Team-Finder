@@ -1,19 +1,19 @@
 :root{
-    --bg-1: #d4d4d4;
-    --bg-2: #c8c8c8;
-    --surface: rgba(255,255,255,0.72);
-    --surface-strong: rgba(255,255,255,0.90);
-    --surface-solid: #ffffff;
-    --border: rgba(0,0,0,0.08);
-    --border-strong: rgba(0,0,0,0.14);
-    --text: #1a1a1a;
-    --text-soft: #444444;
-    --text-faint: #777777;
-    --accent: #cc0000;
-    --accent-dark: #a30000;
-    --shadow-sm: 0 6px 18px rgba(0,0,0,0.10);
-    --shadow-md: 0 14px 34px rgba(0,0,0,0.14);
-    --shadow-lg: 0 24px 60px rgba(0,0,0,0.18);
+    --bg-1: #e8dcc8;
+    --bg-2: #ddd0b6;
+    --surface: rgba(232,220,196,0.60);
+    --surface-strong: rgba(240,230,210,0.85);
+    --surface-solid: #f0e6d2;
+    --border: rgba(60,40,10,0.10);
+    --border-strong: rgba(60,40,10,0.20);
+    --text: #2c1f0e;
+    --text-soft: #5a3e28;
+    --text-faint: #8a6a50;
+    --accent: #8b2e2e;
+    --accent-dark: #6b1f1f;
+    --shadow-sm: 0 6px 18px rgba(60,30,0,0.10);
+    --shadow-md: 0 14px 34px rgba(60,30,0,0.14);
+    --shadow-lg: 0 24px 60px rgba(60,30,0,0.18);
     --radius-xl: 28px;
     --radius-lg: 22px;
     --radius-md: 16px;
@@ -50,7 +50,7 @@ body{
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    padding: 46px 18px 22px;
+    padding: 0 18px 22px;
 }
 
 /* Logo */
@@ -59,15 +59,17 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100vw;
+    padding: 36px 18px 0;
     animation: introRise 0.7s ease;
 }
 
 .site-title h1 {
     margin: 0;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 52px;
-    font-weight: 800;
-    letter-spacing: -1.5px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 88px;
+    font-weight: 400;
+    letter-spacing: 2px;
     color: var(--text);
     line-height: 1;
 }
@@ -80,7 +82,7 @@ body{
     width: 100%;
     height: 3px;
     background: var(--text);
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .hero-tagline {
@@ -176,9 +178,9 @@ body{
 .chip {
     padding: 8px 18px;
     border-radius: var(--radius-pill);
-    border: 1px solid transparent;
-    background: #2e2e2e;
-    color: #e0e0e0;
+    border: 1.5px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
     font-family: 'Montserrat', sans-serif;
     font-size: 13px;
     font-weight: 600;
@@ -189,117 +191,128 @@ body{
 
 .chip:hover {
     transform: translateY(-1px);
-    background: #3a3a3a;
-    color: #ffffff;
+    background: var(--accent);
+    color: var(--bg-1);
     box-shadow: var(--shadow-md);
 }
 
 .chip.active {
     background: var(--accent);
-    border-color: transparent;
-    color: #fff;
+    border-color: var(--accent);
+    color: var(--bg-1);
     box-shadow: none;
 }
 
 /* Search results */
 
-#answer-box{
-    width: min(820px, 100%);
+#answer-box {
+    width: min(1100px, 100%);
     margin-top: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
     animation: fadeIn 0.9s ease;
+    border: 1.5px solid var(--text);
 }
 
-#answer-box:empty{
+#answer-box:empty {
     display: none;
 }
 
-#answer-box > div{
+#answer-box > div {
     position: relative;
     overflow: hidden;
-    background: var(--surface-strong);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: 22px 22px 20px;
-    box-shadow: var(--shadow-md);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    background: transparent;
+    border-right: 1.5px solid var(--text);
+    border-bottom: 1.5px solid var(--text);
+    padding: 22px 20px 18px;
+    transition: background 0.18s ease;
 }
 
-#answer-box > div:hover{
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+#answer-box > div:nth-child(3n) {
+    border-right: none;
 }
 
-.episode-title{
-    margin: 0 0 10px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 26px;
-    line-height: 1.06;
-    color: var(--text);
-    letter-spacing: 0.2px;
+#answer-box > div:hover {
+    background: rgba(0,0,0,0.03);
 }
 
-.episode-desc{
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.72;
-    color: var(--text-soft);
-    max-width: 95%;
+.team-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    height: 100%;
 }
 
-.episode-rating,
-.result-meta{
-    margin: 14px 0 0;
-    display: inline-flex;
+.card-top {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: var(--radius-pill);
-    background: rgba(204,0,0,0.08);
-    border: 1px solid rgba(204,0,0,0.15);
-    color: var(--accent-dark);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.15px;
+    justify-content: space-between;
+    margin-bottom: 14px;
 }
 
-
-.team-card { display: flex; flex-direction: column; gap: 6px; }
-
-.card-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-
-.card-name { margin: 0; font-size: 22px; font-weight: 700; color: var(--text); }
-
-.card-league { margin: 0; font-size: 12px; font-weight: 600; color: var(--text-faint); text-transform: uppercase; }
-
-.card-summary { margin: 4px 0 0; font-size: 14px; line-height: 1.65; color: var(--text-soft); }
-
-.card-score {
-    margin: 8px 0 0;
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 12px;
-    border-radius: var(--radius-pill);
-    background: rgba(204,0,0,0.07);
-    border: 1px solid rgba(204,0,0,0.14);
-    color: var(--accent-dark);
+.card-rank {
+    font-family: 'Montserrat', sans-serif;
     font-size: 12px;
-    font-weight: 700;
-    width: fit-content;
+    font-weight: 600;
+    color: var(--text-faint);
+    letter-spacing: 0.5px;
 }
 
 .card-sport-badge {
-    padding: 3px 10px;
+    padding: 3px 12px;
     border-radius: var(--radius-pill);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    flex-shrink: 0;
-    background: rgba(204,0,0,0.08);
-    color: var(--accent-dark);
+    letter-spacing: 0.8px;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    background: transparent;
+}
+
+.card-name {
+    margin: 0 0 4px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.1;
+}
+
+.card-league {
+    margin: 0 0 12px;
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--text-soft);
+}
+
+.card-summary {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text-soft);
+    flex: 1;
+}
+
+.card-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+}
+
+.card-score {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    color: var(--text-faint);
+}
+
+.card-score strong {
+    font-weight: 700;
+    color: var(--text);
 }
 
 /* LLM mode */
@@ -620,15 +633,26 @@ body{
 
 @media (max-width: 900px){
     .site-title h1{
-        font-size: 42px;
+        font-size: 54px;
     }
 
     .hero-tagline{
         font-size: 17px;
     }
 
+    #answer-box {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #answer-box > div:nth-child(3n) {
+        border-right: 1.5px solid var(--text);
+    }
+
+    #answer-box > div:nth-child(2n) {
+        border-right: none;
+    }
+
     .input-box,
-    #answer-box,
     #messages,
     .chat-bar .input-row{
         width: 100%;
@@ -647,13 +671,22 @@ body{
     }
 
     .site-title h1{
-        font-size: 32px;
+        font-size: 38px;
         letter-spacing: -0.8px;
     }
 
     .hero-tagline{
         font-size: 15px;
         margin-top: 16px;
+    }
+
+    #answer-box {
+        grid-template-columns: 1fr;
+    }
+
+    #answer-box > div:nth-child(2n),
+    #answer-box > div:nth-child(3n) {
+        border-right: none;
     }
 
     .input-box{

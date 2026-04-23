@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
 <body>
     <div class="full-body-container">
         <div class="top-text">
@@ -32,17 +32,20 @@
         let activeFilter = "all";
         let lastResults = [];
 
-        function answerBoxTemplate(row) {
-            const summary = row.summary ? `<p class='card-summary'>${row.summary}</p>` : "";
+        function answerBoxTemplate(row, index) {
+            const num = String(index + 1).padStart(2, '0');
+            const summary = row.summary || row.descr || "";
             return `<div class='team-card'>
-                <div class='card-header'>
-                    <h3 class='card-name'>${row.title}</h3>
-                    <span class='card-sport-badge card-sport-${row.sport}'>${row.sport}</span>
+                <div class='card-top'>
+                    <span class='card-rank'>Rank: ${num}</span>
+                    <span class='card-sport-badge'>${row.sport}</span>
                 </div>
+                <h3 class='card-name'>${row.title}</h3>
                 <p class='card-league'>${row.league}</p>
-                ${summary}
-                <p class='card-score'>Cosine Sim: ${row.score} &nbsp;|&nbsp; SVD: ${row.svd_score}</p>
-                <p class='episode-desc'>${row.descr}</p>
+                <p class='card-summary'>${summary}</p>
+                <div class='card-footer'>
+                    <span class='card-score'>Cosine Similarity Score <strong>${row.score}</strong></span>
+                </div>
             </div>`;
         }
 
@@ -63,9 +66,9 @@
             const filtered = activeFilter === "all"
                 ? data
                 : data.filter(row => row.sport === activeFilter);
-            filtered.forEach(row => {
+            filtered.forEach((row, i) => {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row);
+                tempDiv.innerHTML = answerBoxTemplate(row, i);
                 box.appendChild(tempDiv);
             });
         }
