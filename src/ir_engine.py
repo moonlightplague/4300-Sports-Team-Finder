@@ -779,36 +779,7 @@ class InvertedIndexSearchEngine:
         team_name_boosts = self._team_name_fuzzy_boosts(query)
 
         if not query_tokens:
-            max_dims = min(UI_DIMENSION_COUNT, self._team_latent.shape[1]) if self._team_latent is not None else 0
-            return [
-                {
-                    "title": team,
-                    "descr": "SVD baseline ranking (no query provided).",
-                    "imdb_rating": 0.0,
-                    "score": 0.0,
-                    "matched_terms": [],
-                    "expanded_terms": [],
-                    "dim_scores": {dim_id: 0.0 for dim_id in range(1, max_dims + 1)},
-                    "dim_ranks": {
-                        dim_id: self._dim_ranks.get(dim_id, {}).get(team)
-                        for dim_id in range(1, max_dims + 1)
-                    },
-                    "top_terms_by_dim": {dim_id: [] for dim_id in range(1, max_dims + 1)},
-                    "query_overlap_by_dim": {},
-                    "dim_labels": {
-                        dim_id: self._get_dimension_display(dim_id, 0.0)[0]
-                        for dim_id in range(1, max_dims + 1)
-                    },
-                    "dim_blurbs": {
-                        dim_id: self._get_dimension_display(dim_id, 0.0)[1]
-                        for dim_id in range(1, max_dims + 1)
-                    },
-                    "sport": TEAM_TO_SPORT.get(team, "unknown"),
-                    "league": TEAM_TO_LEAGUE.get(team, ""),
-                    "summary": TEAM_TO_SUMMARY.get(team, ""),
-                }
-                for team in self.teams[:top_k]
-            ]
+            return []
 
         exact_query_weights, _ = self._build_query_weights(
             query_tokens, include_expansions=False
