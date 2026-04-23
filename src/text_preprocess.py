@@ -52,7 +52,6 @@ TARGET_SECTIONS = {
     "draft", "cheerleaders",
 }
 
-
 team_metadata = {}
 for league, teams in european_soccer_league_to_teams.items():
     for team in teams:
@@ -219,14 +218,19 @@ def build_summaries(output_path=None):
     if output_path is None:
         output_path = os.path.join(os.path.dirname(__file__), "data", "team_summaries.json")
 
+    result = {}
     if os.path.exists(output_path):
-        with open(output_path, "r", encoding="utf-8") as f:
-            result = json.load(f)
-    else:
-        result = {}
+        try:
+            with open(output_path, "r", encoding="utf-8") as f:
+                content = f.read().strip()
+                if content:
+                    result = json.loads(content)
+        except json.JSONDecodeError:
+            print("Warning: team_summaries.json was corrupted — starting fresh")
+            result = {}
 
     for team, meta in team_metadata.items():
-        if team in result:
+        if team in result and result[team].get("summary") and result[team].get("sections") is not None:
             continue
 
         summary = ""
@@ -235,8 +239,15 @@ def build_summaries(output_path=None):
 
         try:
             page = wiki.page(team)
+            if not page.exists():
+                page = wiki.page(f"{team} {meta['sport']} team")
+            if not page.exists():
+                page = wiki.page(f"{team} FC")
+            if not page.exists():
+                page = wiki.page(f"{team} F.C.")
+
             if page.exists():
-                raw = (page.summary or "").strip()
+                raw = page.summary.strip()
                 if raw:
                     sentences = re.split(r"(?<=[.!?])\s+", raw)
                     summary = " ".join(sentences[:2]).strip()
@@ -259,17 +270,20 @@ def build_summaries(output_path=None):
 
         except Exception as e:
             print(f"failed summary for '{team}': {e}")
+            continue  # don't overwrite existing data if fetch fails
 
-        result[team] = {
-            "league": meta["league"],
-            "sport": meta["sport"],
-            "summary": summary,
-            "extended": extended,
-            "sections": sections,
-        }
-
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(result, f, ensure_ascii=False, indent=2)
+        if summary:
+            result[team] = {
+                "league": meta["league"],
+                "sport": meta["sport"],
+                "summary": summary,
+                "extended": extended,
+                "sections": sections,
+            }
+            with open(output_path, "w", encoding="utf-8") as f:
+                json.dump(result, f, ensure_ascii=False, indent=2)
+        else:
+            print(f"no data found for '{team}' — skipping")
 def main():
     DATASET_FOLDER = "dataset"
     OUTPUT_FILE = "src/data/inverted_index_matrix.json"
