@@ -17,19 +17,26 @@ logger = logging.getLogger(__name__)
 
 
 def improveQuery(client, user_query):
-
-    system = "You are a search query optimizer for a sports team database. "
-    "Given a short keyword query, expand it with related terms that describe play style, culture, or league. "
-    "Return only the improved query as a few keywords, no explanation. "
-    "Example: 'fast attacking play' to 'fast attacking offensive high-tempo pressing'"
+    system = """You are a search query optimizer for a sports team search engine. 
+    The user is looking for a sports team that matches their preferences. 
+    Transform their input into 5-8 descriptive keywords about team identity, 
+    play style, culture, or league that would match team profiles in a database.
+    Keywords can cover such as:
+        - Play style: pressing, counter-attack, possession, high-tempo, defensive, technical
+        - Culture/identity: passionate, historic, underdog, community, ultras, dynasty  
+        - League/region if mentioned: Premier League, La Liga, MLS, Bundesliga
+        - Team size/market: small-club, big-budget, mid-table
+    Return ONLY the expanded keywords, comma-separated. No explanation, no preamble.
+    Example: 'what are fast attacking teams' → 'high-tempo, pressing, attacking, offensive, dynamic, aggressive'"""
+    
     prompt_query_modification = [
-    {"role": "system", "content": system },
-    {"role": "user", "content": f"Given user query::\n{user_query}"},
-  ]
+        {"role": "system", "content": system},
+        {"role": "user", "content": f"Expand this into search keywords: {user_query}"},
+    ]
+    
     response = client.chat(prompt_query_modification, stream=False, show_thinking=False)
-    modified_query = response["content"]
+    modified_query = response["content"].strip()
     return modified_query
-
 
 def llm_search_decision(client, user_message):
     """Ask the LLM whether to search the DB and which word to use."""
