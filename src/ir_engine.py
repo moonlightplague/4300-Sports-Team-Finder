@@ -5,6 +5,9 @@ import re
 from collections import Counter, defaultdict
 from functools import lru_cache
 import numpy as np
+
+UI_DIMENSION_COUNT = 12
+TOP_TERMS_PER_DIM = 10
 from sklearn.decomposition import TruncatedSVD
 from scipy.sparse import csr_matrix
 from helper import tokenize
@@ -131,6 +134,11 @@ class InvertedIndexSearchEngine:
         self._term_latent_cache = {}
 
         self._load_index()
+        dim_names_path = os.path.join(os.path.dirname(self.index_path), "svd_dimension_names.json")
+        self.dimension_names = {}
+        if os.path.exists(dim_names_path):
+            with open(dim_names_path, "r", encoding="utf-8") as f:
+                self.dimension_names = {int(k): v for k, v in json.load(f).items()}
 
     @staticmethod
     def _embedding_workers():

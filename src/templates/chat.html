@@ -3,18 +3,26 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
 <body>
     <div class="full-body-container llm-mode">
         <div class="top-text">
-            <div class="google-colors">
-                <h1 id="google-4">Sports</h1>
-                <h1 id="google-3">Team</h1>
-                <h1 id="google-0-1">Finder</h1>
+            <div class="site-title">
+                <h1>Sports<span>Team</span>Finder</h1>
+                <div class="title-bar"></div>
             </div>
+            <p class="hero-tagline">Describe the kind of team you love, in your own words —<br>we'll find it in a vocabulary of <em>latent themes</em> learned from fan talk.</p>
             <div class="input-box" onclick="document.getElementById('filter-text-val').focus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a sports team you like" id="filter-text-val" onkeyup="filterText()">
+                <input placeholder="Try 'fast attacking play'" id="filter-text-val" onkeyup="filterText()">
+            </div>
+            <div class="sport-chips">
+                <button class="chip active" data-sport="all" onclick="setFilter('all', this)">All</button>
+                <button class="chip" data-sport="soccer" onclick="setFilter('soccer', this)">Soccer</button>
+                <button class="chip" data-sport="basketball" onclick="setFilter('basketball', this)">Basketball</button>
+                <button class="chip" data-sport="football" onclick="setFilter('football', this)">Football</button>
+                <button class="chip" data-sport="baseball" onclick="setFilter('baseball', this)">Baseball</button>
+                <button class="chip" data-sport="hockey" onclick="setFilter('hockey', this)">Hockey</button>
             </div>
         </div>
 
@@ -31,31 +39,111 @@
         <div class="chat-bar">
             <form id="chat-form" class="input-row">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" alt="">
-                <input type="text" placeholder="Ask the AI about Keeping Up with the Kardashians" id="user-input" autocomplete="off">
+                <input type="text" placeholder="Ask the AI about a team..." id="user-input" autocomplete="off">
                 <button type="submit" id="send-btn">Send</button>
             </form>
         </div>
     </div>
 
-    <!-- Search (same as base.html) -->
+    <div id="modal-overlay" onclick="closeModal()">
+        <div id="modal" onclick="event.stopPropagation()">
+            <button id="modal-close" onclick="closeModal()">×</button>
+            <p id="modal-meta"></p>
+            <h2 id="modal-name"></h2>
+            <p id="modal-league"></p>
+            <div class="modal-divider"></div>
+            <div class="modal-scores">
+                <div class="modal-score-col">
+                    <span class="modal-score-label">OVERALL SCORE</span>
+                    <span class="modal-score-val" id="modal-score"></span>
+                </div>
+                <div class="modal-score-col">
+                    <span class="modal-score-label">SVD COSINE</span>
+                    <span class="modal-score-val" id="modal-svd"></span>
+                </div>
+                <div class="modal-score-col">
+                    <span class="modal-score-label">LEXICAL</span>
+                    <span class="modal-score-val" id="modal-lexical"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search -->
     <script>
-        function answerBoxTemplate(title, titleDesc, rating) {
-            return `<div>
-                <h3 class='episode-title'>${title}</h3>
-                <p class='episode-desc'>${titleDesc}</p>
-                <p class='episode-rating'>IMDB Rating: ${rating}</p>
+        let activeFilter = "all";
+        let lastResults = [];
+
+        function answerBoxTemplate(row, index) {
+            const num = String(index + 1).padStart(2, '0');
+            const summary = row.summary || row.descr || "";
+            return `<div class='team-card' onclick="openModal(${index})" style="cursor:pointer">
+                <div class='card-top'>
+                    <span class='card-rank'>№ ${num}</span>
+                    <span class='card-sport-badge'>${row.sport}</span>
+                </div>
+                <h3 class='card-name'>${row.title}</h3>
+                <p class='card-league'>${row.league}</p>
+                <p class='card-summary'>${summary}</p>
+                ${row.top_terms && row.top_terms.length ? `
+                <div class='card-dimensions'>
+                    <h3 class='card-dimensions-label'>Top Latent Dimensions</h3>
+                    <div class='card-term-chips'>
+                        ${row.top_terms.map(t => `<span class='term-chip'>${t}</span>`).join('')}
+                    </div>
+                </div>` : ''}
+                <div class='card-footer'>
+                    <span class='card-score'>score <strong>${row.score}</strong></span>
+                </div>
             </div>`;
         }
 
+        function openModal(index) {
+            const row = lastResults[index];
+            document.getElementById('modal-meta').textContent = `${row.sport.toUpperCase()} · MATCH #${index + 1}`;
+            document.getElementById('modal-name').textContent = row.title;
+            document.getElementById('modal-league').textContent = row.league;
+            document.getElementById('modal-score').textContent = row.score;
+            document.getElementById('modal-svd').textContent = row.svd_score ?? '—';
+            document.getElementById('modal-lexical').textContent = row.lexical_score ?? '—';
+            document.getElementById('modal-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        function setFilter(sport, btn) {
+            activeFilter = sport;
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            renderResults(lastResults);
+        }
+
+        function renderResults(data) {
+            const box = document.getElementById("answer-box");
+            box.innerHTML = "";
+            const filtered = activeFilter === "all"
+                ? data
+                : data.filter(row => row.sport === activeFilter);
+            filtered.forEach((row, i) => {
+                let tempDiv = document.createElement("div");
+                tempDiv.innerHTML = answerBoxTemplate(row, i);
+                box.appendChild(tempDiv);
+            });
+        }
+
         function filterText() {
-            document.getElementById("answer-box").innerHTML = "";
-            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
+            fetch("/search-teams?" + new URLSearchParams({ q: document.getElementById("filter-text-val").value }).toString())
                 .then((response) => response.json())
-                .then((data) => data.forEach(row => {
-                    let tempDiv = document.createElement("div");
-                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.imdb_rating);
-                    document.getElementById("answer-box").appendChild(tempDiv);
-                }));
+                .then((data) => {
+                    lastResults = data;
+                    renderResults(data);
+                });
         }
     </script>
 
