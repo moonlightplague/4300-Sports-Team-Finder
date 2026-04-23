@@ -4,6 +4,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+
 <body>
     <div class="full-body-container">
         <div class="top-text">
@@ -12,10 +13,16 @@
                 <h1 id="google-3">Team</h1>
                 <h1 id="google-0-1">Finder</h1>
             </div>
+
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="What kind of team are you looking for? Try 'fast attacking play'" id="filter-text-val" onkeyup="filterText()">
+                <input
+                    placeholder="What kind of team are you looking for? Try 'fast attacking play'"
+                    id="filter-text-val"
+                    oninput="debouncedFilterText()"
+                >
             </div>
+
             <div class="sport-chips">
                 <button class="chip active" data-sport="all" onclick="setFilter('all', this)">All</button>
                 <button class="chip" data-sport="soccer" onclick="setFilter('soccer', this)">Soccer</button>
@@ -25,58 +32,129 @@
                 <button class="chip" data-sport="hockey" onclick="setFilter('hockey', this)">Hockey</button>
             </div>
         </div>
-        <div id="answer-box"></div>
+
+        <div id="answer-box">
+            <div class="team-card empty-state">
+                <div class="card-header">
+                    <h3 class="card-name">Start exploring teams</h3>
+                </div>
+                <p class="episode-desc">
+                    Search by play style, fan culture, history, or league. Try queries like
+                    “fast attacking play,” “historic team with loyal fans,” or “young exciting team.”
+                </p>
+            </div>
+        </div>
     </div>
 
     <script>
         let activeFilter = "all";
         let lastResults = [];
+        let debounceTimer = null;
 
         function answerBoxTemplate(row) {
-            const summary = row.summary ? `<p class='card-summary'>${row.summary}</p>` : "";
-            return `<div class='team-card'>
-                <div class='card-header'>
-                    <h3 class='card-name'>${row.title}</h3>
-                    <span class='card-sport-badge card-sport-${row.sport}'>${row.sport}</span>
+            const sport = row.sport || "unknown";
+            const league = row.league || "Unknown league";
+            const summary = row.summary ? `<p class="card-summary">${row.summary}</p>` : "";
+            const score = row.score ?? "N/A";
+            const svdScore = row.svd_score ?? "N/A";
+            const descr = row.descr || "No description available.";
+
+            return `
+                <div class="team-card">
+                    <div class="card-header">
+                        <h3 class="card-name">${row.title}</h3>
+                        <span class="card-sport-badge card-sport-${sport}">${sport}</span>
+                    </div>
+                    <p class="card-league">${league}</p>
+                    ${summary}
+                    <p class="card-score">Cosine Sim: ${score} &nbsp;|&nbsp; SVD: ${svdScore}</p>
+                    <p class="episode-desc">${descr}</p>
                 </div>
-                <p class='card-league'>${row.league}</p>
-                ${summary}
-                <p class='card-score'>Cosine Sim: ${row.score} &nbsp;|&nbsp; SVD: ${row.svd_score}</p>
-                <p class='episode-desc'>${row.descr}</p>
-            </div>`;
+            `;
         }
 
         function sendFocus() {
-            document.getElementById('filter-text-val').focus();
+            document.getElementById("filter-text-val").focus();
         }
 
         function setFilter(sport, btn) {
             activeFilter = sport;
-            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
+            document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+            btn.classList.add("active");
             renderResults(lastResults);
         }
 
         function renderResults(data) {
             const box = document.getElementById("answer-box");
             box.innerHTML = "";
+
             const filtered = activeFilter === "all"
                 ? data
                 : data.filter(row => row.sport === activeFilter);
+
+            if (!filtered.length) {
+                box.innerHTML = `
+                    <div class="team-card empty-state">
+                        <div class="card-header">
+                            <h3 class="card-name">No teams found</h3>
+                        </div>
+                        <p class="episode-desc">
+                            Try a broader query or switch the sport filter.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
             filtered.forEach(row => {
-                let tempDiv = document.createElement("div");
+                const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = answerBoxTemplate(row);
-                box.appendChild(tempDiv);
+                box.appendChild(tempDiv.firstElementChild);
             });
         }
 
         function filterText() {
-            fetch("/search-teams?" + new URLSearchParams({ q: document.getElementById("filter-text-val").value }).toString())
+            const query = document.getElementById("filter-text-val").value.trim();
+
+            if (!query) {
+                lastResults = [];
+                document.getElementById("answer-box").innerHTML = `
+                    <div class="team-card empty-state">
+                        <div class="card-header">
+                            <h3 class="card-name">Start exploring teams</h3>
+                        </div>
+                        <p class="episode-desc">
+                            Search by play style, fan culture, history, or league. Try queries like
+                            “fast attacking play,” “historic team with loyal fans,” or “young exciting team.”
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            fetch("/search-teams?" + new URLSearchParams({ q: query }).toString())
                 .then((response) => response.json())
                 .then((data) => {
                     lastResults = data;
                     renderResults(data);
+                })
+                .catch(() => {
+                    document.getElementById("answer-box").innerHTML = `
+                        <div class="team-card empty-state">
+                            <div class="card-header">
+                                <h3 class="card-name">Search error</h3>
+                            </div>
+                            <p class="episode-desc">
+                                Something went wrong while loading results.
+                            </p>
+                        </div>
+                    `;
                 });
+        }
+
+        function debouncedFilterText() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(filterText, 180);
         }
     </script>
 </body>
