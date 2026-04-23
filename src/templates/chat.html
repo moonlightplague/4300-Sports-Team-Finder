@@ -80,6 +80,9 @@
                             UI placeholder for team-specific SVD explanations. Click a row to expand details.
                         </p>
                     </div>
+                    <button type="button" id="modal-expand-all-btn" class="modal-expand-all-btn" onclick="toggleExpandAll()">
+                        Expand All
+                    </button>
                 </div>
                 <div id="modal-accordion" class="modal-accordion"></div>
             </section>
@@ -106,6 +109,7 @@
         let lastResults = [];
         let visibleResults = [];
         let openAccordionIndex = -1;
+        let allAccordionExpanded = false;
         let currentModalRow = null;
 
         function esc(text) {
@@ -201,6 +205,7 @@
             const terms = uniqueTerms(row);
 
             return components.map((component, idx) => {
+                const isOpen = allAccordionExpanded || idx === openAccordionIndex;
                 const compNumber = component.component ?? (idx + 1);
                 const contribution = Number(component.contribution);
                 const contribText = Number.isNaN(contribution)
@@ -215,15 +220,15 @@
                     : `<span class="modal-term-chip muted">Awaiting term mapping</span>`;
 
                 return `
-                    <article class="modal-accordion-item ${idx === openAccordionIndex ? "open" : ""}">
+                    <article class="modal-accordion-item ${isOpen ? "open" : ""}">
                         <button
                             type="button"
                             class="modal-accordion-trigger"
-                            aria-expanded="${idx === openAccordionIndex ? "true" : "false"}"
+                            aria-expanded="${isOpen ? "true" : "false"}"
                             onclick="toggleAccordionRow(${idx})"
                         >
                             <span class="modal-accordion-left">
-                                <span class="modal-accordion-icon">${idx === openAccordionIndex ? "-" : "+"}</span>
+                                <span class="modal-accordion-icon">${isOpen ? "-" : "+"}</span>
                                 <span class="modal-accordion-title">Dimension LS${esc(compNumber)}</span>
                             </span>
                             <span class="modal-accordion-score">${contribText}</span>
@@ -240,6 +245,14 @@
             }).join("");
         }
 
+        function updateExpandAllButton(row) {
+            const btn = document.getElementById("modal-expand-all-btn");
+            if (!btn) return;
+            const components = row && Array.isArray(row.svd_components) ? row.svd_components : [];
+            btn.disabled = components.length === 0;
+            btn.textContent = allAccordionExpanded ? "Collapse All" : "Expand All";
+        }
+
         function renderModalSections(row) {
             const profileTerms = uniqueTerms(row).slice(0, 6);
             const profileHtml = profileTerms.length
@@ -249,6 +262,7 @@
             document.getElementById("modal-profile-chips").innerHTML = profileHtml;
             document.getElementById("modal-accordion").innerHTML = buildAccordionHtml(row);
             renderWhyMatched(row);
+            updateExpandAllButton(row);
         }
 
         function answerBoxTemplate(row, index) {
@@ -280,6 +294,7 @@
             if (!row) return;
 
             openAccordionIndex = 0;
+            allAccordionExpanded = false;
             currentModalRow = row;
             const sportLabel = String(row.sport || "unknown").toUpperCase();
             document.getElementById('modal-meta').textContent = `${sportLabel} · MATCH #${index + 1}`;
@@ -295,8 +310,25 @@
 
         function toggleAccordionRow(index) {
             if (!currentModalRow) return;
-            openAccordionIndex = openAccordionIndex === index ? -1 : index;
+            if (allAccordionExpanded) {
+                allAccordionExpanded = false;
+                openAccordionIndex = index;
+            } else {
+                openAccordionIndex = openAccordionIndex === index ? -1 : index;
+            }
             document.getElementById("modal-accordion").innerHTML = buildAccordionHtml(currentModalRow);
+            updateExpandAllButton(currentModalRow);
+        }
+
+        function toggleExpandAll() {
+            if (!currentModalRow) return;
+            const components = Array.isArray(currentModalRow.svd_components) ? currentModalRow.svd_components : [];
+            if (!components.length) return;
+
+            allAccordionExpanded = !allAccordionExpanded;
+            openAccordionIndex = allAccordionExpanded ? -1 : 0;
+            document.getElementById("modal-accordion").innerHTML = buildAccordionHtml(currentModalRow);
+            updateExpandAllButton(currentModalRow);
         }
 
         function closeModal() {
@@ -307,7 +339,9 @@
             document.getElementById("modal-exact-hits").innerHTML = "";
             document.getElementById("modal-expansion-hits").innerHTML = "";
             openAccordionIndex = -1;
+            allAccordionExpanded = false;
             currentModalRow = null;
+            updateExpandAllButton(null);
         }
 
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
