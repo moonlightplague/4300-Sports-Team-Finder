@@ -81,28 +81,46 @@ def _retrieval_context(ir_query, retrieved, max_items=8):
             "No IR results were returned."
         )
 
-    lines = [f"IR query used: {ir_query}", "Top retrieved teams:"]
+    lines = [
+        f"IR query used: {ir_query}",
+        "Top retrieved teams with source IDs:",
+        "Use these source IDs for citations in the final answer.",
+    ]
     for idx, team in enumerate(retrieved[:max_items], start=1):
+        source_id = f"S{idx}"
         title = _clean_text(team.get("title", "Unknown team"), max_len=120)
         league = _clean_text(team.get("league", ""), max_len=120)
         sport = _clean_text(team.get("sport", ""), max_len=60)
         score = team.get("score")
         matched_terms = team.get("matched_terms") or []
+        top_terms = team.get("top_terms") or []
         if not isinstance(matched_terms, list):
             matched_terms = []
+        if not isinstance(top_terms, list):
+            top_terms = []
         matched_terms = [_clean_text(t, max_len=30) for t in matched_terms[:8] if t]
+        top_terms = [_clean_text(t, max_len=30) for t in top_terms[:8] if t]
+        summary_from_json = TEAM_SUMMARIES.get(title)
         summary = (
-            TEAM_SUMMARIES.get(title)
+            summary_from_json
             or _clean_text(team.get("summary", ""), max_len=420)
             or _clean_text(team.get("descr", ""), max_len=420)
         )
+        summary_source = (
+            "team_summaries.json"
+            if summary_from_json
+            else "IR index summary/description"
+        )
         lines.append(
-            f"{idx}. {title} | sport={sport} | league={league} | score={score}"
+            f"[{source_id}] {title} | sport={sport} | league={league} | score={score}"
         )
         if matched_terms:
             lines.append(f"   matched_terms: {', '.join(matched_terms)}")
+        if top_terms:
+            lines.append(f"   top_terms: {', '.join(top_terms)}")
         if summary:
             lines.append(f"   summary: {summary}")
+        lines.append(f"   source_type: {summary_source}")
     return "\n".join(lines)
 
 
@@ -115,7 +133,10 @@ def _build_generation_messages(user_message, ir_query, retrieved):
                 "You are a sports-team recommendation assistant. "
                 "Ground your answer in the retrieved IR evidence. "
                 "Use only the provided retrieval context when giving factual claims, "
-                "and clearly say when retrieval evidence is weak or missing."
+                "and clearly say when retrieval evidence is weak or missing. "
+                "Explain in plain language why each recommended team matches the user request. "
+                "Only recommend teams that appear in the retrieval context source list. "
+                "Cite sources inline using [S#] and include a final 'Sources' section listing each cited source ID."
             ),
         },
         {
@@ -123,7 +144,11 @@ def _build_generation_messages(user_message, ir_query, retrieved):
             "content": (
                 f"Original user request:\n{user_message}\n\n"
                 f"Retrieval context:\n{context}\n\n"
-                "Give a concise answer with recommended teams and why they match."
+                "Output format requirements:\n"
+                "1) Start with a short direct recommendation summary.\n"
+                "2) For each recommended team, include why it matches the query and at least one inline citation like [S1].\n"
+                "3) End with a 'Sources' section listing each cited source ID and a short evidence phrase.\n"
+                "4) Keep wording user-friendly and concise."
             ),
         },
     ]
