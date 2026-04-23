@@ -66,6 +66,37 @@
                     <span class="modal-score-val" id="modal-lexical"></span>
                 </div>
             </div>
+            <div class="modal-divider"></div>
+            <section class="modal-section">
+                <div class="modal-section-label">PROFILE</div>
+                <div id="modal-profile-chips" class="modal-profile-chips"></div>
+            </section>
+            <div class="modal-divider"></div>
+            <section class="modal-section">
+                <div class="modal-breakdown-header">
+                    <div>
+                        <div class="modal-section-label">DIMENSION BREAKDOWN</div>
+                        <p class="modal-breakdown-subtitle">
+                            UI placeholder for team-specific SVD explanations. Click a row to expand details.
+                        </p>
+                    </div>
+                </div>
+                <div id="modal-accordion" class="modal-accordion"></div>
+            </section>
+            <div class="modal-divider"></div>
+            <section class="modal-section">
+                <div class="modal-section-label">WHY THIS TEAM MATCHED YOUR QUERY</div>
+                <div class="modal-why-grid">
+                    <div class="modal-why-col">
+                        <h4 class="modal-why-title">Exact query term hits</h4>
+                        <div id="modal-exact-hits" class="modal-why-chips"></div>
+                    </div>
+                    <div class="modal-why-col">
+                        <h4 class="modal-why-title">Query expansions (via embeddings)</h4>
+                        <div id="modal-expansion-hits" class="modal-why-chips"></div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 
@@ -73,6 +104,152 @@
     <script>
         let activeFilter = "all";
         let lastResults = [];
+        let visibleResults = [];
+        let openAccordionIndex = -1;
+        let currentModalRow = null;
+
+        function esc(text) {
+            return String(text ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function formatScore(value) {
+            if (value === null || value === undefined || value === "") return "-";
+            const num = Number(value);
+            if (Number.isNaN(num)) return String(value);
+            return num.toFixed(3);
+        }
+
+        function uniqueTerms(row) {
+            const raw = [
+                ...(Array.isArray(row.top_terms) ? row.top_terms : []),
+                ...(Array.isArray(row.matched_terms) ? row.matched_terms : [])
+            ];
+            const seen = new Set();
+            const terms = [];
+            raw.forEach((term) => {
+                const clean = String(term || "").trim();
+                if (!clean) return;
+                if (seen.has(clean)) return;
+                seen.add(clean);
+                terms.push(clean);
+            });
+            return terms;
+        }
+
+        function tokenizeQuery(text) {
+            const tokens = String(text || "")
+                .toLowerCase()
+                .split(/[^a-z0-9_]+/)
+                .map(t => t.trim())
+                .filter(Boolean);
+            return [...new Set(tokens)];
+        }
+
+        function renderWhyMatched(row) {
+            const queryInput = document.getElementById("filter-text-val");
+            const queryTokens = tokenizeQuery(queryInput ? queryInput.value : "");
+            const matched = Array.isArray(row.matched_terms) ? row.matched_terms : [];
+            const topTerms = Array.isArray(row.top_terms) ? row.top_terms : [];
+
+            const matchedLowerMap = new Map(
+                matched.map(term => [String(term).toLowerCase(), String(term)])
+            );
+
+            let exactHits = queryTokens
+                .filter(token => matchedLowerMap.has(token))
+                .map(token => matchedLowerMap.get(token));
+
+            if (!exactHits.length) {
+                exactHits = matched.slice(0, 6);
+            }
+            exactHits = [...new Set(exactHits)].slice(0, 8);
+
+            const exactLower = new Set(exactHits.map(t => String(t).toLowerCase()));
+            let expansions = topTerms.filter(t => !exactLower.has(String(t).toLowerCase()));
+            if (!expansions.length) {
+                expansions = matched.filter(t => !exactLower.has(String(t).toLowerCase()));
+            }
+            expansions = [...new Set(expansions)].slice(0, 8);
+
+            const exactHtml = exactHits.length
+                ? exactHits.map(term => `<span class="modal-why-chip exact">${esc(term)}</span>`).join("")
+                : `<span class="modal-why-empty">No direct query hits found.</span>`;
+
+            const expansionHtml = expansions.length
+                ? expansions.map(term => `<span class="modal-why-chip expansion">${esc(term)}</span>`).join("")
+                : `<span class="modal-why-empty">No expansion terms available yet.</span>`;
+
+            document.getElementById("modal-exact-hits").innerHTML = exactHtml;
+            document.getElementById("modal-expansion-hits").innerHTML = expansionHtml;
+        }
+
+        function buildAccordionHtml(row) {
+            const components = Array.isArray(row.svd_components) ? row.svd_components : [];
+            if (!components.length) {
+                return `
+                    <div class="modal-accordion-empty">
+                        No SVD dimensions are available for this result yet.
+                    </div>
+                `;
+            }
+
+            const terms = uniqueTerms(row);
+
+            return components.map((component, idx) => {
+                const compNumber = component.component ?? (idx + 1);
+                const contribution = Number(component.contribution);
+                const contribText = Number.isNaN(contribution)
+                    ? "-"
+                    : `${contribution >= 0 ? "+" : ""}${contribution.toFixed(3)}`;
+
+                const rowTerms = terms.length
+                    ? terms.slice(idx, idx + 4).concat(terms.slice(0, Math.max(0, idx + 4 - terms.length)))
+                    : [];
+                const termChips = rowTerms.length
+                    ? rowTerms.map(t => `<span class="modal-term-chip">${esc(t)}</span>`).join("")
+                    : `<span class="modal-term-chip muted">Awaiting term mapping</span>`;
+
+                return `
+                    <article class="modal-accordion-item ${idx === openAccordionIndex ? "open" : ""}">
+                        <button
+                            type="button"
+                            class="modal-accordion-trigger"
+                            aria-expanded="${idx === openAccordionIndex ? "true" : "false"}"
+                            onclick="toggleAccordionRow(${idx})"
+                        >
+                            <span class="modal-accordion-left">
+                                <span class="modal-accordion-icon">${idx === openAccordionIndex ? "-" : "+"}</span>
+                                <span class="modal-accordion-title">Dimension LS${esc(compNumber)}</span>
+                            </span>
+                            <span class="modal-accordion-score">${contribText}</span>
+                        </button>
+                        <div class="modal-accordion-panel">
+                            <p class="modal-accordion-copy">
+                                Placeholder explanation for LS${esc(compNumber)}. We will swap this with team-specific axis
+                                interpretation and evidence snippets in the next iteration.
+                            </p>
+                            <div class="modal-accordion-terms">${termChips}</div>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        function renderModalSections(row) {
+            const profileTerms = uniqueTerms(row).slice(0, 6);
+            const profileHtml = profileTerms.length
+                ? profileTerms.map(term => `<span class="modal-profile-chip">${esc(term)}</span>`).join("")
+                : `<span class="modal-profile-empty">No profile terms yet.</span>`;
+
+            document.getElementById("modal-profile-chips").innerHTML = profileHtml;
+            document.getElementById("modal-accordion").innerHTML = buildAccordionHtml(row);
+            renderWhyMatched(row);
+        }
 
         function answerBoxTemplate(row, index) {
             const num = String(index + 1).padStart(2, '0');
@@ -99,20 +276,38 @@
         }
 
         function openModal(index) {
-            const row = lastResults[index];
-            document.getElementById('modal-meta').textContent = `${row.sport.toUpperCase()} · MATCH #${index + 1}`;
+            const row = visibleResults[index];
+            if (!row) return;
+
+            openAccordionIndex = 0;
+            currentModalRow = row;
+            const sportLabel = String(row.sport || "unknown").toUpperCase();
+            document.getElementById('modal-meta').textContent = `${sportLabel} · MATCH #${index + 1}`;
             document.getElementById('modal-name').textContent = row.title;
             document.getElementById('modal-league').textContent = row.league;
-            document.getElementById('modal-score').textContent = row.score;
-            document.getElementById('modal-svd').textContent = row.svd_score ?? '—';
-            document.getElementById('modal-lexical').textContent = row.lexical_score ?? '—';
+            document.getElementById('modal-score').textContent = formatScore(row.score);
+            document.getElementById('modal-svd').textContent = formatScore(row.svd_score);
+            document.getElementById('modal-lexical').textContent = formatScore(row.lexical_score);
+            renderModalSections(row);
             document.getElementById('modal-overlay').classList.add('active');
             document.body.style.overflow = 'hidden';
+        }
+
+        function toggleAccordionRow(index) {
+            if (!currentModalRow) return;
+            openAccordionIndex = openAccordionIndex === index ? -1 : index;
+            document.getElementById("modal-accordion").innerHTML = buildAccordionHtml(currentModalRow);
         }
 
         function closeModal() {
             document.getElementById('modal-overlay').classList.remove('active');
             document.body.style.overflow = '';
+            document.getElementById("modal-profile-chips").innerHTML = "";
+            document.getElementById("modal-accordion").innerHTML = "";
+            document.getElementById("modal-exact-hits").innerHTML = "";
+            document.getElementById("modal-expansion-hits").innerHTML = "";
+            openAccordionIndex = -1;
+            currentModalRow = null;
         }
 
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
@@ -127,10 +322,10 @@
         function renderResults(data) {
             const box = document.getElementById("answer-box");
             box.innerHTML = "";
-            const filtered = activeFilter === "all"
+            visibleResults = activeFilter === "all"
                 ? data
                 : data.filter(row => row.sport === activeFilter);
-            filtered.forEach((row, i) => {
+            visibleResults.forEach((row, i) => {
                 let tempDiv = document.createElement("div");
                 tempDiv.innerHTML = answerBoxTemplate(row, i);
                 box.appendChild(tempDiv);
