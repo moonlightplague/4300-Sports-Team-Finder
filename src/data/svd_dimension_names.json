@@ -1,721 +1,560 @@
 {
   "1": {
     "id": 1,
-    "label_pos": "",
+    "label_pos": "Franchise Structure",
     "label_neg": "",
-    "blurb": "",
+    "blurb": "League/franchise identity, drafts, and club infrastructure language.",
     "top_terms_pos": [
       {
         "t": "conference",
-        "w": 0.0587
+        "w": 0.0624
       },
       {
         "t": "franchise",
-        "w": 0.0557
-      },
-      {
-        "t": "playoffs",
-        "w": 0.055
+        "w": 0.0593
       },
       {
         "t": "uniform",
-        "w": 0.0543
+        "w": 0.0579
       },
       {
         "t": "uniforms",
-        "w": 0.054
+        "w": 0.0577
       },
       {
         "t": "draft",
-        "w": 0.0534
+        "w": 0.0571
       },
       {
         "t": "hall",
-        "w": 0.0526
-      },
-      {
-        "t": "playoff",
-        "w": 0.0519
+        "w": 0.0561
       },
       {
         "t": "football",
-        "w": 0.0502
+        "w": 0.0525
       },
       {
-        "t": "million",
-        "w": 0.0495
+        "t": "pick",
+        "w": 0.0517
       }
     ],
-    "top_terms_neg": [
-      {
-        "t": "bot",
-        "w": 0.0
-      },
-      {
-        "t": "vikes",
-        "w": 0.0
-      },
-      {
-        "t": "flairs",
-        "w": 0.0
-      },
-      {
-        "t": "hmm",
-        "w": 0.0
-      },
-      {
-        "t": "asap",
-        "w": 0.0
-      },
-      {
-        "t": "seems_like",
-        "w": 0.0
-      },
-      {
-        "t": "insane",
-        "w": 0.0
-      },
-      {
-        "t": "youll",
-        "w": 0.0
-      },
-      {
-        "t": "wasnt",
-        "w": 0.0
-      },
-      {
-        "t": "wont",
-        "w": 0.0
-      }
-    ]
+    "top_terms_neg": []
   },
   "2": {
     "id": 2,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
+    "label_pos": "Global Club Soccer",
+    "label_neg": "Draft-Centric Team Sports",
+    "blurb": "International club-football(soccer) language vs North American draft/trade language.",
     "top_terms_pos": [
       {
         "t": "fifa",
-        "w": 0.1055
+        "w": 0.1098
       },
       {
         "t": "uefa",
-        "w": 0.1005
+        "w": 0.1046
       },
       {
         "t": "matches",
-        "w": 0.0893
-      },
-      {
-        "t": "cup",
-        "w": 0.0876
+        "w": 0.0932
       },
       {
         "t": "european",
-        "w": 0.0867
+        "w": 0.0904
       },
       {
         "t": "champions_league",
-        "w": 0.0835
+        "w": 0.0873
       },
       {
         "t": "supporters",
-        "w": 0.0826
+        "w": 0.0864
       },
       {
         "t": "clubs",
-        "w": 0.0817
-      },
-      {
-        "t": "match",
-        "w": 0.073
+        "w": 0.0856
       },
       {
         "t": "kit",
-        "w": 0.072
+        "w": 0.0752
       }
     ],
     "top_terms_neg": [
       {
         "t": "draft",
-        "w": -0.0564
+        "w": -0.0558
       },
       {
         "t": "pick",
-        "w": -0.0537
+        "w": -0.053
       },
       {
         "t": "uniforms",
-        "w": -0.0527
+        "w": -0.0516
       },
       {
         "t": "traded",
-        "w": -0.0477
+        "w": -0.0467
       },
       {
         "t": "franchise",
-        "w": -0.0463
-      },
-      {
-        "t": "uniform",
-        "w": -0.0446
+        "w": -0.0449
       },
       {
         "t": "nba",
-        "w": -0.044
+        "w": -0.0435
       },
       {
-        "t": "trade",
-        "w": -0.0426
+        "t": "uniform",
+        "w": -0.0434
       },
       {
         "t": "picks",
-        "w": -0.042
-      },
-      {
-        "t": "alternate",
         "w": -0.0417
       }
     ]
   },
   "3": {
     "id": 3,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
+    "label_pos": "American Football",
+    "label_neg": "Hockey/Basketball Slant",
+    "blurb": "NFL-style terminology vs  hockey and basketball vocabulary.",
     "top_terms_pos": [
       {
         "t": "bowl",
-        "w": 0.1251
+        "w": 0.1283
       },
       {
         "t": "quarterback",
-        "w": 0.1114
+        "w": 0.1146
       },
       {
         "t": "nfl",
-        "w": 0.0924
+        "w": 0.0949
       },
       {
         "t": "touchdown",
-        "w": 0.0884
+        "w": 0.0907
       },
       {
         "t": "yards",
-        "w": 0.0881
+        "w": 0.0905
       },
       {
         "t": "coordinator",
-        "w": 0.0821
+        "w": 0.0843
       },
       {
         "t": "ncaa",
-        "w": 0.0787
+        "w": 0.0783
       },
       {
         "t": "touchdowns",
-        "w": 0.0748
-      },
-      {
-        "t": "yard",
-        "w": 0.0679
-      },
-      {
-        "t": "receiver",
-        "w": 0.0675
+        "w": 0.0769
       }
     ],
     "top_terms_neg": [
       {
         "t": "nhl",
-        "w": -0.0772
-      },
-      {
-        "t": "stanley",
-        "w": -0.0643
-      },
-      {
-        "t": "traded",
-        "w": -0.0633
+        "w": -0.0762
       },
       {
         "t": "trade",
-        "w": -0.0632
+        "w": -0.0649
+      },
+      {
+        "t": "traded",
+        "w": -0.0648
       },
       {
         "t": "nba",
-        "w": -0.0605
+        "w": -0.0642
+      },
+      {
+        "t": "stanley",
+        "w": -0.0633
       },
       {
         "t": "goaltender",
-        "w": -0.0595
+        "w": -0.0582
       },
       {
         "t": "arena",
-        "w": -0.0568
-      },
-      {
-        "t": "hockey",
-        "w": -0.0549
+        "w": -0.0577
       },
       {
         "t": "swept",
-        "w": -0.0543
-      },
-      {
-        "t": "exchange",
-        "w": -0.054
+        "w": -0.0561
       }
     ]
   },
   "4": {
     "id": 4,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
+    "label_pos": "Basketball",
+    "label_neg": "Baseball",
+    "blurb": "Basketball-heavy terms vs with baseball-heavy terms.",
     "top_terms_pos": [
       {
         "t": "nba",
-        "w": 0.1153
+        "w": 0.1169
       },
       {
         "t": "basketball",
-        "w": 0.1093
+        "w": 0.1112
       },
       {
         "t": "ncaa",
-        "w": 0.1036
+        "w": 0.1071
       },
       {
         "t": "guard",
-        "w": 0.0788
+        "w": 0.0799
       },
       {
         "t": "tournament",
-        "w": 0.0708
+        "w": 0.0725
       },
       {
         "t": "conference",
-        "w": 0.068
+        "w": 0.069
       },
       {
         "t": "rebounds",
-        "w": 0.0671
+        "w": 0.068
       },
       {
         "t": "college",
-        "w": 0.0629
-      },
-      {
-        "t": "nit",
-        "w": 0.0617
-      },
-      {
-        "t": "boston_celtics",
-        "w": 0.0608
+        "w": 0.0651
       }
     ],
     "top_terms_neg": [
       {
         "t": "mlb",
-        "w": -0.0746
+        "w": -0.0748
       },
       {
         "t": "wild_card",
-        "w": -0.0725
+        "w": -0.0737
       },
       {
         "t": "pitcher",
-        "w": -0.07
+        "w": -0.0701
       },
       {
         "t": "baseball",
-        "w": -0.0691
+        "w": -0.0693
       },
       {
         "t": "pants",
-        "w": -0.0602
+        "w": -0.0614
       },
       {
         "t": "cardinals",
-        "w": -0.0597
+        "w": -0.06
       },
       {
         "t": "inning",
-        "w": -0.0596
+        "w": -0.0597
       },
       {
         "t": "pennant",
         "w": -0.0588
-      },
-      {
-        "t": "pitching",
-        "w": -0.0539
-      },
-      {
-        "t": "baseman",
-        "w": -0.0534
       }
     ]
   },
   "5": {
     "id": 5,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
+    "label_pos": "Ice Hockey",
+    "label_neg": "Baseball",
+    "blurb": "NHL/ice-hockey language vs MLB/baseball language.",
     "top_terms_pos": [
       {
         "t": "nhl",
-        "w": 0.1152
-      },
-      {
-        "t": "goaltender",
-        "w": 0.1111
+        "w": 0.1214
       },
       {
         "t": "stanley",
-        "w": 0.1109
+        "w": 0.1171
+      },
+      {
+        "t": "goaltender",
+        "w": 0.1166
       },
       {
         "t": "defenseman",
-        "w": 0.0836
+        "w": 0.0876
       },
       {
         "t": "hockey",
-        "w": 0.0827
+        "w": 0.087
       },
       {
         "t": "ice",
-        "w": 0.0789
+        "w": 0.0823
       },
       {
         "t": "boston_bruins",
-        "w": 0.0745
+        "w": 0.0784
       },
       {
         "t": "montreal_canadiens",
-        "w": 0.0699
-      },
-      {
-        "t": "edmonton_oilers",
-        "w": 0.0671
-      },
-      {
-        "t": "new_york_rangers",
-        "w": 0.0664
+        "w": 0.0736
       }
     ],
     "top_terms_neg": [
       {
         "t": "mlb",
-        "w": -0.0939
+        "w": -0.0963
       },
       {
         "t": "pitcher",
-        "w": -0.0936
+        "w": -0.0957
       },
       {
         "t": "inning",
-        "w": -0.0804
+        "w": -0.0822
       },
       {
         "t": "pennant",
-        "w": -0.079
+        "w": -0.0805
       },
       {
         "t": "pitching",
-        "w": -0.0728
+        "w": -0.0744
       },
       {
         "t": "yankees",
-        "w": -0.072
+        "w": -0.0739
       },
       {
         "t": "baseball",
-        "w": -0.0717
+        "w": -0.0737
       },
       {
         "t": "baseman",
-        "w": -0.0716
-      },
-      {
-        "t": "new_york_yankees",
-        "w": -0.0696
-      },
-      {
-        "t": "sox",
-        "w": -0.0666
+        "w": -0.0732
       }
     ]
   },
   "6": {
     "id": 6,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
+    "label_pos": "College Programs",
+    "label_neg": "NFL Conferences",
+    "blurb": "College-sports vs pro football conference terms.",
     "top_terms_pos": [
       {
         "t": "ncaa",
-        "w": 0.1157
+        "w": 0.1179
       },
       {
         "t": "program",
-        "w": 0.0707
+        "w": 0.0726
       },
       {
         "t": "poll",
-        "w": 0.0701
+        "w": 0.0714
       },
       {
         "t": "schools",
-        "w": 0.0662
+        "w": 0.0674
       },
       {
         "t": "school",
-        "w": 0.0657
+        "w": 0.0668
       },
       {
         "t": "nit",
-        "w": 0.0622
+        "w": 0.0634
       },
       {
         "t": "stanley",
-        "w": 0.0621
+        "w": 0.0611
       },
       {
         "t": "ranked",
-        "w": 0.0578
-      },
-      {
-        "t": "sweet",
-        "w": 0.0572
-      },
-      {
-        "t": "americans",
-        "w": 0.0566
+        "w": 0.0592
       }
     ],
     "top_terms_neg": [
       {
         "t": "nfc",
-        "w": -0.0882
+        "w": -0.0894
       },
       {
         "t": "nfl",
-        "w": -0.0702
+        "w": -0.0709
       },
       {
         "t": "super",
-        "w": -0.0692
+        "w": -0.0703
       },
       {
         "t": "afc",
-        "w": -0.065
+        "w": -0.0658
       },
       {
         "t": "new_england_patriots",
-        "w": -0.0602
+        "w": -0.0609
       },
       {
         "t": "dallas_cowboys",
-        "w": -0.0577
+        "w": -0.0585
       },
       {
         "t": "green_bay_packers",
-        "w": -0.0567
+        "w": -0.0578
       },
       {
         "t": "quarterback",
-        "w": -0.0566
-      },
-      {
-        "t": "49ers",
-        "w": -0.0562
-      },
-      {
-        "t": "rams",
-        "w": -0.0549
+        "w": -0.0575
       }
     ]
   },
   "7": {
     "id": 7,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
+    "label_pos": "Latin American Soccer",
+    "label_neg": "European Club Soccer",
+    "blurb": "LatAm competition terms vs European club-football(soccer) terms.",
     "top_terms_pos": [
       {
         "t": "copa",
-        "w": 0.1489
+        "w": 0.1541
       },
       {
         "t": "libertadores",
-        "w": 0.1246
+        "w": 0.1289
       },
       {
         "t": "estadio",
-        "w": 0.113
+        "w": 0.1168
       },
       {
         "t": "apertura",
-        "w": 0.1026
+        "w": 0.1062
       },
       {
         "t": "primera",
-        "w": 0.0946
-      },
-      {
-        "t": "concacaf",
-        "w": 0.077
+        "w": 0.098
       },
       {
         "t": "sudamericana",
-        "w": 0.0769
+        "w": 0.0797
       },
       {
         "t": "mexican",
-        "w": 0.0767
+        "w": 0.0782
       },
       {
         "t": "clausura",
-        "w": 0.0743
-      },
-      {
-        "t": "tournament",
-        "w": 0.0737
+        "w": 0.0765
       }
     ],
     "top_terms_neg": [
       {
         "t": "uefa",
-        "w": -0.0906
+        "w": -0.0918
       },
       {
         "t": "europa",
-        "w": -0.0606
+        "w": -0.0614
       },
       {
         "t": "scottish",
-        "w": -0.0559
+        "w": -0.0565
       },
       {
         "t": "european",
-        "w": -0.0543
+        "w": -0.0549
       },
       {
         "t": "premier",
-        "w": -0.0538
+        "w": -0.0547
       },
       {
         "t": "liverpool",
-        "w": -0.0538
+        "w": -0.0544
       },
       {
         "t": "chairman",
-        "w": -0.0503
-      },
-      {
-        "t": "colours",
-        "w": -0.0491
+        "w": -0.0509
       },
       {
         "t": "shirts",
-        "w": -0.049
-      },
-      {
-        "t": "charity",
-        "w": -0.0477
+        "w": -0.0492
       }
     ]
   },
   "8": {
     "id": 8,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
+    "label_pos": "MLS / US Soccer",
+    "label_neg": "Serie/LatAm Club Context",
+    "blurb": "MLS/US-soccer terms vs  non-MLS club competition vocabulary.",
     "top_terms_pos": [
       {
         "t": "mls",
-        "w": 0.2364
+        "w": 0.2486
       },
       {
         "t": "concacaf",
-        "w": 0.1284
+        "w": 0.1369
       },
       {
         "t": "usl",
-        "w": 0.1065
+        "w": 0.1122
       },
       {
         "t": "majorleaguesoccer",
-        "w": 0.0866
+        "w": 0.091
       },
       {
         "t": "galaxy",
-        "w": 0.0863
-      },
-      {
-        "t": "new_york_red_bulls",
-        "w": 0.0862
+        "w": 0.0908
       },
       {
         "t": "la_galaxy",
-        "w": 0.0858
+        "w": 0.0903
       },
       {
         "t": "columbus_crew",
-        "w": 0.0853
+        "w": 0.0895
       },
       {
-        "t": "philadelphia_union",
-        "w": 0.0775
-      },
-      {
-        "t": "open",
-        "w": 0.0773
+        "t": "seattle_sounders_fc",
+        "w": 0.0812
       }
     ],
     "top_terms_neg": [
       {
         "t": "serie",
-        "w": -0.0762
+        "w": -0.0788
       },
       {
         "t": "campeonato",
-        "w": -0.0525
-      },
-      {
-        "t": "copa",
-        "w": -0.0511
+        "w": -0.0534
       },
       {
         "t": "italia",
-        "w": -0.0484
+        "w": -0.0505
       },
       {
-        "t": "libertadores",
-        "w": -0.0459
+        "t": "copa",
+        "w": -0.0497
       },
       {
         "t": "taca",
-        "w": -0.0441
+        "w": -0.0455
+      },
+      {
+        "t": "libertadores",
+        "w": -0.0445
       },
       {
         "t": "coppa",
-        "w": -0.0419
-      },
-      {
-        "t": "torneio",
-        "w": -0.0417
+        "w": -0.044
       },
       {
         "t": "italian",
-        "w": -0.0413
-      },
-      {
-        "t": "brasil",
-        "w": -0.0405
+        "w": -0.0434
       }
     ]
   }

@@ -29,6 +29,8 @@ except ImportError:
 
 SVD_EPSILON = 1e-10
 MIN_EXACT_CANDIDATES = 8
+MIN_TERM_DF = 4
+MAX_TERM_DF_RATIO = 0.50
 
 EMBEDDING_VECTOR_SIZE = 80
 EMBEDDING_WINDOW = 8
@@ -75,6 +77,9 @@ JUNK_TERMS = {
 "thinking", "wish", "forget", "fucked", "anymore", "isnt", "dad", "stuff",
 "nbsp", "bitch", "crazy", "alright", "holy", "talk",
 "seriously", "completely",
+"bot", "flairs", "hmm", "asap", "seems_like", "youll", "vikes",
+"idk", "imo", "irl", "bruh", "bro", "uh", "umm", "yup", "nope",
+"fwiw", "tbh", "afaik", "lmk", "btw", "fwiw", "omg", "smh",
 }
 
 
@@ -91,7 +96,15 @@ def is_good_term(term):
         return False
     if len(set(term)) == 1:
         return False
+    if not re.search(r"[a-z]", term):
+        return False
+    if re.fullmatch(r"[a-z]\d+|\d+[a-z]", term):
+        return False
+    if term.count("_") >= 3:
+        return False
     if re.fullmatch(r"(ha)+", term):
+        return False
+    if re.fullmatch(r"(lol)+|(lmao)+", term):
         return False
     if term in JUNK_TERMS:
         return False
@@ -262,14 +275,15 @@ class InvertedIndexSearchEngine:
                     self.team_term_tf[team].get(token, 0) + tf
                 )
         
-        max_df = int(0.6 * len(all_teams))
+        min_df = min(MIN_TERM_DF, len(all_teams))
+        max_df = max(min_df, int(MAX_TERM_DF_RATIO * len(all_teams)))
         self._protected_name_terms = set(protected_name_terms)
         normalized_index = {
             term: postings for term, postings in normalized_index.items()
             if (
                 term in protected_name_terms
                 or (
-                    3 <= len(postings) <= max_df
+                    min_df <= len(postings) <= max_df
                     and not (sum(postings.values()) > 10000 and len(postings) < 50)
                 )
             )
@@ -579,20 +593,31 @@ class InvertedIndexSearchEngine:
         label_pos = str(dim_entry.get("label_pos", "")).strip()
         label_neg = str(dim_entry.get("label_neg", "")).strip()
         blurb = str(dim_entry.get("blurb", "")).strip()
+        has_terms_pos = bool(self._coerce_dim_terms(dim_entry.get("top_terms_pos", [])))
+        has_terms_neg = bool(self._coerce_dim_terms(dim_entry.get("top_terms_neg", [])))
 
         if not label_pos:
             label_pos = self._derive_pole_label(dim_entry, positive=True)
         if not label_neg:
             label_neg = self._derive_pole_label(dim_entry, positive=False)
 
-        if dim_score >= 0:
-            label = label_pos or f"Dimension LS{dim_id}"
+        # One-sided dimensions should present as a single theme regardless of sign.
+        if not has_terms_neg and label_pos:
+            label = label_pos
+        elif not has_terms_pos and label_neg:
+            label = label_neg
+        elif dim_score >= 0:
+            label = label_pos or label_neg or f"Dimension LS{dim_id}"
         else:
-            label = label_neg or f"Dimension LS{dim_id}"
+            label = label_neg or label_pos or f"Dimension LS{dim_id}"
 
         if not blurb:
-            if label_pos and label_neg:
+            if has_terms_pos and has_terms_neg and label_pos and label_neg:
                 blurb = f"{label_pos} vs {label_neg}"
+            elif has_terms_pos and label_pos:
+                blurb = f"{label_pos} theme."
+            elif has_terms_neg and label_neg:
+                blurb = f"{label_neg} theme."
             else:
                 blurb = f"Latent semantic axis LS{dim_id}."
 
