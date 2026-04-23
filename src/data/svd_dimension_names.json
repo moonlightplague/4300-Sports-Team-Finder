@@ -6,69 +6,85 @@
     "blurb": "",
     "top_terms_pos": [
       {
-        "t": "seems_like",
-        "w": 0.0156
+        "t": "conference",
+        "w": 0.0587
       },
       {
-        "t": "lets",
-        "w": 0.0148
+        "t": "franchise",
+        "w": 0.0557
       },
       {
-        "t": "yep",
-        "w": 0.0145
+        "t": "playoffs",
+        "w": 0.055
       },
       {
-        "t": "tomorrow",
-        "w": 0.0145
+        "t": "uniform",
+        "w": 0.0543
       },
       {
-        "t": "insane",
-        "w": 0.0144
+        "t": "uniforms",
+        "w": 0.054
       },
       {
-        "t": "glad",
-        "w": 0.0143
+        "t": "draft",
+        "w": 0.0534
       },
       {
-        "t": "tho",
-        "w": 0.0143
+        "t": "hall",
+        "w": 0.0526
       },
       {
-        "t": "wasnt",
-        "w": 0.0142
+        "t": "playoff",
+        "w": 0.0519
+      },
+      {
+        "t": "football",
+        "w": 0.0502
+      },
+      {
+        "t": "million",
+        "w": 0.0495
       }
     ],
     "top_terms_neg": [
       {
-        "t": "happened_can",
+        "t": "bot",
         "w": 0.0
       },
       {
-        "t": "had_clicked",
+        "t": "vikes",
         "w": 0.0
       },
       {
-        "t": "scoreboard_can",
+        "t": "flairs",
         "w": 0.0
       },
       {
-        "t": "currenly",
+        "t": "hmm",
         "w": 0.0
       },
       {
-        "t": "tibs",
+        "t": "asap",
         "w": 0.0
       },
       {
-        "t": "ashit",
+        "t": "seems_like",
         "w": 0.0
       },
       {
-        "t": "checkbooks",
+        "t": "insane",
         "w": 0.0
       },
       {
-        "t": "automatic_downvotes",
+        "t": "youll",
+        "w": 0.0
+      },
+      {
+        "t": "wasnt",
+        "w": 0.0
+      },
+      {
+        "t": "wont",
         "w": 0.0
       }
     ]
@@ -80,70 +96,86 @@
     "blurb": "",
     "top_terms_pos": [
       {
-        "t": "deulofeu",
-        "w": 0.027
+        "t": "fifa",
+        "w": 0.1055
       },
       {
-        "t": "dembele",
-        "w": 0.0267
+        "t": "uefa",
+        "w": 0.1005
       },
       {
-        "t": "motm",
-        "w": 0.025
+        "t": "matches",
+        "w": 0.0893
       },
       {
-        "t": "ibra",
-        "w": 0.0243
+        "t": "cup",
+        "w": 0.0876
       },
       {
-        "t": "verratti",
-        "w": 0.0241
+        "t": "european",
+        "w": 0.0867
       },
       {
-        "t": "juve",
-        "w": 0.024
+        "t": "champions_league",
+        "w": 0.0835
       },
       {
-        "t": "digne",
-        "w": 0.0239
+        "t": "supporters",
+        "w": 0.0826
       },
       {
-        "t": "psg",
-        "w": 0.0236
+        "t": "clubs",
+        "w": 0.0817
+      },
+      {
+        "t": "match",
+        "w": 0.073
+      },
+      {
+        "t": "kit",
+        "w": 0.072
       }
     ],
     "top_terms_neg": [
       {
-        "t": "rollins",
-        "w": -0.0187
+        "t": "draft",
+        "w": -0.0564
       },
       {
-        "t": "hundley",
-        "w": -0.0172
+        "t": "pick",
+        "w": -0.0537
       },
       {
-        "t": "pederson",
-        "w": -0.0157
+        "t": "uniforms",
+        "w": -0.0527
       },
       {
-        "t": "arod",
-        "w": -0.0155
+        "t": "traded",
+        "w": -0.0477
       },
       {
-        "t": "hof",
-        "w": -0.0148
+        "t": "franchise",
+        "w": -0.0463
       },
       {
-        "t": "ethier",
-        "w": -0.0147
+        "t": "uniform",
+        "w": -0.0446
       },
       {
-        "t": "burnett",
-        "w": -0.0147
+        "t": "nba",
+        "w": -0.044
       },
       {
-        "t": "niners",
-        "w": -0.0146
+        "t": "trade",
+        "w": -0.0426
+      },
+      {
+        "t": "picks",
+        "w": -0.042
+      },
+      {
+        "t": "alternate",
+        "w": -0.0417
       }
     ]
   },
@@ -154,70 +186,86 @@
     "blurb": "",
     "top_terms_pos": [
       {
-        "t": "ilb",
-        "w": 0.0312
+        "t": "bowl",
+        "w": 0.1251
       },
       {
-        "t": "olb",
-        "w": 0.0293
+        "t": "quarterback",
+        "w": 0.1114
       },
       {
-        "t": "wrs",
-        "w": 0.0281
+        "t": "nfl",
+        "w": 0.0924
       },
       {
-        "t": "ints",
-        "w": 0.0273
+        "t": "touchdown",
+        "w": 0.0884
       },
       {
-        "t": "oline",
-        "w": 0.0269
+        "t": "yards",
+        "w": 0.0881
       },
       {
-        "t": "playcalling",
-        "w": 0.0259
+        "t": "coordinator",
+        "w": 0.0821
       },
       {
-        "t": "rushers",
-        "w": 0.0254
+        "t": "ncaa",
+        "w": 0.0787
       },
       {
-        "t": "ypc",
-        "w": 0.0249
+        "t": "touchdowns",
+        "w": 0.0748
+      },
+      {
+        "t": "yard",
+        "w": 0.0679
+      },
+      {
+        "t": "receiver",
+        "w": 0.0675
       }
     ],
     "top_terms_neg": [
       {
-        "t": "grandal",
-        "w": -0.0253
+        "t": "nhl",
+        "w": -0.0772
       },
       {
-        "t": "joc",
-        "w": -0.0243
+        "t": "stanley",
+        "w": -0.0643
       },
       {
-        "t": "bellinger",
-        "w": -0.0237
+        "t": "traded",
+        "w": -0.0633
       },
       {
-        "t": "maeda",
-        "w": -0.0237
+        "t": "trade",
+        "w": -0.0632
       },
       {
-        "t": "kersh",
-        "w": -0.0237
+        "t": "nba",
+        "w": -0.0605
       },
       {
-        "t": "mattingly",
-        "w": -0.0236
+        "t": "goaltender",
+        "w": -0.0595
       },
       {
-        "t": "utley",
-        "w": -0.0232
+        "t": "arena",
+        "w": -0.0568
       },
       {
-        "t": "ryu",
-        "w": -0.0231
+        "t": "hockey",
+        "w": -0.0549
+      },
+      {
+        "t": "swept",
+        "w": -0.0543
+      },
+      {
+        "t": "exchange",
+        "w": -0.054
       }
     ]
   },
@@ -228,70 +276,86 @@
     "blurb": "",
     "top_terms_pos": [
       {
-        "t": "franchise",
-        "w": 0.0275
+        "t": "nba",
+        "w": 0.1153
       },
       {
-        "t": "playoffs",
-        "w": 0.0271
+        "t": "basketball",
+        "w": 0.1093
+      },
+      {
+        "t": "ncaa",
+        "w": 0.1036
+      },
+      {
+        "t": "guard",
+        "w": 0.0788
+      },
+      {
+        "t": "tournament",
+        "w": 0.0708
       },
       {
         "t": "conference",
-        "w": 0.0263
+        "w": 0.068
       },
       {
-        "t": "uniform",
-        "w": 0.0261
+        "t": "rebounds",
+        "w": 0.0671
       },
       {
-        "t": "draft",
-        "w": 0.026
+        "t": "college",
+        "w": 0.0629
       },
       {
-        "t": "hall",
-        "w": 0.0259
+        "t": "nit",
+        "w": 0.0617
       },
       {
-        "t": "blue",
-        "w": 0.0258
-      },
-      {
-        "t": "pick",
-        "w": 0.0256
+        "t": "boston_celtics",
+        "w": 0.0608
       }
     ],
     "top_terms_neg": [
       {
-        "t": "busi",
-        "w": -0.0194
+        "t": "mlb",
+        "w": -0.0746
       },
       {
-        "t": "semedo",
-        "w": -0.0186
+        "t": "wild_card",
+        "w": -0.0725
       },
       {
-        "t": "samper",
-        "w": -0.0183
+        "t": "pitcher",
+        "w": -0.07
       },
       {
-        "t": "masche",
-        "w": -0.017
+        "t": "baseball",
+        "w": -0.0691
       },
       {
-        "t": "lucho",
-        "w": -0.0163
+        "t": "pants",
+        "w": -0.0602
       },
       {
-        "t": "abidal",
-        "w": -0.0162
+        "t": "cardinals",
+        "w": -0.0597
       },
       {
-        "t": "masch",
-        "w": -0.016
+        "t": "inning",
+        "w": -0.0596
       },
       {
-        "t": "valdes",
-        "w": -0.016
+        "t": "pennant",
+        "w": -0.0588
+      },
+      {
+        "t": "pitching",
+        "w": -0.0539
+      },
+      {
+        "t": "baseman",
+        "w": -0.0534
       }
     ]
   },
@@ -302,70 +366,86 @@
     "blurb": "",
     "top_terms_pos": [
       {
-        "t": "conference",
-        "w": 0.0539
+        "t": "nhl",
+        "w": 0.1152
       },
       {
-        "t": "uniforms",
-        "w": 0.0504
+        "t": "goaltender",
+        "w": 0.1111
       },
       {
-        "t": "uniform",
-        "w": 0.0502
+        "t": "stanley",
+        "w": 0.1109
       },
       {
-        "t": "playoffs",
-        "w": 0.0499
+        "t": "defenseman",
+        "w": 0.0836
       },
       {
-        "t": "franchise",
-        "w": 0.0498
+        "t": "hockey",
+        "w": 0.0827
       },
       {
-        "t": "draft",
-        "w": 0.0476
+        "t": "ice",
+        "w": 0.0789
       },
       {
-        "t": "playoff",
-        "w": 0.0466
+        "t": "boston_bruins",
+        "w": 0.0745
       },
       {
-        "t": "hall",
-        "w": 0.0465
+        "t": "montreal_canadiens",
+        "w": 0.0699
+      },
+      {
+        "t": "edmonton_oilers",
+        "w": 0.0671
+      },
+      {
+        "t": "new_york_rangers",
+        "w": 0.0664
       }
     ],
     "top_terms_neg": [
       {
-        "t": "bolasie",
-        "w": -0.0195
+        "t": "mlb",
+        "w": -0.0939
       },
       {
-        "t": "rom",
-        "w": -0.0192
+        "t": "pitcher",
+        "w": -0.0936
       },
       {
-        "t": "jags",
-        "w": -0.0187
+        "t": "inning",
+        "w": -0.0804
       },
       {
-        "t": "lookman",
-        "w": -0.0187
+        "t": "pennant",
+        "w": -0.079
       },
       {
-        "t": "siggy",
-        "w": -0.0174
+        "t": "pitching",
+        "w": -0.0728
       },
       {
-        "t": "evertonian",
-        "w": -0.0172
+        "t": "yankees",
+        "w": -0.072
       },
       {
-        "t": "gueye",
-        "w": -0.0171
+        "t": "baseball",
+        "w": -0.0717
       },
       {
-        "t": "coyb",
-        "w": -0.0171
+        "t": "baseman",
+        "w": -0.0716
+      },
+      {
+        "t": "new_york_yankees",
+        "w": -0.0696
+      },
+      {
+        "t": "sox",
+        "w": -0.0666
       }
     ]
   },
@@ -376,70 +456,86 @@
     "blurb": "",
     "top_terms_pos": [
       {
-        "t": "lookman",
-        "w": 0.0397
+        "t": "ncaa",
+        "w": 0.1157
       },
       {
-        "t": "gueye",
-        "w": 0.0365
+        "t": "program",
+        "w": 0.0707
       },
       {
-        "t": "siggy",
-        "w": 0.0365
+        "t": "poll",
+        "w": 0.0701
       },
       {
-        "t": "rom",
-        "w": 0.0364
+        "t": "schools",
+        "w": 0.0662
       },
       {
-        "t": "goodison",
-        "w": 0.0362
+        "t": "school",
+        "w": 0.0657
       },
       {
-        "t": "baines",
-        "w": 0.036
+        "t": "nit",
+        "w": 0.0622
       },
       {
-        "t": "bolasie",
-        "w": 0.0358
+        "t": "stanley",
+        "w": 0.0621
       },
       {
-        "t": "coyb",
-        "w": 0.0358
+        "t": "ranked",
+        "w": 0.0578
+      },
+      {
+        "t": "sweet",
+        "w": 0.0572
+      },
+      {
+        "t": "americans",
+        "w": 0.0566
       }
     ],
     "top_terms_neg": [
       {
-        "t": "rabiot",
-        "w": -0.0231
+        "t": "nfc",
+        "w": -0.0882
       },
       {
-        "t": "verratti",
-        "w": -0.0218
+        "t": "nfl",
+        "w": -0.0702
       },
       {
-        "t": "mercato",
-        "w": -0.0215
+        "t": "super",
+        "w": -0.0692
       },
       {
-        "t": "soriano",
-        "w": -0.0214
+        "t": "afc",
+        "w": -0.065
       },
       {
-        "t": "veratti",
-        "w": -0.0212
+        "t": "new_england_patriots",
+        "w": -0.0602
       },
       {
-        "t": "adriano",
-        "w": -0.0205
+        "t": "dallas_cowboys",
+        "w": -0.0577
       },
       {
-        "t": "abate",
-        "w": -0.02
+        "t": "green_bay_packers",
+        "w": -0.0567
       },
       {
-        "t": "biglia",
-        "w": -0.0198
+        "t": "quarterback",
+        "w": -0.0566
+      },
+      {
+        "t": "49ers",
+        "w": -0.0562
+      },
+      {
+        "t": "rams",
+        "w": -0.0549
       }
     ]
   },
@@ -450,70 +546,86 @@
     "blurb": "",
     "top_terms_pos": [
       {
-        "t": "cutrone",
-        "w": 0.0356
+        "t": "copa",
+        "w": 0.1489
       },
       {
-        "t": "galliani",
-        "w": 0.0353
+        "t": "libertadores",
+        "w": 0.1246
       },
       {
-        "t": "ses",
-        "w": 0.0352
+        "t": "estadio",
+        "w": 0.113
       },
       {
-        "t": "monto",
-        "w": 0.0351
+        "t": "apertura",
+        "w": 0.1026
       },
       {
-        "t": "bonaventura",
-        "w": 0.0349
+        "t": "primera",
+        "w": 0.0946
       },
       {
-        "t": "gigio",
-        "w": 0.034
+        "t": "concacaf",
+        "w": 0.077
       },
       {
-        "t": "calabria",
-        "w": 0.0334
+        "t": "sudamericana",
+        "w": 0.0769
       },
       {
-        "t": "kessie",
-        "w": 0.0329
+        "t": "mexican",
+        "w": 0.0767
+      },
+      {
+        "t": "clausura",
+        "w": 0.0743
+      },
+      {
+        "t": "tournament",
+        "w": 0.0737
       }
     ],
     "top_terms_neg": [
       {
-        "t": "valverde",
-        "w": -0.0268
+        "t": "uefa",
+        "w": -0.0906
       },
       {
-        "t": "boras",
-        "w": -0.0236
+        "t": "europa",
+        "w": -0.0606
       },
       {
-        "t": "yankees",
-        "w": -0.0221
+        "t": "scottish",
+        "w": -0.0559
       },
       {
-        "t": "yerry",
-        "w": -0.0186
+        "t": "european",
+        "w": -0.0543
       },
       {
-        "t": "cillessen",
-        "w": -0.0183
+        "t": "premier",
+        "w": -0.0538
       },
       {
-        "t": "busi",
-        "w": -0.0181
+        "t": "liverpool",
+        "w": -0.0538
       },
       {
-        "t": "sox",
-        "w": -0.0181
+        "t": "chairman",
+        "w": -0.0503
       },
       {
-        "t": "and_coutinho",
-        "w": -0.0178
+        "t": "colours",
+        "w": -0.0491
+      },
+      {
+        "t": "shirts",
+        "w": -0.049
+      },
+      {
+        "t": "charity",
+        "w": -0.0477
       }
     ]
   },
@@ -524,366 +636,86 @@
     "blurb": "",
     "top_terms_pos": [
       {
-        "t": "burnett",
-        "w": 0.0381
+        "t": "mls",
+        "w": 0.2364
       },
       {
-        "t": "jeter",
-        "w": 0.0373
+        "t": "concacaf",
+        "w": 0.1284
       },
       {
-        "t": "arod",
-        "w": 0.0372
+        "t": "usl",
+        "w": 0.1065
       },
       {
-        "t": "nyy",
-        "w": 0.0334
+        "t": "majorleaguesoccer",
+        "w": 0.0866
       },
       {
-        "t": "posada",
-        "w": 0.0311
+        "t": "galaxy",
+        "w": 0.0863
       },
       {
-        "t": "girardi",
-        "w": 0.0304
+        "t": "new_york_red_bulls",
+        "w": 0.0862
       },
       {
-        "t": "yankee",
-        "w": 0.0301
+        "t": "la_galaxy",
+        "w": 0.0858
       },
       {
-        "t": "gardner",
-        "w": 0.0296
+        "t": "columbus_crew",
+        "w": 0.0853
+      },
+      {
+        "t": "philadelphia_union",
+        "w": 0.0775
+      },
+      {
+        "t": "open",
+        "w": 0.0773
       }
     ],
     "top_terms_neg": [
       {
-        "t": "goff",
-        "w": -0.0335
+        "t": "serie",
+        "w": -0.0762
       },
       {
-        "t": "gurley",
-        "w": -0.0331
+        "t": "campeonato",
+        "w": -0.0525
       },
       {
-        "t": "tavon",
-        "w": -0.0316
+        "t": "copa",
+        "w": -0.0511
       },
       {
-        "t": "losangelesrams",
-        "w": -0.0307
+        "t": "italia",
+        "w": -0.0484
       },
       {
-        "t": "mcvay",
-        "w": -0.0291
+        "t": "libertadores",
+        "w": -0.0459
       },
       {
-        "t": "kupp",
-        "w": -0.0286
+        "t": "taca",
+        "w": -0.0441
       },
       {
-        "t": "blythe",
-        "w": -0.0285
+        "t": "coppa",
+        "w": -0.0419
       },
       {
-        "t": "tru",
-        "w": -0.0282
-      }
-    ]
-  },
-  "9": {
-    "id": 9,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
-    "top_terms_pos": [
-      {
-        "t": "kimpembe",
-        "w": 0.0438
+        "t": "torneio",
+        "w": -0.0417
       },
       {
-        "t": "meunier",
-        "w": 0.0435
+        "t": "italian",
+        "w": -0.0413
       },
       {
-        "t": "areola",
-        "w": 0.0414
-      },
-      {
-        "t": "aurier",
-        "w": 0.04
-      },
-      {
-        "t": "kurzawa",
-        "w": 0.039
-      },
-      {
-        "t": "dima",
-        "w": 0.038
-      },
-      {
-        "t": "trapp",
-        "w": 0.0372
-      },
-      {
-        "t": "adm",
-        "w": 0.0371
-      }
-    ],
-    "top_terms_neg": [
-      {
-        "t": "traded",
-        "w": -0.0274
-      },
-      {
-        "t": "abate",
-        "w": -0.0267
-      },
-      {
-        "t": "draft",
-        "w": -0.0265
-      },
-      {
-        "t": "franchise",
-        "w": -0.0264
-      },
-      {
-        "t": "soriano",
-        "w": -0.0259
-      },
-      {
-        "t": "suso",
-        "w": -0.0256
-      },
-      {
-        "t": "uniforms",
-        "w": -0.0253
-      },
-      {
-        "t": "galliani",
-        "w": -0.0252
-      }
-    ]
-  },
-  "10": {
-    "id": 10,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
-    "top_terms_pos": [
-      {
-        "t": "fifa",
-        "w": 0.0994
-      },
-      {
-        "t": "uefa",
-        "w": 0.0881
-      },
-      {
-        "t": "matches",
-        "w": 0.0851
-      },
-      {
-        "t": "cup",
-        "w": 0.0803
-      },
-      {
-        "t": "clubs",
-        "w": 0.0784
-      },
-      {
-        "t": "european",
-        "w": 0.0766
-      },
-      {
-        "t": "supporters",
-        "w": 0.0757
-      },
-      {
-        "t": "champions_league",
-        "w": 0.0715
-      }
-    ],
-    "top_terms_neg": [
-      {
-        "t": "pick",
-        "w": -0.0543
-      },
-      {
-        "t": "draft",
-        "w": -0.0537
-      },
-      {
-        "t": "nba",
-        "w": -0.0527
-      },
-      {
-        "t": "uniforms",
-        "w": -0.0473
-      },
-      {
-        "t": "traded",
-        "w": -0.0453
-      },
-      {
-        "t": "trade",
-        "w": -0.0438
-      },
-      {
-        "t": "alternate",
-        "w": -0.0434
-      },
-      {
-        "t": "picks",
-        "w": -0.043
-      }
-    ]
-  },
-  "11": {
-    "id": 11,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
-    "top_terms_pos": [
-      {
-        "t": "bowl",
-        "w": 0.1233
-      },
-      {
-        "t": "quarterback",
-        "w": 0.1037
-      },
-      {
-        "t": "ncaa",
-        "w": 0.1027
-      },
-      {
-        "t": "nfl",
-        "w": 0.085
-      },
-      {
-        "t": "program",
-        "w": 0.0822
-      },
-      {
-        "t": "yards",
-        "w": 0.0812
-      },
-      {
-        "t": "touchdown",
-        "w": 0.0812
-      },
-      {
-        "t": "poll",
-        "w": 0.0795
-      }
-    ],
-    "top_terms_neg": [
-      {
-        "t": "nhl",
-        "w": -0.0804
-      },
-      {
-        "t": "stanley",
-        "w": -0.0665
-      },
-      {
-        "t": "traded",
-        "w": -0.062
-      },
-      {
-        "t": "goaltender",
-        "w": -0.0613
-      },
-      {
-        "t": "trade",
-        "w": -0.0612
-      },
-      {
-        "t": "hockey",
-        "w": -0.0581
-      },
-      {
-        "t": "exchange",
-        "w": -0.053
-      },
-      {
-        "t": "arena",
-        "w": -0.0527
-      }
-    ]
-  },
-  "12": {
-    "id": 12,
-    "label_pos": "",
-    "label_neg": "",
-    "blurb": "",
-    "top_terms_pos": [
-      {
-        "t": "nba",
-        "w": 0.0588
-      },
-      {
-        "t": "que",
-        "w": 0.0555
-      },
-      {
-        "t": "sevilla_fc",
-        "w": 0.055
-      },
-      {
-        "t": "partido",
-        "w": 0.0531
-      },
-      {
-        "t": "vamos",
-        "w": 0.0519
-      },
-      {
-        "t": "esta",
-        "w": 0.0519
-      },
-      {
-        "t": "muy",
-        "w": 0.0512
-      },
-      {
-        "t": "basketball",
-        "w": 0.0508
-      }
-    ],
-    "top_terms_neg": [
-      {
-        "t": "cup",
-        "w": -0.0363
-      },
-      {
-        "t": "park",
-        "w": -0.0279
-      },
-      {
-        "t": "supporters",
-        "w": -0.0269
-      },
-      {
-        "t": "colours",
-        "w": -0.0257
-      },
-      {
-        "t": "wild_card",
-        "w": -0.0244
-      },
-      {
-        "t": "stanley",
-        "w": -0.0244
-      },
-      {
-        "t": "pants",
-        "w": -0.0235
-      },
-      {
-        "t": "academy",
-        "w": -0.0235
+        "t": "brasil",
+        "w": -0.0405
       }
     ]
   }

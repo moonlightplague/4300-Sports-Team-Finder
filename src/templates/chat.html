@@ -11,7 +11,7 @@
                 <h1>Sports<span>Team</span>Finder</h1>
                 <div class="title-bar"></div>
             </div>
-            <p class="hero-tagline">Describe the kind of team you love, in your own words —<br>we'll find it in a vocabulary of <em>latent themes</em> learned from fan talk.</p>
+            <p class="hero-tagline">Describe the kind of team you would love.</p>
             <div class="input-box" onclick="document.getElementById('filter-text-val').focus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
                 <input placeholder="Try 'fast attacking play'" id="filter-text-val" onkeyup="filterText()">
@@ -58,7 +58,7 @@
                     <span class="modal-score-val" id="modal-score"></span>
                 </div>
                 <div class="modal-score-col">
-                    <span class="modal-score-label">SVD COSINE</span>
+                    <span class="modal-score-label">COSINE SIMILARITY</span>
                     <span class="modal-score-val" id="modal-svd"></span>
                 </div>
                 <div class="modal-score-col">
@@ -66,9 +66,12 @@
                     <span class="modal-score-val" id="modal-lexical"></span>
                 </div>
             </div>
+            <p class="modal-score-explainer">
+                Overall combines semantic cosine, lexical overlap, and ranking signals.
+            </p>
             <div class="modal-divider"></div>
             <section class="modal-section">
-                <div class="modal-section-label">PROFILE</div>
+                <div class="modal-section-label">TOP LATENT DIMENSIONS</div>
                 <div id="modal-profile-chips" class="modal-profile-chips"></div>
             </section>
             <div class="modal-divider"></div>
@@ -76,9 +79,6 @@
                 <div class="modal-breakdown-header">
                     <div>
                         <div class="modal-section-label">DIMENSION BREAKDOWN</div>
-                        <p class="modal-breakdown-subtitle">
-                            Team-specific latent dimensions with signed contribution and top terms.
-                        </p>
                     </div>
                     <button type="button" id="modal-expand-all-btn" class="modal-expand-all-btn" onclick="toggleExpandAll()">
                         Expand All
@@ -108,6 +108,7 @@
         let activeFilter = "all";
         let lastResults = [];
         let visibleResults = [];
+        let visibleScoreContext = { minOverall: 0, maxOverall: 0 };
         let openAccordionIndex = -1;
         let allAccordionExpanded = false;
         let currentModalRow = null;
@@ -126,6 +127,48 @@
             const num = Number(value);
             if (Number.isNaN(num)) return String(value);
             return num.toFixed(3);
+        }
+
+        function clamp(value, min, max) {
+            return Math.max(min, Math.min(max, value));
+        }
+
+        function scoreToHundredFromCosine(raw) {
+            const n = Number(raw);
+            if (!Number.isFinite(n)) return "-";
+            const mapped = (clamp(n, -1, 1) + 1) * 50;
+            return `${Math.round(mapped)}/100`;
+        }
+
+        function buildScoreContext(rows) {
+            const vals = rows
+                .map(r => Number(r.score))
+                .filter(v => Number.isFinite(v));
+            if (!vals.length) return { minOverall: 0, maxOverall: 0 };
+            return {
+                minOverall: Math.min(...vals),
+                maxOverall: Math.max(...vals),
+            };
+        }
+
+        function overallToHundred(raw, ctx) {
+            const n = Number(raw);
+            if (!Number.isFinite(n)) return "-";
+            const min = Number(ctx && ctx.minOverall);
+            const max = Number(ctx && ctx.maxOverall);
+            if (!Number.isFinite(min) || !Number.isFinite(max)) return "-";
+            const span = max - min;
+            if (span <= 1e-12) return "50/100";
+            const mapped = 100 * (n - min) / span;
+            return `${Math.round(clamp(mapped, 0, 100))}/100`;
+        }
+
+        function displayScores(row) {
+            return {
+                overall: overallToHundred(row.score, visibleScoreContext),
+                cosine: scoreToHundredFromCosine(row.svd_score),
+                lexical: scoreToHundredFromCosine(row.lexical_score),
+            };
         }
 
         function uniqueTerms(row) {
@@ -174,11 +217,26 @@
             return [...new Set(tokens)];
         }
 
+        function getTopDimensionItems(row, count) {
+            const dimRows = normalizeDimRows(row).slice(0, count);
+            const dimLabels = row && row.dim_labels && typeof row.dim_labels === "object"
+                ? row.dim_labels
+                : {};
+            return dimRows.map((dim) => {
+                const label = dimLabels[String(dim.dimId)] ?? dimLabels[dim.dimId] ?? `LS${dim.dimId}`;
+                return {
+                    label: String(label),
+                    score: Number(dim.score),
+                    dimId: dim.dimId
+                };
+            });
+        }
+
         function renderWhyMatched(row) {
             const queryInput = document.getElementById("filter-text-val");
             const queryTokens = tokenizeQuery(queryInput ? queryInput.value : "");
             const matched = Array.isArray(row.matched_terms) ? row.matched_terms : [];
-            const topTerms = Array.isArray(row.top_terms) ? row.top_terms : [];
+            const expandedTerms = Array.isArray(row.expanded_terms) ? row.expanded_terms : [];
 
             const matchedLowerMap = new Map(
                 matched.map(term => [String(term).toLowerCase(), String(term)])
@@ -193,12 +251,7 @@
             }
             exactHits = [...new Set(exactHits)].slice(0, 8);
 
-            const exactLower = new Set(exactHits.map(t => String(t).toLowerCase()));
-            let expansions = topTerms.filter(t => !exactLower.has(String(t).toLowerCase()));
-            if (!expansions.length) {
-                expansions = matched.filter(t => !exactLower.has(String(t).toLowerCase()));
-            }
-            expansions = [...new Set(expansions)].slice(0, 8);
+            const expansions = [...new Set(expandedTerms)].slice(0, 8);
 
             const exactHtml = exactHits.length
                 ? exactHits.map(term => `<span class="modal-why-chip exact">${esc(term)}</span>`).join("")
@@ -231,6 +284,9 @@
             const dimBlurbs = row && row.dim_blurbs && typeof row.dim_blurbs === "object"
                 ? row.dim_blurbs
                 : {};
+            const queryOverlapByDim = row && row.query_overlap_by_dim && typeof row.query_overlap_by_dim === "object"
+                ? row.query_overlap_by_dim
+                : {};
 
             return dimRows.map((dim, idx) => {
                 const isOpen = allAccordionExpanded || idx === openAccordionIndex;
@@ -243,18 +299,48 @@
                 const perDimTerms = Array.isArray(topTermsByDim[String(compNumber)])
                     ? topTermsByDim[String(compNumber)]
                     : (Array.isArray(topTermsByDim[compNumber]) ? topTermsByDim[compNumber] : []);
-                const rowTerms = perDimTerms
-                    .map(item => item && typeof item === "object" ? item.t : "")
-                    .filter(Boolean)
-                    .slice(0, 6);
-                const termChips = rowTerms.length
-                    ? rowTerms.map(t => `<span class="modal-term-chip">${esc(t)}</span>`).join("")
-                    : `<span class="modal-term-chip muted">Awaiting term mapping</span>`;
+                const polaritySign = contribution >= 0 ? 1 : -1;
+                let alignedTerms = perDimTerms.filter(item =>
+                    item
+                    && typeof item === "object"
+                    && item.t
+                    && Number(item.w) * polaritySign > 0
+                );
+                if (!alignedTerms.length) {
+                    alignedTerms = perDimTerms.filter(item => item && typeof item === "object" && item.t);
+                }
+                const barTerms = alignedTerms.slice(0, 6);
+                const maxAbs = barTerms.length
+                    ? Math.max(...barTerms.map(item => Math.abs(Number(item.w) || 0)))
+                    : 0;
+                const barRowsHtml = barTerms.length
+                    ? barTerms.map(item => {
+                        const weight = Number(item.w) || 0;
+                        const pct = maxAbs > 0 ? Math.max(6, (Math.abs(weight) / maxAbs) * 100) : 0;
+                        const weightText = `${weight >= 0 ? "+" : ""}${weight.toFixed(3)}`;
+                        return `
+                            <div class="modal-term-bar-row">
+                                <span class="modal-term-bar-label">${esc(item.t)}</span>
+                                <div class="modal-term-bar-track">
+                                    <span class="modal-term-bar-fill" style="width:${pct.toFixed(1)}%"></span>
+                                </div>
+                                <span class="modal-term-bar-value">${weightText}</span>
+                            </div>
+                        `;
+                    }).join("")
+                    : `<div class="modal-accordion-copy">No contributing terms available for this dimension yet.</div>`;
+
                 const label = dimLabels[String(compNumber)] ?? dimLabels[compNumber] ?? `Dimension LS${compNumber}`;
                 const blurb = dimBlurbs[String(compNumber)] ?? dimBlurbs[compNumber] ?? "";
                 const detailText = blurb
-                    ? `${esc(blurb)} Evidence terms: ${rowTerms.map(esc).join(", ") || "n/a"}.`
-                    : `Evidence terms: ${rowTerms.map(esc).join(", ") || "n/a"}.`;
+                    ? esc(blurb)
+                    : "Latent semantic theme for this team on the selected axis.";
+                const queryOverlap = Array.isArray(queryOverlapByDim[String(compNumber)])
+                    ? queryOverlapByDim[String(compNumber)]
+                    : (Array.isArray(queryOverlapByDim[compNumber]) ? queryOverlapByDim[compNumber] : []);
+                const overlapHtml = queryOverlap.length
+                    ? queryOverlap.map(term => `<span class="modal-overlap-chip">${esc(term)}</span>`).join("")
+                    : `<span class="modal-overlap-empty">No direct query-term overlap for this dimension.</span>`;
 
                 return `
                     <article class="modal-accordion-item ${isOpen ? "open" : ""}">
@@ -274,7 +360,14 @@
                             <p class="modal-accordion-copy">
                                 ${detailText}
                             </p>
-                            <div class="modal-accordion-terms">${termChips}</div>
+                            <div class="modal-overlap-block">
+                                <div class="modal-overlap-label">Matched your query via</div>
+                                <div class="modal-overlap-chips">${overlapHtml}</div>
+                            </div>
+                            <div class="modal-term-bars-block">
+                                <div class="modal-overlap-label">What drives this team's score</div>
+                                <div class="modal-term-bars">${barRowsHtml}</div>
+                            </div>
                         </div>
                     </article>
                 `;
@@ -290,10 +383,12 @@
         }
 
         function renderModalSections(row) {
-            const profileTerms = uniqueTerms(row).slice(0, 6);
-            const profileHtml = profileTerms.length
-                ? profileTerms.map(term => `<span class="modal-profile-chip">${esc(term)}</span>`).join("")
-                : `<span class="modal-profile-empty">No profile terms yet.</span>`;
+            const topDims = getTopDimensionItems(row, 6);
+            const profileHtml = topDims.length
+                ? topDims.map(item =>
+                    `<span class="modal-profile-chip">${esc(item.label)} ${item.score >= 0 ? "+" : ""}${item.score.toFixed(3)}</span>`
+                ).join("")
+                : `<span class="modal-profile-empty">No latent dimensions yet.</span>`;
 
             document.getElementById("modal-profile-chips").innerHTML = profileHtml;
             document.getElementById("modal-accordion").innerHTML = buildAccordionHtml(row);
@@ -304,23 +399,29 @@
         function answerBoxTemplate(row, index) {
             const num = String(index + 1).padStart(2, '0');
             const summary = row.summary || row.descr || "";
+            const cardTopDims = getTopDimensionItems(row, 4);
+            const shown = displayScores(row);
             return `<div class='team-card' onclick="openModal(${index})" style="cursor:pointer">
                 <div class='card-top'>
-                    <span class='card-rank'>№ ${num}</span>
+                    <span class='card-rank'>RANK: ${num}</span>
                     <span class='card-sport-badge'>${row.sport}</span>
                 </div>
                 <h3 class='card-name'>${row.title}</h3>
                 <p class='card-league'>${row.league}</p>
                 <p class='card-summary'>${summary}</p>
-                ${row.top_terms && row.top_terms.length ? `
+                ${cardTopDims.length ? `
                 <div class='card-dimensions'>
                     <h3 class='card-dimensions-label'>Top Latent Dimensions</h3>
                     <div class='card-term-chips'>
-                        ${row.top_terms.map(t => `<span class='term-chip'>${t}</span>`).join('')}
+                        ${cardTopDims.map(item => `<span class='term-chip'>${esc(item.label)}</span>`).join('')}
                     </div>
                 </div>` : ''}
                 <div class='card-footer'>
-                    <span class='card-score'>score <strong>${row.score}</strong></span>
+                    <div class='card-score-grid'>
+                        <span class='card-score'>overall <strong>${shown.overall}</strong></span>
+                        <span class='card-score'>cosine similarity <strong>${shown.cosine}</strong></span>
+                        <span class='card-score'>lexical <strong>${shown.lexical}</strong></span>
+                    </div>
                 </div>
             </div>`;
         }
@@ -332,13 +433,14 @@
             openAccordionIndex = 0;
             allAccordionExpanded = false;
             currentModalRow = row;
+            const shown = displayScores(row);
             const sportLabel = String(row.sport || "unknown").toUpperCase();
             document.getElementById('modal-meta').textContent = `${sportLabel} · MATCH #${index + 1}`;
             document.getElementById('modal-name').textContent = row.title;
             document.getElementById('modal-league').textContent = row.league;
-            document.getElementById('modal-score').textContent = formatScore(row.score);
-            document.getElementById('modal-svd').textContent = formatScore(row.svd_score);
-            document.getElementById('modal-lexical').textContent = formatScore(row.lexical_score);
+            document.getElementById('modal-score').textContent = shown.overall;
+            document.getElementById('modal-svd').textContent = shown.cosine;
+            document.getElementById('modal-lexical').textContent = shown.lexical;
             renderModalSections(row);
             document.getElementById('modal-overlay').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -395,6 +497,7 @@
             visibleResults = activeFilter === "all"
                 ? data
                 : data.filter(row => row.sport === activeFilter);
+            visibleScoreContext = buildScoreContext(visibleResults);
             visibleResults.forEach((row, i) => {
                 let tempDiv = document.createElement("div");
                 tempDiv.innerHTML = answerBoxTemplate(row, i);

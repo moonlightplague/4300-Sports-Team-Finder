@@ -6,7 +6,7 @@ from collections import Counter, defaultdict
 from functools import lru_cache
 import numpy as np
 
-UI_DIMENSION_COUNT = 12
+UI_DIMENSION_COUNT = 8
 TOP_TERMS_PER_DIM = 10
 from sklearn.decomposition import TruncatedSVD
 from scipy.sparse import csr_matrix
@@ -132,6 +132,8 @@ class InvertedIndexSearchEngine:
         self._team_latent_norm = None
         self._embedding_vectors = None
         self._term_latent_cache = {}
+        self._dim_ranks = {}
+        self._top_terms_by_team_dim = {}
 
         self._load_index()
         dim_names_path = os.path.join(os.path.dirname(self.index_path), "svd_dimension_names.json")
@@ -464,6 +466,159 @@ class InvertedIndexSearchEngine:
         norms = np.linalg.norm(self._team_latent, axis=1)
         norms[norms == 0] = 1.0
         self._team_latent_norm = norms
+        self._precompute_dim_ranks()
+        self._precompute_top_terms_by_team_dim()
+
+    def _precompute_dim_ranks(self):
+        """
+        compute dimension ranks:
+        - positive side ranked among positive values (descending)
+        - negative side ranked among negative values (more negative ranks higher)
+        """
+        self._dim_ranks = {}
+        if self._team_latent is None or not len(self.teams):
+            return
+
+        max_dims = min(UI_DIMENSION_COUNT, self._team_latent.shape[1])
+        for dim_idx in range(max_dims):
+            col = self._team_latent[:, dim_idx]
+
+            pos_indices = [idx for idx, val in enumerate(col) if val >= 0]
+            neg_indices = [idx for idx, val in enumerate(col) if val < 0]
+
+            pos_sorted = sorted(pos_indices, key=lambda idx: col[idx], reverse=True)
+            neg_sorted = sorted(neg_indices, key=lambda idx: col[idx])
+
+            rank_by_team = {}
+            for rank, idx in enumerate(pos_sorted, start=1):
+                rank_by_team[self.teams[idx]] = rank
+            for rank, idx in enumerate(neg_sorted, start=1):
+                rank_by_team[self.teams[idx]] = rank
+
+            self._dim_ranks[dim_idx + 1] = rank_by_team
+
+    def _precompute_top_terms_by_team_dim(self):
+        """
+        Precompute signed per-team dimension terms:
+        """
+        self._top_terms_by_team_dim = {}
+        if self._svd_components is None or not self._term_list:
+            return
+
+        max_dims = min(UI_DIMENSION_COUNT, self._svd_components.shape[0])
+        term_to_idx = {term: idx for idx, term in enumerate(self._term_list)}
+
+        for team in self.teams:
+            team_tf = self.team_term_tf.get(team, {})
+            if not team_tf:
+                self._top_terms_by_team_dim[team] = {
+                    dim_id: [] for dim_id in range(1, max_dims + 1)
+                }
+                continue
+
+            weighted_terms = []
+            for term, tf in team_tf.items():
+                term_idx = term_to_idx.get(term)
+                if term_idx is None:
+                    continue
+                tfidf = self._tf_weight(tf) * self.idf.get(term, 0.0)
+                if tfidf <= 0:
+                    continue
+                weighted_terms.append((term, term_idx, tfidf))
+
+            by_dim = {}
+            for dim_id in range(1, max_dims + 1):
+                comp = self._svd_components[dim_id - 1]
+                contribs = [
+                    (term, float(tfidf * comp[term_idx]))
+                    for term, term_idx, tfidf in weighted_terms
+                ]
+                contribs.sort(key=lambda item: abs(item[1]), reverse=True)
+                by_dim[dim_id] = [
+                    {"t": term, "w": round(weight, 4)}
+                    for term, weight in contribs[:TOP_TERMS_PER_DIM]
+                ]
+            self._top_terms_by_team_dim[team] = by_dim
+
+    @staticmethod
+    def _as_dict(value):
+        return value if isinstance(value, dict) else {}
+
+    @staticmethod
+    def _coerce_dim_terms(raw_terms):
+        """
+        Normalize arbitrary JSON-ish term entries into:
+        [(term: str, weight: float), ...]
+        """
+        if not isinstance(raw_terms, list):
+            return []
+        out = []
+        for item in raw_terms:
+            if not isinstance(item, dict):
+                continue
+            term = item.get("t")
+            if not isinstance(term, str) or not term:
+                continue
+            try:
+                weight = float(item.get("w", 0.0))
+            except (TypeError, ValueError):
+                weight = 0.0
+            out.append((term, weight))
+        return out
+
+    def _derive_pole_label(self, dim_entry, positive=True):
+        key = "top_terms_pos" if positive else "top_terms_neg"
+        terms = self._coerce_dim_terms(self._as_dict(dim_entry).get(key, []))
+        names = [term.replace("_", " ") for term, _ in terms]
+        if not names:
+            return ""
+        return " / ".join(names[:2])
+
+    def _get_dimension_display(self, dim_id, dim_score):
+        dim_entry = self._as_dict(self.dimension_names.get(dim_id, {}))
+        label_pos = str(dim_entry.get("label_pos", "")).strip()
+        label_neg = str(dim_entry.get("label_neg", "")).strip()
+        blurb = str(dim_entry.get("blurb", "")).strip()
+
+        if not label_pos:
+            label_pos = self._derive_pole_label(dim_entry, positive=True)
+        if not label_neg:
+            label_neg = self._derive_pole_label(dim_entry, positive=False)
+
+        if dim_score >= 0:
+            label = label_pos or f"Dimension LS{dim_id}"
+        else:
+            label = label_neg or f"Dimension LS{dim_id}"
+
+        if not blurb:
+            if label_pos and label_neg:
+                blurb = f"{label_pos} vs {label_neg}"
+            else:
+                blurb = f"Latent semantic axis LS{dim_id}."
+
+        return label, blurb
+
+    def _query_dim_overlap(self, query_weights, team_top_terms_by_dim, dim_scores):
+        """
+        For each dimension, return query terms that overlap with this team's
+        top contributing terms on that dimension (pole-aware when possible).
+        """
+        query_term_set = set(query_weights.keys())
+        overlap_by_dim = {}
+        if not query_term_set:
+            return overlap_by_dim
+
+        for dim_id, terms in team_top_terms_by_dim.items():
+            dim_score = dim_scores.get(dim_id, 0.0)
+            sign = 1 if dim_score >= 0 else -1
+            coerced = self._coerce_dim_terms(terms)
+            aligned_terms = [term for term, weight in coerced if weight * sign > 0]
+            if not aligned_terms:
+                aligned_terms = [term for term, _ in coerced]
+            overlap = sorted(query_term_set.intersection(set(aligned_terms)))
+            if overlap:
+                overlap_by_dim[dim_id] = overlap
+        return overlap_by_dim
 
 
     def _embedding_expansions(self, term):
@@ -624,6 +779,7 @@ class InvertedIndexSearchEngine:
         team_name_boosts = self._team_name_fuzzy_boosts(query)
 
         if not query_tokens:
+            max_dims = min(UI_DIMENSION_COUNT, self._team_latent.shape[1]) if self._team_latent is not None else 0
             return [
                 {
                     "title": team,
@@ -631,6 +787,22 @@ class InvertedIndexSearchEngine:
                     "imdb_rating": 0.0,
                     "score": 0.0,
                     "matched_terms": [],
+                    "expanded_terms": [],
+                    "dim_scores": {dim_id: 0.0 for dim_id in range(1, max_dims + 1)},
+                    "dim_ranks": {
+                        dim_id: self._dim_ranks.get(dim_id, {}).get(team)
+                        for dim_id in range(1, max_dims + 1)
+                    },
+                    "top_terms_by_dim": {dim_id: [] for dim_id in range(1, max_dims + 1)},
+                    "query_overlap_by_dim": {},
+                    "dim_labels": {
+                        dim_id: self._get_dimension_display(dim_id, 0.0)[0]
+                        for dim_id in range(1, max_dims + 1)
+                    },
+                    "dim_blurbs": {
+                        dim_id: self._get_dimension_display(dim_id, 0.0)[1]
+                        for dim_id in range(1, max_dims + 1)
+                    },
                     "sport": TEAM_TO_SPORT.get(team, "unknown"),
                     "league": TEAM_TO_LEAGUE.get(team, ""),
                     "summary": TEAM_TO_SUMMARY.get(team, ""),
@@ -719,6 +891,7 @@ class InvertedIndexSearchEngine:
         exact_query_set = set(query_tokens)
 
         ranked = []
+        max_dims = min(UI_DIMENSION_COUNT, self._team_latent.shape[1])
         for team in candidate_teams:
             team_idx = self.team_to_idx.get(team)
             if team_idx is None:
@@ -759,6 +932,35 @@ class InvertedIndexSearchEngine:
                 continue
 
             explanation = self._explain_match(team_idx, expanded_query_weights, q_unit)
+            team_vec = self._team_latent[team_idx]
+            team_norm = self._team_latent_norm[team_idx]
+            team_unit = team_vec / team_norm if team_norm else team_vec
+
+            component_scores = q_unit * team_unit
+            dim_scores = {
+                dim_id: round(float(component_scores[dim_id - 1]), 4)
+                for dim_id in range(1, max_dims + 1)
+            }
+            dim_ranks = {
+                dim_id: self._dim_ranks.get(dim_id, {}).get(team)
+                for dim_id in range(1, max_dims + 1)
+            }
+            top_terms_by_dim = self._top_terms_by_team_dim.get(
+                team,
+                {dim_id: [] for dim_id in range(1, max_dims + 1)},
+            )
+            dim_labels = {}
+            dim_blurbs = {}
+            for dim_id in range(1, max_dims + 1):
+                label, blurb = self._get_dimension_display(dim_id, dim_scores[dim_id])
+                dim_labels[dim_id] = label
+                dim_blurbs[dim_id] = blurb
+            query_overlap_by_dim = self._query_dim_overlap(
+                expanded_query_weights,
+                top_terms_by_dim,
+                dim_scores,
+            )
+
             strong_terms = []
             if matched_ref_terms:
                 strong_terms.extend(matched_ref_terms)
@@ -781,6 +983,13 @@ class InvertedIndexSearchEngine:
                     "imdb_rating": round(score, 4),
                     "score": round(score, 4),
                     "matched_terms": strong_terms,
+                    "expanded_terms": sorted(expanded_terms),
+                    "dim_scores": dim_scores,
+                    "dim_ranks": dim_ranks,
+                    "top_terms_by_dim": top_terms_by_dim,
+                    "query_overlap_by_dim": query_overlap_by_dim,
+                    "dim_labels": dim_labels,
+                    "dim_blurbs": dim_blurbs,
                     "top_terms": strong_terms,
                     "svd_components": explanation["svd_components"],
                     "svd_score": round(svd_score, 4),
