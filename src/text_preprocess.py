@@ -25,6 +25,8 @@ WEIGHTS = {
     "reddit": .3,
 }
 
+MAX_REDDIT_DOCS_PER_TEAM = 100
+
 
 team_metadata = {}
 for league, teams in european_soccer_league_to_teams.items():
@@ -70,7 +72,7 @@ def save_wiki_cache(cache):
 
 
 
-def build_documents(filepath):
+def build_documents(filepath, cap=None):
     """
 
     returns a list of utterances from a filepath
@@ -81,6 +83,8 @@ def build_documents(filepath):
             line = line.strip()
             if line:
                 documents.append(json.loads(line))
+            if cap and len(documents) >= cap:
+                break
     return documents
 
 
@@ -104,7 +108,7 @@ def build_team_documents(team_name, files, cache):
     """Returns all documents for a team from Reddit, Wikipedia, and metadata."""
     documents = []
     if team_name in files:
-        documents = build_documents(files[team_name])
+        documents = build_documents(files[team_name], cap=MAX_REDDIT_DOCS_PER_TEAM)
     documents += build_documents_from_wikipedia(team_name, cache)
     meta = team_metadata.get(team_name)
     if meta:
@@ -163,7 +167,7 @@ def build_inverted_index(files):
                 team_term_freq[token] += WEIGHTS["wiki"]
         
         if team_name in files:
-            reddit_docs = build_documents(files[team_name])
+            reddit_docs = build_documents(files[team_name], cap=MAX_REDDIT_DOCS_PER_TEAM)
             for doc in reddit_docs:
                 for token in tokenize(doc.get("text", "")):
                     team_term_freq[token] += WEIGHTS["reddit"]
@@ -183,7 +187,8 @@ def build_inverted_index(files):
 
 
 def build_summaries(output_path=None):
-    output_path = os.path.join(os.path.dirname(__file__), "data", "team_summaries.json")
+    if output_path is None:
+        output_path = os.path.join(os.path.dirname(__file__), "data", "team_summaries.json")
     """
     Fetches Wikipedia summaries for all teams using page.summary and writes
     them to data json file as { team: { league, sport, summary } }.
@@ -197,12 +202,16 @@ def build_summaries(output_path=None):
     for team, meta in team_metadata.items():
         if team in result:
             continue
-        page = wiki.page(team)
         summary = ""
-        if page.exists():
-            raw = page.summary.strip()
-            sentences = re.split(r"(?<=[.!?])\s+", raw)
-            summary = " ".join(sentences[:2]).strip()
+        try:
+            page = wiki.page(team)
+            if page.exists():
+                raw = (page.summary or "").strip()
+                if raw:
+                    sentences = re.split(r"(?<=[.!?])\s+", raw)
+                    summary = " ".join(sentences[:2]).strip()
+        except Exception as e:
+            print(f"failed summary for '{team}': {e}")
 
         result[team] = {
             "league": meta["league"],
