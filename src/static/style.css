@@ -102,6 +102,16 @@ body{
     font-weight: 700;
 }
 
+.results-tip {
+    margin: 14px 0 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    color: var(--text-soft);
+    text-align: center;
+}
+
 .top-text{
     display: flex;
     flex-direction: column;
